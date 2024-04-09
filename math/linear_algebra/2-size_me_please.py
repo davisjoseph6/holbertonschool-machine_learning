@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 def matrix_shape(matrix):
     """Calculate the shape of a matrix represented as a list of lists."""
     shape = []
