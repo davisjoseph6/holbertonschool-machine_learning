@@ -4,6 +4,7 @@ This module provides functionality to calculate the shape of a matrix.
 The shape is determined by the dimensions of the matrix
 """
 
+
 def matrix_shape(matrix):
     """
     Calculate the shape of a matrix represented as a list of lists.
