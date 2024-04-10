@@ -4,11 +4,13 @@ a function that calculates the shape of a numpy.ndarray
 """
 
 
-import numpy as np
-
-
-def np_shape(matrix):
+def infer_shape(matrix):
     """
-    Calculate the shape of a numpy.ndarray
+    Infer the shape of a list structure that represents a matrix
+    or a higher dimensional array
     """
-    return matrix.shape
+    shape = []
+    while isinstance(matrix, list):
+        shape.append(len(matrix))
+        matrix = matrix[0] if matrix else []
+    return tuple(shape)
