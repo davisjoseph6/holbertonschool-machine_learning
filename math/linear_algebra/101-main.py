@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-add_matrices = __import__('the_whole_barn').add_matrices
+add_matrices = __import__('101-the_whole_barn').add_matrices
 
 mat1 = [1, 2, 3]
 mat2 = [4, 5, 6]

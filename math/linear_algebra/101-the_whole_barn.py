@@ -6,15 +6,18 @@ Module to add n dimension matrices with the same shape
 
 def add_matrices(mat1, mat2):
     """
-    Add n-dimensional matrices with the same shape.
+    Adds two matrices of the same shape.
     Args:
         mat1, mat2: Given matrices.
     Returns:
-        The recursively computed addition of mat1 and mat2,
-        or None if the matrices have different shapes
+        list: The sum of the two matrices, or None if their shapes differ
     """
     if isinstance(mat1, list) and isinstance(mat2, list):
-        if len(mat1) != len(mat2) or any(isinstance(sub, list) for sub in mat1) != any(isinstance(sub, list) for sub in mat2):
+        if len(mat1) != len(mat2):
+            return None
+        mat1_lists = any(isinstance(sub, list) for sub in mat1)
+        mat2_lists = any(isinstance(sub, list) for sub in mat2)
+        if mat1_lists != mat2_lists:
             return None
 
         result = []
