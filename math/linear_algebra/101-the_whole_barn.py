@@ -1,30 +1,51 @@
 #!/usr/bin/env python3
 """
-A function that adds two matrices
+A function to add n dimension matrices with the same shape
 """
 
 
-def get_shape(matrix):
-    """Utility function to get the shape of a nested matrix.
+def shape(matrix):
     """
-    if not isinstance(matrix, list):
-        return []
-    if not matrix:
-        return [0]
+    Return the shape of a matrix.
+    Args:
+        matrix: Given matrix.
+    Returns:
+        The shape of the matrix as a list of integers.
+    """
+    if type(matrix[0]) != list:
+        return [len(matrix)]
+    else:
+        return [len(matrix)] + shape(matrix[0])
+
+def rec_matrix(mat1, mat2):
+    """
+    Recursively operate an add of a n-dimensional matrix.
+    Args:
+        mat1, mat2: Given matrices.
+    Returns:
+        The addition of mat1 and mat2 iterating recursively.
+    """
+    new_mat = []
+
+    if (type(mat1) and type(mat2)) == list:
+        for i in range(len(mat1)):
+            if type(mat1[i]) == list:
+                new_mat.append(rec_matrix(mat1[i], mat2[i]))
+            else:
+                new_mat.append(mat1[i] + mat2[i])
+        return new_mat
+
 def add_matrices(mat1, mat2):
     """
-    Adds two matrices element-wise.
-
+    Add n-dimensional matrices with the same shape.
+    Args:
+        mat1, mat2: Given matrices.
     Returns:
-    - A new matrix containing the element-wise sums of mat1 and mat2.
-    Returns None if the matrices have different shapes.
+        The recursively computed addition of mat1 and mat2,
+        or None if the matrices have different shapes
     """
-    shape1 = get_shape(mat1)
-    shape2 = get_shape(mat2)
-    if shape1 != shape2:
-        return None  # Shape mismatch
-
-    if not isinstance(mat1, list):
-        return mat1 + mat2  # Base case
-
-    return [add_matrices(sub_mat1, sub_mat2) for sub_mat1, sub_mat2 in zip(mat1, mat2)]
+    if shape(mat1) != shape(mat2):
+        return None
+    else:
+        new_mat = rec_matrix(mat1, mat2)
+        return new_mat
