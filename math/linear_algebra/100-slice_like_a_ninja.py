@@ -3,8 +3,6 @@
 A function that slices a matrix along specific axes
 """
 
-import numpy as np
-
 
 def np_slice(matrix, axes={}):
     """
