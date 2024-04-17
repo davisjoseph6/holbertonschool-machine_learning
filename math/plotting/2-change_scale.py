@@ -32,8 +32,5 @@ def change_scale():
     # Set the limits for the x-axis
     plt.xlim(0, 28650)
 
-    # Optional: Add a grid for better readability
-    plt.grid(True)
-
     # Display the plot
     plt.show()
