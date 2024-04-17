@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-import numpy as np
-import matplotlib.pyplot as plt
 """
 Code to plot y as a line graph
 """
+import numpy as np
+import matplotlib.pyplot as plt
 
 
 def line():
