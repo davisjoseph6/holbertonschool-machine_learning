@@ -24,7 +24,7 @@ def change_scale():
     plt.ylabel('Fraction Remaining')
 
     # Set the title of the graph
-    plt.title('Exponential Decay of C')
+    plt.title('Exponential Decay of C-14')
 
     # Set y-axis to logarithmic scale
     plt.yscale('log')
