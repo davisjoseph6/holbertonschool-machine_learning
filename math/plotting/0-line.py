@@ -1,8 +1,15 @@
 #!/usr/bin/env python3
 import numpy as np
 import matplotlib.pyplot as plt
+"""
+Code to plot y as a line graph
+"""
+
 
 def line():
+    """
+    code to plot y
+    """
 
     y = np.arange(0, 11) ** 3
     plt.figure(figsize=(6.4, 4.8))
