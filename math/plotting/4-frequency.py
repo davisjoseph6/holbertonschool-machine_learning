@@ -20,6 +20,8 @@ arguments.
 It can be executed with `./4-frequency.py` if it's made executable or `python3
 4-frequency.py`.
 """
+import numpy as np
+import matplotlib.pyplot as plt
 
 
 def frequency():
