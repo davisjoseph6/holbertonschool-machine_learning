@@ -11,12 +11,16 @@ def frequency():
 
     # Plot histogram with bins every 10 units
     bins = range(0, 101, 10)  # Create bins from 0 to 100 with a step of 10
-    plt.hist(student_grades, bins=bins, edgecolor='black')  # edgecolor outlines the bars
+    n, bins, patches = plt.hist(student_grades, bins=bins, edgecolor='black')  # edgecolor outlines the bars
 
     # Setting labels and title
     plt.xlabel('Grades')
     plt.ylabel('Number of Students')
     plt.title('Project A')
+
+    # Set y-axis ticks
+    max_height = n.max()  # Get the maximum bar height
+    plt.yticks(np.arange(0, max_height + 1, 5))  # Set the y-ticks to go from 0 to max_height with steps of 5
 
     # Show the plot
     plt.show()
