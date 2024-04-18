@@ -6,21 +6,20 @@ import matplotlib.pyplot as plt
 def frequency():
 
     np.random.seed(5)
-    student_grades = np.random.normal(68, 15, 50)
+    student_grades = np.random.normal(68, 15, 50)  # Normal distribution of grades
     plt.figure(figsize=(6.4, 4.8))
 
-    # Plot histogram with bins every 10 units
-    bins = range(0, 101, 10)  # Create bins from 0 to 100 with a step of 10
-    n, bins, patches = plt.hist(student_grades, bins=bins, edgecolor='black')  # edgecolor outlines the bars
-
-    # Setting labels and title
+    # Define bins starting from 0 to 100
+    bins = np.arange(0, 101, 10)  # Bins from 0 to 100 inclusive
+    
+    # Plot settings
     plt.xlabel('Grades')
+    plt.ylim(0, 30)  # Ensure the y-axis starts at 0 up to 30
+    plt.xlim(0, 100)  # Ensure the x-axis spans from 0 to 100
     plt.ylabel('Number of Students')
     plt.title('Project A')
-
-    # Set y-axis ticks
-    max_height = n.max()  # Get the maximum bar height
-    plt.yticks(np.arange(0, max_height + 1, 5))  # Set the y-ticks to go from 0 to max_height with steps of 5
+    plt.hist(student_grades, bins, edgecolor='black')  # Histogram with black-edged bars
+    plt.xticks(np.arange(0, 110, 10))  # Set the x-ticks to match the bin edges
 
     # Show the plot
     plt.show()
