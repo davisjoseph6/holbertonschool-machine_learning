@@ -1,7 +1,7 @@
 Plotting
 
 Resources
-Read or watch:
+Read or watch::
 
 Plot (graphics)
 Scatter plot
