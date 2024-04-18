@@ -1,19 +1,25 @@
 #!/usr/bin/env python3
+"""
+This function generates a stacked bar graph
+"""
 import numpy as np
 import matplotlib.pyplot as plt
 
 
 def bars():
+    """
+    Requires matplotlib and numpy libraries
+    """
     np.random.seed(5)
     fruit = np.random.randint(0, 20, (4, 3))
-    
+
     # Create a figure
     plt.figure(figsize=(6.4, 4.8))
 
     # Names of people
     people = ['Farrah', 'Fred', 'Felicia']
     # Colors for each fruit
-    colors = ['red', 'yellow', '#ff8000', '#ffe5b4']  # Red, Yellow, Orange, Peach
+    colors = ['red', 'yellow', '#ff8000', '#ffe5b4']  # Red,Yellow,Orange,Peach
     # Fruit names
     fruits = ['apples', 'bananas', 'oranges', 'peaches']
 
@@ -22,7 +28,8 @@ def bars():
 
     # Create stacked bars
     for idx, row in enumerate(fruit):
-        plt.bar(people, row, color=colors[idx], label=fruits[idx], bottom=bottom, width=0.5)
+        plt.bar(people, row, color=colors[idx], label=fruits[idx],
+                bottom=bottom, width=0.5)
         bottom += row
 
     # Labeling and setting limits
