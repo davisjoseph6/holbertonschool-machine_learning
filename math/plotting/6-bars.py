@@ -15,7 +15,7 @@ def bars():
     # Colors for each fruit
     colors = ['red', 'yellow', '#ff8000', '#ffe5b4']  # Red, Yellow, Orange, Peach
     # Fruit names
-    fruits = ['Apples', 'Bananas', 'Oranges', 'Peaches']
+    fruits = ['apples', 'bananas', 'oranges', 'peaches']
 
     # Bottom offset for each bar
     bottom = np.zeros(3)
