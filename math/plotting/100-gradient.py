@@ -1,9 +1,17 @@
 #!/usr/bin/env python3
+"""
+Generates ad plots a scatter plot
+"""
 import numpy as np
 import matplotlib.pyplot as plt
 
 
 def gradient():
+    """
+    - Run the function to displau the scatter plot with elevations
+    - the Plot assists in visualizing how elevation changes in 
+    - respect to x and y
+    """
 
     # Set the seed for reproducibility
     np.random.seed(5)
@@ -18,10 +26,10 @@ def gradient():
 
     # Create the scatter plot
     sc = plt.scatter(x, y, c=z)  # Scatter plot of x and y
-    
+
     # Add a colorbar with a label
     plt.colorbar(sc, label='elevation (m)')
-    
+
     # Add labels and title to the plot
     plt.title('Mountain Elevation')
     plt.xlabel('x coordinate (m)')
