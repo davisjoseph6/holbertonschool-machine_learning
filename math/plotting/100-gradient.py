@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 def gradient():
     """
     - Run the function to displau the scatter plot with elevations
-    - the Plot assists in visualizing how elevation changes in 
+    - the Plot assists in visualizing how elevation changes in
     - respect to x and y
     """
 
