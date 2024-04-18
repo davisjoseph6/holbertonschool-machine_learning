@@ -17,15 +17,15 @@ def gradient():
     plt.figure(figsize=(6.4, 4.8))  # Set the figure size
 
     # Create the scatter plot
-    sc = plt.scatter(x, y, c=z, s=40)  # Scatter plot of x and y
+    sc = plt.scatter(x, y, c=z)  # Scatter plot of x and y
     
     # Add a colorbar with a label
-    plt.colorbar(sc, label="elevation (m)")
+    plt.colorbar(sc, label='elevation (m)')
     
     # Add labels and title to the plot
-    plt.title("Mountain Elevation")
-    plt.xlabel("x coordinate (m)")
-    plt.ylabel("y coordinate (m)")
+    plt.title('Mountain Elevation')
+    plt.xlabel('x coordinate (m)')
+    plt.ylabel('y coordinate (m)')
 
     # Display the plot
     plt.show()
