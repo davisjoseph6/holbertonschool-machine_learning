@@ -7,7 +7,10 @@ import numpy as np
 data = np.load('data.npy')
 labels = np.load('labels.npy')
 
-# Save both arrays into a single .npz file
+# Save both into a single .npz file
+np.savez('pca.npz', data=data, labels=labels)
+
+# Load the data and the labels
 lib = np.load("pca.npz")
 data = lib["data"]
 labels = lib["labels"]
