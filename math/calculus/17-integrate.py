@@ -12,20 +12,18 @@ def poly_integral(poly, C=0):
         return None
 
     # Check if poly is empty
-    if not poly:
-        return [C]
+    if not poly or all(coef == 0 for coef in poly):
+        return [C] if C != 0 else [0]
 
     # Calculate the integral
     integral = [C]  # Start with the integration constant
     for index, coef in enumerate(poly):
         if coef == 0:
-            new_coef = 0
-        else:
-            new_power = index + 1
-            new_coef = coef / new_power
+            continue
+        new_power = index + 1
+        new_coef = coef / new_power
 
-        # Ensure to handle new_coef as float to apply is_integer()
-        if isinstance(new_coef, float) and new_coef.is_integer():
+        if new_coef.is_integer():
             new_coef = int(new_coef)
 
         integral.append(new_coef)
