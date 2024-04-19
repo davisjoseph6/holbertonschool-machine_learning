@@ -3,11 +3,13 @@
 a function that calculates the derivative of a polynomial
 """
 
+
 def poly_derivative(poly):
     """
     Args:
     poly (list of int or float): Coefficients of the polynomial, where the
-    index of each element represents the power of x that the coefficient belongs to.
+    index of each element represents the power of x that the coefficient
+    belongs to.
     """
     # Check if the input is a valid list
     if not isinstance(poly, list) or any(
