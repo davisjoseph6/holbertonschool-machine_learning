@@ -9,13 +9,15 @@ def poly_derivative(poly):
     poly (list of int or float): Coefficients of the polynomial, where the
     index of each element represents the power of x that the coefficient belongs to.
     """
-    # Check of the input is a valid list
+    # Check if the input is a valid list
     if not isinstance(poly, list) or any(
             not isinstance(coef, (int, float)) for coef in poly
             ):
         return None
 
     # Special case for a constant polynomial or empty list
+    if len(poly) == 0:  # Handling empty list by returning None
+        return None
     if len(poly) < 2:
         return [0]
 
