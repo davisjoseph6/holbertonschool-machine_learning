@@ -29,10 +29,6 @@ ax = fig.add_subplot(111, projection='3d')
 scatter = ax.scatter(pca_data[:, 0], pca_data[:, 1], pca_data[:, 2], 
         c=labels, cmap='plasma')
 
-# Color bar
-cbar = plt.colorbar(scatter, ax=ax)
-cbar.set_label('Species')
-
 # Labeling the axes
 ax.set_xlabel('U1')
 ax.set_ylabel('U2')
