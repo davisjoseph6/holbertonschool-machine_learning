@@ -8,21 +8,14 @@ def poly_integral(poly, C=0):
     """
     Validate input
     """
-    if not isinstance(poly, list) or not all(isinstance(coef, (int, float)) for coef in poly):
+    if not isinstance(poly, list) or not all(isinstance(x, (int, float)) for x in poly):
         return None
-    if not isinstance(C, int):
+    if not isinstance(C, (int, float)):
         return None
 
-    if all(coef == 0 for coef in poly):
-        return [C]  # Return [C] if the polynomial is zero
+    if not poly or all(x == 0 for x in poly):
+        return [C] if C != 0 else [0]
 
-    integral = [C]  # Start with the integration constant
-    for i, coef in enumerate(poly):
-        new_coef = coef / (i + 1)  # Calculate the new coefficient
-        integral.append(int(new_coef) if new_coef.is_integer() else new_coef)  # Append as int if whole number, else as float
+    arr = [C] + [poly[i] / (i + 1) for i in range(len(poly))]
 
-    # remove trailing zeros if they are not the only coefficient
-    while len(integral) > 1 and integral[-1] == 0:
-        integral.pop()
-
-    return integral
+    return [int(x) if isinstance(x, float) and x.is_integer() else x for x in arr]
