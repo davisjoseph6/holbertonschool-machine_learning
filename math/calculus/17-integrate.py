@@ -10,11 +10,12 @@ def poly_integral(poly, C=0):
     """
     if not isinstance(poly, list) or not all(isinstance(x, (int, float)) for x in poly):
         return None
+
     if not isinstance(C, (int, float)):
         return None
 
     if not poly or all(x == 0 for x in poly):
-        return [C] if C != 0 else [0]
+        return None
 
     arr = [C] + [poly[i] / (i + 1) for i in range(len(poly))]
 
