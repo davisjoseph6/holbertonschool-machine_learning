@@ -30,7 +30,7 @@ def all_in_one():
     bins = np.arange(0, 110, 10)
 
     # Create a figure
-    fig = plt.figure(figsize=(12, 8))
+    fig = plt.figure(figsize=(6.4, 4.8))
     fig.suptitle('All in One', fontsize='x-large')
 
     # First plot
