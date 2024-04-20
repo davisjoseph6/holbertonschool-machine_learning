@@ -15,7 +15,7 @@ def poly_integral(poly, C=0):
         return None
 
     if not poly or all(x == 0 for x in poly):
-        return None
+        return [C] if C != 0 else [0]
 
     arr = [C] + [poly[i] / (i + 1) for i in range(len(poly))]
 
