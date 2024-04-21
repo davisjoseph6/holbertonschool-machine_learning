@@ -1,8 +1,3 @@
-#!/usr/bin/env python3
-"""
-integration functions
-"""
-
 def poly_integral(poly, C=0):
     """Calculate the integral of a polynomial represented by coefficients."""
     if isinstance(poly, list) and all(isinstance(x, (int, float)) for x in poly) and isinstance(C, (int, float)):
