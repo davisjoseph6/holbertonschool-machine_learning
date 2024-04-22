@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 
-import numpy as np
 """
 Decision Tree Components
 Includes classes for nodes (both decision and leaf nodes) and the
 decision tree itself
 """
+import numpy as np
 
 
 class Node:
