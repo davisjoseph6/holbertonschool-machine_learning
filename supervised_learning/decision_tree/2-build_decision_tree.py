@@ -76,8 +76,8 @@ class Node:
         """
         lines = text.split("\n")
         new_text = "    +--" + lines[0] + "\n"
-        for x in lines[1:]:
-            new_text += "    |  " + x + "\n"
+        for line in lines[1:]:
+            new_text += "    |  " + line + "\n"
         return new_text.strip()
 
 
@@ -85,18 +85,16 @@ class Node:
         """
         Provides a string representation of the node, including its subtree.
         """
-        # Adjust the label according to whether it's the root or not.
-        node_label = f"node [feature={self.feature}, threshold={self.threshold}]"
+        node_label = f"[feature={self.feature}, threshold={self.threshold}]"
         if self.is_root:
             node_label = "root " + node_label
         else:
-            node_label = "-> node " + node_label  # Adjusted to "-> node"
+            node_label = "-> node " + node_label
 
-        # Add child representations    
         left_str = self.left_child_add_prefix(self.left_child.__str__()) if self.left_child else ""
         right_str = self.right_child_add_prefix(self.right_child.__str__()) if self.right_child else ""
 
-        return node_label + "\n" + left_str + right_str
+        return node_label + "\n" + left_str + (("\n" + right_str) if right_str else "")
 
     def left_child_add_prefix(self, text):
         """
@@ -105,8 +103,8 @@ class Node:
         """
         lines = text.split("\n")
         new_text = "    +--" + lines[0] + "\n"
-        for x in lines[1:]:
-            new_text += ("    |  " + x) + "\n"
+        for line in lines[1:]:
+            new_text += "    |  " + line + "\n"
         return new_text.strip() 
 
 
