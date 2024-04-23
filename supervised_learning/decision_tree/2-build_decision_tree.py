@@ -78,19 +78,22 @@ class Node:
         new_text = "    +--" + lines[0] + "\n"
         for x in lines[1:]:
             new_text += "    |  " + x + "\n"
-        return new_text
+        return new_text.strip()
 
 
     def __str__(self):
         """
         Provides a string representation of the node, including its subtree.
         """
+        # Adjust the label according to whether it's the root or not.
         node_label = f"node [feature={self.feature}, threshold={self.threshold}]"
         if self.is_root:
             node_label = "root " + node_label
-            
-        left_str = self.left_child_add_prefix(self.left_child.__str__()) if self.left_child else ""
+        else:
+            node_label = "-> node " + node_label  # Adjusted to "-> node"
 
+        # Add child representations    
+        left_str = self.left_child_add_prefix(self.left_child.__str__()) if self.left_child else ""
         right_str = self.right_child_add_prefix(self.right_child.__str__()) if self.right_child else ""
 
         return node_label + "\n" + left_str + right_str
@@ -104,7 +107,7 @@ class Node:
         new_text = "    +--" + lines[0] + "\n"
         for x in lines[1:]:
             new_text += ("    |  " + x) + "\n"
-        return new_text
+        return new_text.strip() 
 
 
 class Leaf(Node):
@@ -135,7 +138,7 @@ class Leaf(Node):
         return 1
 
     def __str__(self):
-        return (f"-> leaf [value={self.value}] ")
+        return f"-> leaf [value={self.value}]"
 
 
 class Decision_Tree():
