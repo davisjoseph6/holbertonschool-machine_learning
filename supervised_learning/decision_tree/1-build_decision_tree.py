@@ -48,10 +48,12 @@ class Node:
 
     def count_nodes_below(self, only_leaves=False):
         """
-        Counts the nodes in the subtree rooted at this node. Optionally counts only leaf nodes.
+        Counts the nodes in the subtree rooted at this node.
+        Optionally counts only leaf nodes.
         """
         if only_leaves:
-            # If only leaves should be counted, skip counting for non-leaf nodes.
+            # If only leaves should be counted, skip counting for non-leaf
+            # nodes.
             if self.is_leaf:
                 return 1
             count = 0
@@ -84,12 +86,15 @@ class Leaf(Node):
 
     def max_depth_below(self):
         """
-        Returns the depth of the leaf, as leaf nodes are the endoiunts
+        Returns the depth of the leaf, as leaf nodes are the endpoints
         of a tree
         """
         return self.depth
 
     def count_nodes_below(self, only_leaves=False):
+        """
+        Returns 1 since leaves count as one node each.
+        """
         return 1
 
 
@@ -127,4 +132,3 @@ class Decision_Tree():
         Counts the total nodes or only leaf nodes in the tree
         """
         return self.root.count_nodes_below(only_leaves=only_leaves)
-
