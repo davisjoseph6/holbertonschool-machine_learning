@@ -69,18 +69,6 @@ class Node:
 
         return count
 
-    def right_child_add_prefix(self, text):
-        """
-        Formats text lines for the right child of a node with appropriate
-        tree graphics.
-        """
-        lines = text.split("\n")
-        new_text = "    +--" + lines[0] + "\n"
-        for line in lines[1:]:
-            new_text += "    |  " + line + "\n"
-        return new_text.strip()
-
-
     def __str__(self):
         """
         Provides a string representation of the node, including its subtree.
@@ -101,11 +89,27 @@ class Node:
         Formats text lines for the left child of a node with appropriate
         tree graphics
         """
+        if not text:
+            return ""
         lines = text.split("\n")
         new_text = "    +--" + lines[0] + "\n"
         for line in lines[1:]:
             new_text += "    |  " + line + "\n"
-        return new_text.strip() 
+        return new_text.strip()
+
+
+    def right_child_add_prefix(self, text):
+        """
+        Formats text lines for the right child of a node with appropriate
+        tree graphics.
+        """
+        if not text:
+            return ""
+        lines = text.split("\n")
+        new_text = "    +--" + lines[0] + "\n"
+        for line in lines[1:]:
+            new_text += "    |  " + line + "\n"
+        return new_text.strip()
 
 
 class Leaf(Node):
