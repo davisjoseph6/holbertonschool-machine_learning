@@ -77,7 +77,7 @@ class Node:
         if self.is_root:
             node_label = "root " + node_label
         else:
-            node_label = "-> node " + node_label
+            node_label = "    +---> node " + node_label
 
         left_str = self.left_child_add_prefix(self.left_child.__str__()) if self.left_child else ""
         right_str = self.right_child_add_prefix(self.right_child.__str__()) if self.right_child else ""
@@ -109,7 +109,7 @@ class Node:
         new_text = "    +--" + lines[0] + "\n"
         for line in lines[1:]:
             new_text += "    |  " + line + "\n"
-        return new_text.strip()
+        return new_text.rstrip()
 
 
 class Leaf(Node):
