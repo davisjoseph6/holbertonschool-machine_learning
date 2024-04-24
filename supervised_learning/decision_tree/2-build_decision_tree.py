@@ -3,23 +3,10 @@
 """
 Decision Tree Components
 Includes classes for nodes (both decision and leaf nodes) and the
-decision tree itself.
+decision tree itself
 """
 import numpy as np
 
-def left_child_add_prefix(text):
-    lines = text.split("\n")
-    new_text = "    +---> " + lines[0] + "\n"  # Adjusted arrow style for left child
-    for x in lines[1:]:
-        new_text += "    |     " + x + "\n"  # Adjust spacing for left child alignment
-    return new_text.rstrip()
-
-def right_child_add_prefix(text):
-    lines = text.split("\n")
-    new_text = "    \\---> " + lines[0] + "\n"  # Adjusted arrow style for right child
-    for x in lines[1:]:
-        new_text += "          " + x + "\n"  # Adjust spacing for right child alignment
-    return new_text.rstrip()
 
 class Node:
     """
@@ -46,10 +33,17 @@ class Node:
         Returns the maximum depth of the tree beneath this node.
         """
         max_depth = self.depth
+
+        # If the node has a left child, calculate the maximum depth below
+        # the left child
         if self.left_child is not None:
             max_depth = max(max_depth, self.left_child.max_depth_below())
+
+        # If the node has a right child, calculate the maximum depth below
+        # the right child
         if self.right_child is not None:
             max_depth = max(max_depth, self.right_child.max_depth_below())
+
         return max_depth
 
     def count_nodes_below(self, only_leaves=False):
@@ -58,28 +52,59 @@ class Node:
         Optionally counts only leaf nodes.
         """
         if only_leaves:
+            # If only leaves should be counted, skip counting for non-leaf
+            # nodes.
             if self.is_leaf:
                 return 1
             count = 0
         else:
+            # Count this node if we are not only counting leaves
             count = 1
 
+        # Recursively count the nodes int the left and right subtress
         if self.left_child is not None:
             count += self.left_child.count_nodes_below(only_leaves)
         if self.right_child is not None:
             count += self.right_child.count_nodes_below(only_leaves)
+
         return count
 
     def __str__(self):
-        node_desc = f"node [feature={self.feature}, threshold={self.threshold}]"
-        parts = [node_desc]
+        """
+        Prints string representation of the node and its children.
+        """
 
-        if self.left_child:
-            parts.append(left_child_add_prefix(str(self.left_child)))
-        if self.right_child:
-            parts.append(right_child_add_prefix(str(self.right_child)))
+        if self.is_root:
+            s = "root"
+        else:
+            s = "-> node"
 
-        return "\n".join(parts)
+        return f"{s} [feature={self.feature}, threshold={self.threshold}]\n"\
+            + self.left_child_add_prefix(str(self.left_child))\
+            + self.right_child_add_prefix(str(self.right_child))
+
+    def left_child_add_prefix(self, text):
+        """
+        Adds the string representation of the left child to the given text
+        """
+        lines = text.split("\n")
+        new_text = "    +--" + lines[0] + "\n"
+        for x in lines[1:]:
+            new_text += ("    |  " + x) + "\n"
+        return (new_text)
+
+    def right_child_add_prefix(self, text):
+        """
+        Adds the string representation of the right child to the given text
+        """
+        lines = text.split("\n")
+        new_text = "    +--" + lines[0] + "\n"
+        for x in lines[1:]:
+            new_text += ("       " + x) + "\n"
+        # Had to strip the extra newline after right node
+        # There may be better alternatives
+        return (new_text.rstrip())
+
 
 class Leaf(Node):
     """
@@ -87,6 +112,9 @@ class Leaf(Node):
     and depth.
     """
     def __init__(self, value, depth=None):
+        """
+        Initializes the leaf with a specific value and depth.
+        """
         super().__init__()
         self.value = value
         self.is_leaf = True
@@ -95,7 +123,7 @@ class Leaf(Node):
     def max_depth_below(self):
         """
         Returns the depth of the leaf, as leaf nodes are the endpoints
-        of a tree.
+        of a tree
         """
         return self.depth
 
@@ -106,7 +134,8 @@ class Leaf(Node):
         return 1
 
     def __str__(self):
-        return f"leaf [value={self.value}]"
+        return (f"-> leaf [value={self.value}] ")
+
 
 class Decision_Tree():
     """
@@ -133,18 +162,15 @@ class Decision_Tree():
 
     def depth(self):
         """
-        Returns the maximum depth of the tree.
+        Returns the maximum depth of a tree
         """
         return self.root.max_depth_below()
 
     def count_nodes(self, only_leaves=False):
         """
-        Counts the total nodes or only leaf nodes in the tree.
+        Counts the total nodes or only leaf nodes in the tree
         """
         return self.root.count_nodes_below(only_leaves=only_leaves)
 
     def __str__(self):
-        return "root " + str(self.root)
-
-# Here you can insert your main testing code or other functionalities as required.
-
+        return self.root.__str__()
