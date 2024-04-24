@@ -9,16 +9,16 @@ import numpy as np
 
 def left_child_add_prefix(text):
     lines = text.split("\n")
-    new_text = "    +--" + lines[0] + "\n"
+    new_text = "    +---> " + lines[0] + "\n"  # Adjusted arrow style for left child
     for x in lines[1:]:
-        new_text += ("    |  " + x) + "\n"
+        new_text += "    |     " + x + "\n"  # Adjust spacing for left child alignment
     return new_text.rstrip()
 
 def right_child_add_prefix(text):
     lines = text.split("\n")
-    new_text = "    \\--" + lines[0] + "\n"
+    new_text = "    \\---> " + lines[0] + "\n"  # Adjusted arrow style for right child
     for x in lines[1:]:
-        new_text += ("     " + x) + "\n"
+        new_text += "          " + x + "\n"  # Adjust spacing for right child alignment
     return new_text.rstrip()
 
 class Node:
@@ -73,12 +73,12 @@ class Node:
     def __str__(self):
         node_desc = f"node [feature={self.feature}, threshold={self.threshold}]"
         parts = [node_desc]
-        
+
         if self.left_child:
             parts.append(left_child_add_prefix(str(self.left_child)))
         if self.right_child:
             parts.append(right_child_add_prefix(str(self.right_child)))
-        
+
         return "\n".join(parts)
 
 class Leaf(Node):
@@ -145,4 +145,6 @@ class Decision_Tree():
 
     def __str__(self):
         return "root " + str(self.root)
+
+# Here you can insert your main testing code or other functionalities as required.
 
