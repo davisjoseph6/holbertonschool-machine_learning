@@ -173,4 +173,5 @@ class Decision_Tree():
         return self.root.count_nodes_below(only_leaves=only_leaves)
 
     def __str__(self):
-        return self.root.__str__()
+        # cleaner to update this than use the "solution" I've seen
+        return f"{self.root.__str__()}\n"
