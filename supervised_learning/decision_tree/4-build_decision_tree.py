@@ -97,6 +97,44 @@ class Node:
             leaves.extend(self.right_child.get_leaves_below())
         return leaves
 
+    def update_bounds_below(self):
+        """
+        Recursively compute, for each node, two dictionaries stored as
+        attributes Node.lower and Node.upper. These dictionaries contain
+        the bounds for each feature.
+        """
+        if self.is_root:
+            self.lower = {0: -np.inf}
+            self.upper = {0: np.inf}
+
+        if self.left_child:
+            # Copy bounds from parent and update
+            self.left_child.lower = self.lower.copy()
+            self.left_child.upper = self.upper.copy()
+
+            if self.feature in self.left_child.lower:
+                # Update left child's lower bound for the feature
+                self.left_child.lower[self.feature] = max(self.threshold, self.left_child.lower[self.feature])
+            else:
+                self.left_child.lower[self.feature] = self.threshold
+
+            # Recurse into the left child
+            self.left_child.update_bounds_below()
+
+        if self.right_child:
+            # Copy bounds from parent and update
+            self.right_child.lower = self.lower.copy()
+            self.right_child.upper = self.upper.copy()
+
+            if self.feature in self.right_child.upper:
+                # Update right child's upper bound for the feature
+                self.right_child.upper[self.feature] = min(self.threshold, self.right_child.upper[self.feature])
+            else:
+                self.right_child.upper[self.feature] = self.threshold
+
+            # Recurse into the right child
+            self.right_child.update_bounds_below()
+
 
 class Leaf(Node):
     """
