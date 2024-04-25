@@ -149,13 +149,9 @@ class Node:
             comparisons = [x[:, key] > self.lower[key] for key in self.lower]
             return np.all(comparisons, axis=0)
 
-            # return np.all([x[:, key] > self.lower[key] for key in self.lower],
-            # axis=0)
-
         def is_small_enough(x):
             comparisons = [x[:, key] <= self.upper[key] for key in self.upper]
             return np.all(comparisons, axis=0)
-            # return np.all([x[:, key] <= self.upper[key] for key in self.upper], axis=0)
 
         self.indicator = lambda x: (
                 np.logical_and(is_large_enough(x), is_small_enough(x))
