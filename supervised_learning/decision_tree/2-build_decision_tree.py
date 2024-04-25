@@ -74,11 +74,12 @@ class Node:
         Returns a string representation of the node and it's children
         """
         node_type = "root" if self.is_root else "node"
-        details = f"{node_type} [feature={self.feature}, threshold={self.threshold}]\n"
+        details = (f"{node_type} [feature={self.feature}, "
+                   f"threshold={self.threshold}]\n")
         if self.left_child:
-            details += "    +---> " + self.left_child.__str__().replace("\n", "\n    |  ")
+            details += ("    +---> " + self.left_child.__str__().replace("\n", "\n    |  "))
         if self.right_child:
-            details += "\n    +---> " + self.right_child.__str__().replace("\n", "\n       ")
+            details += ("\n    +---> " + self.right_child.__str__().replace("\n", "\n       "))
         return details
 
 
