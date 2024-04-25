@@ -129,7 +129,7 @@ class Leaf(Node):
         """
         Returns a string representation of the leaf.
         """
-        return f"leaf [value={self.value}]"
+        return f"-> leaf [value={self.value}]"
 
     def get_leaves_below(self):
         """
