@@ -165,7 +165,7 @@ class Node:
 
     def pred(self, x):
         """
-        Predict the class label for a single instance x 
+        Predict the class label for a single instance x
         based on the tree structure
         """
         if x[self.feature] > self.threshold:
