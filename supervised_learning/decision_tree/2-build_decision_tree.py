@@ -138,5 +138,4 @@ class Decision_Tree():
         """
         Returns a string representation of the entire decision tree.
         """
-        return self.root.__str__()
-
+        return self.root.__str__() + "\n"
