@@ -146,10 +146,16 @@ class Node:
         Update the indicator function based on the lower and upper bounds.
         """
         def is_large_enough(x):
+            """
+            is large enough
+            """
             comparisons = [x[:, key] > self.lower[key] for key in self.lower]
             return np.all(comparisons, axis=0)
 
         def is_small_enough(x):
+            """
+            is small enough
+            """
             comparisons = [x[:, key] <= self.upper[key] for key in self.upper]
             return np.all(comparisons, axis=0)
 
@@ -158,6 +164,10 @@ class Node:
                 )
 
     def pred(self, x):
+        """
+        Predict the class label for a single instance x 
+        based on the tree structure
+        """
         if x[self.feature] > self.threshold:
             return self.left_child.pred(x)
         else:
@@ -210,6 +220,9 @@ class Leaf(Node):
         pass
 
     def pred(self, x):
+        """
+        def pred
+        """
         return self.value
 
 
@@ -285,4 +298,7 @@ class Decision_Tree():
         self.predict = predict
 
     def pred(self, x):
+        """
+        def pred
+        """
         return self.root.pred(x)
