@@ -88,14 +88,10 @@ class Node:
 
     def get_leaves_below(self):
         """
-        Returns a list of all leaves below this node.
+        Returns the list of all leaves below this one.
         """
-        leaves = []
-        if self.left_child:
-            leaves.extend(self.left_child.get_leaves_below())
-        if self.right_child:
-            leaves.extend(self.right_child.get_leaves_below())
-        return leaves
+        return self.left_child.get_leaves_below()\
+            + self.right_child.get_leaves_below()
 
 
 class Leaf(Node):
