@@ -3,7 +3,7 @@
 """
 Decision Tree Components
 Includes classes for nodes (both decision and leaf nodes) and the
-decision tree itself
+decision tree itself.
 """
 import numpy as np
 
@@ -71,14 +71,14 @@ class Node:
 
     def __str__(self):
         """
-        Returns a string representation of the node and its children.
+        Returns a string representation of the node and it's children
         """
         node_type = "root" if self.is_root else "node"
         details = f"{node_type} [feature={self.feature}, threshold={self.threshold}]\n"
         if self.left_child:
-            details += "    +---> " + self.left_child.__str__().replace("\n", "\n    |  ")
+            details +="     +---> " + self.left_child.__str__().replace("\n", "\n    |  ")
         if self.right_child:
-            details += "\n    +---> " + self.right_child.__str__().replace("\n", "\n       ")
+            details += "\n    +---> " self.right_child.__str__().replace("\n", "\n       ")
         return details
 
 
@@ -156,4 +156,3 @@ class Decision_Tree():
         Returns a string representation of the entire decision tree.
         """
         return self.root.__str__() + "\n"
-
