@@ -157,8 +157,8 @@ class Node:
                 np.logical_and(is_large_enough(x), is_small_enough(x))
                 )
 
-    def pred(self,x):
-        if x[self.feature]>self.threshold:
+    def pred(self, x):
+        if x[self.feature] > self.threshold:
             return self.left_child.pred(x)
         else:
             return self.right_child.pred(x)
@@ -209,7 +209,7 @@ class Leaf(Node):
         """
         pass
 
-    def pred(self,x):
+    def pred(self, x):
         return self.value
 
 
@@ -284,5 +284,5 @@ class Decision_Tree():
 
         self.predict = predict
 
-    def pred(self,x):
+    def pred(self, x):
         return self.root.pred(x)
