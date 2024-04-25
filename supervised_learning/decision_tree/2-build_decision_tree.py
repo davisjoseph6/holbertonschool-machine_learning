@@ -77,9 +77,14 @@ class Node:
         details = (f"{node_type} [feature={self.feature}, "
                    f"threshold={self.threshold}]\n")
         if self.left_child:
-            details += ("    +---> " + self.left_child.__str__().replace("\n", "\n    |  "))
+            left_str = self.left_child.__str__().replace("\n", "\n    |  ")
+            details += f"    +---> {left_str}"
+
+            # details += ("    +---> " + self.left_child.__str__().replace("\n", "\n    |  "))
         if self.right_child:
-            details += ("\n    +---> " + self.right_child.__str__().replace("\n", "\n       "))
+            right_str = self.right_child.__str__().replace("\n", "\n       ")
+            details += f"\n    +---> {right_str}"
+            # details += ("\n    +---> " + self.right_child.__str__().replace("\n", "\n       "))
         return details
 
 
