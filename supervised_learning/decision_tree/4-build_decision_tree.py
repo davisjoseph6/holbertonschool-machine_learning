@@ -176,6 +176,9 @@ class Leaf(Node):
         return [self]
 
     def update_bounds_below(self):
+        """
+        Leaves do not need to update bounds as they represent endpoints
+        """
         pass
 
 
@@ -227,5 +230,8 @@ class Decision_Tree():
         return self.root.get_leaves_below()
 
     def update_bounds(self):
+        """
+        Initiates the bounds update process from the root.
+        """
         self.root.update_bounds_below()
 
