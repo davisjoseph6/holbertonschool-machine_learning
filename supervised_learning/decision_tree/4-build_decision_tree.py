@@ -114,7 +114,9 @@ class Node:
 
             if self.feature in self.left_child.lower:
                 # Update left child's lower bound for the feature
-                self.left_child.lower[self.feature] = max(self.threshold, self.left_child.lower[self.feature])
+                self.left_child.lower[self.feature] = max(
+                        self.threshold, self.left_child.lower[self.feature]
+                        )
             else:
                 self.left_child.lower[self.feature] = self.threshold
 
@@ -128,7 +130,9 @@ class Node:
 
             if self.feature in self.right_child.upper:
                 # Update right child's upper bound for the feature
-                self.right_child.upper[self.feature] = min(self.threshold, self.right_child.upper[self.feature])
+                self.right_child.upper[self.feature] = min(
+                        self.threshold, self.right_child.upper[self.feature]
+                        )
             else:
                 self.right_child.upper[self.feature] = self.threshold
 
@@ -234,4 +238,3 @@ class Decision_Tree():
         Initiates the bounds update process from the root.
         """
         self.root.update_bounds_below()
-
