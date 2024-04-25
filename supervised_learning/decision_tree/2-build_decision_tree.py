@@ -62,9 +62,9 @@ class Node:
         node_type = "root" if self.is_root else "node"
         details = f"{node_type} [feature={self.feature}, threshold={self.threshold}]\n"
         if self.left_child:
-            details += "    +-- " + self.left_child.__str__().replace("\n", "\n    |  ")
+            details += "    +---> " + self.left_child.__str__().replace("\n", "\n    |  ")
         if self.right_child:
-            details += "\n    +-- " + self.right_child.__str__().replace("\n", "\n       ")
+            details += "\n    +---> " + self.right_child.__str__().replace("\n", "\n       ")
         return details
 
 class Leaf(Node):
