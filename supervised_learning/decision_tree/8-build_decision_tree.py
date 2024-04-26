@@ -422,14 +422,6 @@ class Decision_Tree():
         """
         Calculate the midpoints between unique sorted values of a feature,
         which will serve as potential thresholds for splitting the node.
-
-        Args:
-            node (Node): The node for which to find possible thresholds.
-            feature (int): Index of the feature within the explanatory
-            variables.
-
-        Returns:
-            numpy.ndarray: Array of possible threshold values for the feature.
         """
         # Extract unique values for the given feature within the node's
         # subpopulation
@@ -442,14 +434,6 @@ class Decision_Tree():
         Calculate the Gini impurity for all potential splits on a given feature
         in a node, and return the best split threshold and the corresponding
         Gini impurity.
-
-        Args:
-            node (Node): The node to split.
-            feature (int): The index of the feature to split on.
-
-        Returns:
-            tuple: A tuple containing the threshold value for the best split
-            and the minimum Gini impurity achieved by this split.
         """
         # Get all possible thresholds for the given feature
         thresholds = self.possible_thresholds(node, feature)
@@ -497,13 +481,6 @@ class Decision_Tree():
         """
         Find the best feature and threshold to split the node using
         the Gini impurity.
-
-        Args:
-            node (Node): The node to split.
-
-        Returns:
-            tuple: A tuple containing the index of the feature that gives the
-            best split and the threshold value for this feature.
         """
         # Calculate the Gini impurity for every feature
         X = np.array([self.Gini_split_criterion_one_feature(node, i)
