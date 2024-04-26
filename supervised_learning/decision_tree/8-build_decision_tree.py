@@ -425,12 +425,14 @@ class Decision_Tree():
 
         Args:
             node (Node): The node for which to find possible thresholds.
-            feature (int): Index of the feature within the explanatory variables.
+            feature (int): Index of the feature within the explanatory
+            variables.
 
         Returns:
             numpy.ndarray: Array of possible threshold values for the feature.
         """
-        # Extract unique values for the given feature within the node's subpopulation
+        # Extract unique values for the given feature within the node's
+        # subpopulation
         values = np.unique(self.explanatory[node.sub_population, feature])
         # Calculate midpoints between consecutive unique values
         return (values[1:] + values[:-1]) / 2
@@ -476,9 +478,12 @@ class Decision_Tree():
         left_class_mask = classes_mask[:, :, None] & filter_left[:, None]
         right_class_mask = classes_mask[:, :, None] & filter_right[:, None]
 
-        # Compute the Gini impurity for left and right children for each threshold
-        gini_left = 1 - np.sum(np.square(np.sum(left_class_mask, axis=0)), axis=0) / np.sum(filter_left, axis=0)
-        gini_right = 1 - np.sum(np.square(np.sum(right_class_mask, axis=0)), axis=0) / np.sum(filter_right, axis=0)
+        # Compute the Gini impurity for left and right children for
+        # each threshold
+        gini_left = (1 - np.sum(np.square(np.sum(left_class_mask, axis=0)),
+                                axis=0) / np.sum(filter_left, axis=0))
+        gini_right = (1 - np.sum(np.square(np.sum(right_class_mask, axis=0)),
+                                 axis=0) / np.sum(filter_right, axis=0))
 
         # Average Gini impurity weighted by the size of left/right splits
         gini_sum = (gini_left + gini_right) / indices.size
@@ -490,7 +495,8 @@ class Decision_Tree():
 
     def Gini_split_criterion(self, node):
         """
-        Find the best feature and threshold to split the node using the Gini impurity.
+        Find the best feature and threshold to split the node using
+        the Gini impurity.
 
         Args:
             node (Node): The node to split.
@@ -500,7 +506,8 @@ class Decision_Tree():
             best split and the threshold value for this feature.
         """
         # Calculate the Gini impurity for every feature
-        X = np.array([self.Gini_split_criterion_one_feature(node, i) for i in range(self.explanatory.shape[1])])
+        X = np.array([self.Gini_split_criterion_one_feature(node, i)
+                      for i in range(self.explanatory.shape[1])])
 
         # Index of the feature that gives the minimum Gini impurity
         i = np.argmin(X[:, 1])
