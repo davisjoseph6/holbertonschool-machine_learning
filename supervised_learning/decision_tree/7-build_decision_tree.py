@@ -306,12 +306,7 @@ class Decision_Tree():
     def fit(self, explanatory, target, verbose=0):
         """
         Initializes training by setting up the root node and splitting criteria
-        then performs recursive node fitting and updates the prediction model.
-
-        Args:
-            explanatory (np.ndarray): The feature data for training.
-            target (np.ndarray): The target labels for training.
-            verbose (int): Verbosity level for output messages.
+        then performs recursive node fitting and updates and prediction model.
         """
         # Choose split criterion based on configuration
         if self.split_criterion == "random":
@@ -342,25 +337,13 @@ class Decision_Tree():
 
     def np_extrema(self, arr):
         """
-        Returns the minimum and maximum of an array.
-
-        Args:
-            arr (np.ndarray): Array to find extrema of.
-
-        Returns:
-            tuple: Minimum and maximum values.
+        Returns the minimum and maximum of an array
         """
         return np.min(arr), np.max(arr)
 
     def random_split_criterion(self, node):
         """
         Determines a random feature and threshold to split the node.
-
-        Args:
-            node (Node): The node to split.
-
-        Returns:
-            tuple: Selected feature index and threshold value.
         """
         diff = 0
         while diff == 0:
@@ -375,10 +358,7 @@ class Decision_Tree():
     def fit_node(self, node):
         """
         Recursively fits a node, splitting the data and creating child
-        nodes as necessary.
-
-        Args:
-            node (Node): The node to fit.
+        nodes as necessary
         """
         node.feature, node.threshold = self.split_criterion(node)
 
@@ -414,15 +394,7 @@ class Decision_Tree():
     def get_leaf_child(self, node, sub_population):
         """
         Creates a leaf node using the most frequent class in
-        the sub_population.
-
-        Args:
-            node (Node): Parent node.
-            sub_population (np.ndarray): Boolean array indicating
-            the sub_population.
-
-        Returns:
-            Leaf: The newly created leaf node.
+        the sub_population
         """
         value = np.argmax(np.bincount(self.target[sub_population]))
         leaf_child = Leaf(value)
@@ -433,14 +405,6 @@ class Decision_Tree():
     def get_node_child(self, node, sub_population):
         """
         Creates a non-leaf child node.
-
-        Args:
-            node (Node): Parent node.
-            sub_population (np.ndarray): Boolean array indicating
-            the sub_population.
-
-        Returns:
-            Node: The newly created child node.
         """
         n = Node()
         n.depth = node.depth + 1
@@ -449,14 +413,7 @@ class Decision_Tree():
 
     def accuracy(self, test_explanatory, test_target):
         """
-        Calculates the accuracy of the decision tree on test data.
-
-        Args:
-            test_explanatory (np.ndarray): The test data features.
-            test_target (np.ndarray): The test data targets.
-
-        Returns:
-            float: Accuracy of the model on the test data.
+        Calculates the accuracy of the decision tree on test data
         """
         predictions = self.predict(test_explanatory)
         return np.mean(predictions == test_target)
