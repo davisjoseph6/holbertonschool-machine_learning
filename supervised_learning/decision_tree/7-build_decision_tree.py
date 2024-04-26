@@ -305,52 +305,65 @@ class Decision_Tree():
 
     def fit(self, explanatory, target, verbose=0):
         """
-        Initializes some attributes of the tree and then calls a new method
-        Decision_Tree.fit_node on the root.
+        Initializes training by setting up the root node and splitting criteria,
+        then performs recursive node fitting and updates the prediction model.
+
+        Args:
+            explanatory (np.ndarray): The feature data for training.
+            target (np.ndarray): The target labels for training.
+            verbose (int): Verbosity level for output messages.
         """
+        # Choose split criterion based on configuration
         if self.split_criterion == "random":
             self.split_criterion = self.random_split_criterion
         else:
             self.split_criterion = self.Gini_split_criterion
+
+        # Assign data to tree attributes
         self.explanatory = explanatory
         self.target = target
-        self.root.sub_population = np.ones_like(self.target, dtype='bool')
+        self.root.sub_population = np.ones_like(self.target, dtype=bool)  # Start with all samples at the root
 
+        # Start recursive tree building
         self.fit_node(self.root)
 
+        # Prepare the tree for making predictions
         self.update_predict()
 
+        # Output training summary if verbose
         if verbose == 1:
-            print(f"""  Training finished.
-    - Depth                     : { self.depth()       }
-    - Number of nodes           : { self.count_nodes() }
-    - Number of leaves          : { self.count_nodes(only_leaves=True) }
-    - Accuracy on training data : { self.accuracy(self.explanatory,
-                                              self.target)}""")
+            print(f"""Training finished.
+    - Depth                     : {self.depth()}
+    - Number of nodes           : {self.count_nodes()}
+    - Number of leaves          : {self.count_nodes(only_leaves=True)}
+    - Accuracy on training data : {self.accuracy(self.explanatory, self.target)}""")
 
     def np_extrema(self, arr):
         """
-        Compute the minimum and maximum values of an array using NumPy.
-        Returns the values as a tuple.
+        Returns the minimum and maximum of an array.
+
+        Args:
+            arr (np.ndarray): Array to find extrema of.
+
+        Returns:
+            tuple: Minimum and maximum values.
         """
         return np.min(arr), np.max(arr)
 
     def random_split_criterion(self, node):
         """
-        Randomly selects a feature and threshold to split the node's
-        subpopulation.
+        Determines a random feature and threshold to split the node.
 
         Args:
             node (Node): The node to split.
 
         Returns:
-            tuple: A tuple containing the selected feature and threshold.
+            tuple: Selected feature index and threshold value.
         """
         diff = 0
         while diff == 0:
             feature = self.rng.integers(0, self.explanatory.shape[1])
-            feature_min, feature_max = self.np_extrema(
-                self.explanatory[:, feature][node.sub_population])
+            feature_min, feature_max = self.np_extrema(self.explanatory[:, feature][node.sub_population])
             diff = feature_max - feature_min
         x = self.rng.uniform()
         threshold = (1 - x) * feature_min + x * feature_max
@@ -358,42 +371,33 @@ class Decision_Tree():
 
     def fit_node(self, node):
         """
-        Fits a decision tree node by recursively splitting the data based on
-        the best split criterion.
+        Recursively fits a node, splitting the data and creating child nodes as necessary.
+
+        Args:
+            node (Node): The node to fit.
         """
         node.feature, node.threshold = self.split_criterion(node)
 
-        max_criterion = np.greater(
-            self.explanatory[:, node.feature],
-            node.threshold)
+        # Boolean masks for left and right sub-populations
+        left_population = node.sub_population & (self.explanatory[:, node.feature] > node.threshold)
+        right_population = node.sub_population & ~left_population
 
-        left_population = np.logical_and(
-            node.sub_population,
-            max_criterion)
+        # Check conditions for left child to be a leaf
+        is_left_leaf = node.depth == self.max_depth - 1 or np.sum(left_population) <= self.min_pop or \
+                       np.unique(self.target[left_population]).size == 1
 
-        # "War does not determine who is right - only who is left."
-        right_population = np.logical_and(
-            node.sub_population,
-            np.logical_not(max_criterion))
-
-        # Is left node a leaf ?
-        is_left_leaf = np.any(np.array(
-            [node.depth == self.max_depth - 1,
-             np.sum(left_population) <= self.min_pop,
-             np.unique(self.target[left_population]).size == 1]))
-
+        # Create left child node or leaf
         if is_left_leaf:
             node.left_child = self.get_leaf_child(node, left_population)
         else:
             node.left_child = self.get_node_child(node, left_population)
             self.fit_node(node.left_child)
 
-        # Is right node a leaf ?
-        is_right_leaf = np.any(np.array(
-            [node.depth == self.max_depth - 1,
-             np.sum(right_population) <= self.min_pop,
-             np.unique(self.target[right_population]).size == 1]))
+        # Check conditions for right child to be a leaf
+        is_right_leaf = node.depth == self.max_depth - 1 or np.sum(right_population) <= self.min_pop or \
+                        np.unique(self.target[right_population]).size == 1
 
+        # Create right child node or leaf
         if is_right_leaf:
             node.right_child = self.get_leaf_child(node, right_population)
         else:
@@ -402,24 +406,28 @@ class Decision_Tree():
 
     def get_leaf_child(self, node, sub_population):
         """
-        Create a leaf child node with the most frequent target value in the
-        given subpopulation and returns the new object.
+        Creates a leaf node using the most frequent class in the sub_population.
+
+        Args:
+            node (Node): Parent node.
+            sub_population (np.ndarray): Boolean array indicating the sub_population.
+
+        Returns:
+            Leaf: The newly created leaf node.
         """
         value = np.argmax(np.bincount(self.target[sub_population]))
         leaf_child = Leaf(value)
         leaf_child.depth = node.depth + 1
-        # NOTE this should be leaf_child.subpopulation_leaf
-        leaf_child.subpopulation = sub_population
+        leaf_child.sub_population = sub_population
         return leaf_child
 
     def get_node_child(self, node, sub_population):
         """
-        Create a new child node for the given parent node.
+        Creates a non-leaf child node.
 
         Args:
-            node (Node): The parent node.
-            sub_population (list): The sub-population associated with
-                the child node.
+            node (Node): Parent node.
+            sub_population (np.ndarray): Boolean array indicating the sub_population.
 
         Returns:
             Node: The newly created child node.
@@ -431,17 +439,15 @@ class Decision_Tree():
 
     def accuracy(self, test_explanatory, test_target):
         """
-        Calculates the accuracy of the decision tree model on the given
-        test data.
+        Calculates the accuracy of the decision tree on test data.
 
         Args:
-        test_explanatory (numpy.ndarray): The explanatory variables of
-            the test data.
-        test_target (numpy.ndarray): The target variable of the test data.
+            test_explanatory (np.ndarray): The test data features.
+            test_target (np.ndarray): The test data targets.
 
         Returns:
-        float: The accuracy of the decision tree model on the test data.
+            float: Accuracy of the model on the test data.
         """
-        return np.sum(np.equal(
-            self.predict(test_explanatory), test_target)) / test_target.size
+        predictions = self.predict(test_explanatory)
+        return np.mean(predictions == test_target)
 
