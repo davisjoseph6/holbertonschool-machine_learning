@@ -305,7 +305,7 @@ class Decision_Tree():
 
     def fit(self, explanatory, target, verbose=0):
         """
-        Initializes training by setting up the root node and splitting criteria,
+        Initializes training by setting up the root node and splitting criteria
         then performs recursive node fitting and updates the prediction model.
 
         Args:
@@ -322,7 +322,8 @@ class Decision_Tree():
         # Assign data to tree attributes
         self.explanatory = explanatory
         self.target = target
-        self.root.sub_population = np.ones_like(self.target, dtype=bool)  # Start with all samples at the root
+        # Start with all samples at the root
+        self.root.sub_population = np.ones_like(self.target, dtype=bool)
 
         # Start recursive tree building
         self.fit_node(self.root)
@@ -372,7 +373,8 @@ class Decision_Tree():
 
     def fit_node(self, node):
         """
-        Recursively fits a node, splitting the data and creating child nodes as necessary.
+        Recursively fits a node, splitting the data and creating child
+        nodes as necessary.
 
         Args:
             node (Node): The node to fit.
@@ -385,7 +387,7 @@ class Decision_Tree():
 
         # Check conditions for left child to be a leaf
         is_left_leaf = node.depth == self.max_depth - 1 or np.sum(left_population) <= self.min_pop or \
-                       np.unique(self.target[left_population]).size == 1
+            np.unique(self.target[left_population]).size == 1
 
         # Create left child node or leaf
         if is_left_leaf:
@@ -396,7 +398,7 @@ class Decision_Tree():
 
         # Check conditions for right child to be a leaf
         is_right_leaf = node.depth == self.max_depth - 1 or np.sum(right_population) <= self.min_pop or \
-                        np.unique(self.target[right_population]).size == 1
+            np.unique(self.target[right_population]).size == 1
 
         # Create right child node or leaf
         if is_right_leaf:
@@ -407,11 +409,13 @@ class Decision_Tree():
 
     def get_leaf_child(self, node, sub_population):
         """
-        Creates a leaf node using the most frequent class in the sub_population.
+        Creates a leaf node using the most frequent class in
+        the sub_population.
 
         Args:
             node (Node): Parent node.
-            sub_population (np.ndarray): Boolean array indicating the sub_population.
+            sub_population (np.ndarray): Boolean array indicating
+            the sub_population.
 
         Returns:
             Leaf: The newly created leaf node.
@@ -428,7 +432,8 @@ class Decision_Tree():
 
         Args:
             node (Node): Parent node.
-            sub_population (np.ndarray): Boolean array indicating the sub_population.
+            sub_population (np.ndarray): Boolean array indicating
+            the sub_population.
 
         Returns:
             Node: The newly created child node.
@@ -451,4 +456,3 @@ class Decision_Tree():
         """
         predictions = self.predict(test_explanatory)
         return np.mean(predictions == test_target)
-
