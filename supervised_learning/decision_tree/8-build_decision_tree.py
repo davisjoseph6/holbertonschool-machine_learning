@@ -420,80 +420,90 @@ class Decision_Tree():
 
     def possible_thresholds(self, node, feature):
         """
-        Calculate the possible thresholds for a given node and feature.
-        Return a numpy.ndarray of possible thresholds.
+        Calculate the midpoints between unique sorted values of a feature,
+        which will serve as potential thresholds for splitting the node.
+
+        Args:
+            node (Node): The node for which to find possible thresholds.
+            feature (int): Index of the feature within the explanatory variables.
+
+        Returns:
+            numpy.ndarray: Array of possible threshold values for the feature.
         """
-        values = np.unique((self.explanatory[:, feature])[node.sub_population])
-        return (values[1:]+values[:-1])/2
+        # Extract unique values for the given feature within the node's subpopulation
+        values = np.unique(self.explanatory[node.sub_population, feature])
+        # Calculate midpoints between consecutive unique values
+        return (values[1:] + values[:-1]) / 2
 
     def Gini_split_criterion_one_feature(self, node, feature):
         """
-        Compute the Gini split criterion for a given feature in a node.
+        Calculate the Gini impurity for all potential splits on a given feature
+        in a node, and return the best split threshold and the corresponding
+        Gini impurity.
 
         Args:
-            node (Node): The node for which to compute the Gini split
-                criterion.
-            feature (int): The index of the feature to consider.
+            node (Node): The node to split.
+            feature (int): The index of the feature to split on.
 
         Returns:
-            numpy.ndarray: An array containing the threshold with the smallest
-            total impurity and the corresponding Gini sum.
+            tuple: A tuple containing the threshold value for the best split
+            and the minimum Gini impurity achieved by this split.
         """
+        # Get all possible thresholds for the given feature
         thresholds = self.possible_thresholds(node, feature)
 
-        # Getting array of indexes for individuals in node's sub_population
-        indices = np.arange(0, self.explanatory.shape[0])[node.sub_population]
-        # Number of indexes, used to divide the expression later
-        div = indices.size
+        # Indices of the samples in the node's subpopulation
+        indices = np.arange(self.explanatory.shape[0])[node.sub_population]
 
-        # Getting feature values for individuals in node's sub_population
-        feature_values = (self.explanatory[:, feature])[node.sub_population]
+        # Feature values of the node's subpopulation for the given feature
+        feature_values = self.explanatory[indices, feature]
 
-        # Filter arrays for left/right child nodes
-        filter_left = np.greater(feature_values[:, None], thresholds[None, :])
-        filter_right = np.logical_not(filter_left)
+        # Boolean masks for whether each sample value exceeds the thresholds
+        filter_left = feature_values[:, None] > thresholds
+        filter_right = ~filter_left  # Invert filter_left to get filter_right
 
-        # Only taking individuals in node's sub_population
+        # Target (class labels) for the samples in the node's subpopulation
         target_reduced = self.target[indices]
 
-        # Only unique classes in node's sub_population
-        classes = np.unique(self.target)
+        # Get unique class labels in the node's subpopulation
+        classes = np.unique(target_reduced)
 
-        # Computing class masks for left/right children
-        classes_mask = np.equal(target_reduced[:, None], classes)
+        # Create masks for class membership for each sample
+        classes_mask = target_reduced[:, None] == classes
 
-        left_class_mask = np.logical_and(classes_mask[:, :, None],
-                                         filter_left[:, None, :])
+        # Combine class membership with the left/right filters to determine
+        # which samples would go to each child node after the split
+        left_class_mask = classes_mask[:, :, None] & filter_left[:, None]
+        right_class_mask = classes_mask[:, :, None] & filter_right[:, None]
 
-        right_class_mask = np.logical_and(classes_mask[:, :, None],
-                                          filter_right[:, None, :])
+        # Compute the Gini impurity for left and right children for each threshold
+        gini_left = 1 - np.sum(np.square(np.sum(left_class_mask, axis=0)), axis=0) / np.sum(filter_left, axis=0)
+        gini_right = 1 - np.sum(np.square(np.sum(right_class_mask, axis=0)), axis=0) / np.sum(filter_right, axis=0)
 
-        # Gini impurities for left and right children
-        gini_left = 1 - np.sum(np.square(np.sum(left_class_mask, axis=0)),
-                               axis=0) / (np.sum(filter_left, axis=0)) / div
+        # Average Gini impurity weighted by the size of left/right splits
+        gini_sum = (gini_left + gini_right) / indices.size
 
-        gini_right = 1 - np.sum(np.square(np.sum(right_class_mask, axis=0)),
-                                axis=0) / (np.sum(filter_right, axis=0)) / div
+        # Index of the threshold that minimizes the total Gini impurity
+        min_gini_index = np.argmin(gini_sum)
 
-        # Sum average of gini impurities
-        gini_sum = gini_left + gini_right
-
-        # Finding index of threshold with smalledt total impurity
-        gini_min = np.argmin(gini_left + gini_right)
-
-        return np.array([thresholds[gini_min], gini_sum[gini_min]])
+        return thresholds[min_gini_index], gini_sum[min_gini_index]
 
     def Gini_split_criterion(self, node):
         """
-        Calculates the Gini split criterion for a given node.
+        Find the best feature and threshold to split the node using the Gini impurity.
+
+        Args:
+            node (Node): The node to split.
 
         Returns:
-        - i: The index of the feature that provides the best split.
-        - gini: The Gini index for the best split.
+            tuple: A tuple containing the index of the feature that gives the
+            best split and the threshold value for this feature.
         """
-        X = np.array(
-            [self.Gini_split_criterion_one_feature(node, i)
-             for i in range(self.explanatory.shape[1])])
+        # Calculate the Gini impurity for every feature
+        X = np.array([self.Gini_split_criterion_one_feature(node, i) for i in range(self.explanatory.shape[1])])
+
+        # Index of the feature that gives the minimum Gini impurity
         i = np.argmin(X[:, 1])
 
+        # Return the index of the best feature and the best threshold
         return i, X[i, 0]
