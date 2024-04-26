@@ -383,12 +383,14 @@ class Decision_Tree():
         node.feature, node.threshold = self.split_criterion(node)
 
         # Boolean masks for left and right sub-populations
-        left_population = node.sub_population & (self.explanatory[:, node.feature] > node.threshold)
+        feature = self.explanatory[:, node.feature]
+        left_population = node.sub_population & (feature > node.threshold)
         right_population = node.sub_population & ~left_population
 
         # Check conditions for left child to be a leaf
-        is_left_leaf = node.depth == self.max_depth - 1 or np.sum(left_population) <= self.min_pop or \
-            np.unique(self.target[left_population]).size == 1
+        is_left_leaf = (node.depth == self.max_depth - 1 or
+                        np.sum(left_population) <= self.min_pop or
+                        np.unique(self.target[left_population]).size == 1)
 
         # Create left child node or leaf
         if is_left_leaf:
@@ -398,8 +400,9 @@ class Decision_Tree():
             self.fit_node(node.left_child)
 
         # Check conditions for right child to be a leaf
-        is_right_leaf = node.depth == self.max_depth - 1 or np.sum(right_population) <= self.min_pop or \
-            np.unique(self.target[right_population]).size == 1
+        is_right_leaf = (node.depth == self.max_depth - 1 or
+                         np.sum(right_population) <= self.min_pop or
+                         np.unique(self.target[right_population]).size == 1)
 
         # Create right child node or leaf
         if is_right_leaf:
