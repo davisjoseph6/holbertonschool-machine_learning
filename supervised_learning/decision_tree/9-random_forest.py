@@ -14,6 +14,10 @@ class Random_Forest():
     Random forest class, using Decision Trees.
     """
     def __init__(self, n_trees=100, max_depth=10, min_pop=1, seed=0):
+        """
+        Initialize Random Forest with configuration and storage for trees and
+        training data.
+        """
         self.n_trees = n_trees
         self.max_depth = max_depth
         self.min_pop = min_pop
