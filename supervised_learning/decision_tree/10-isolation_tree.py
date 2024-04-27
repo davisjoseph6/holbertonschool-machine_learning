@@ -1,19 +1,23 @@
 #!/usr/bin/env python3
 
 """
-This is the 10-isolation_tree module, utilizing a custom tree structure for outlier detection.
+This is the 10-isolation_tree module, utilizing a custom tree
+structure for outlier detection.
 """
 
 import numpy as np
 Node = __import__('8-build_decision_tree').Node
 Leaf = __import__('8-build_decision_tree').Leaf
 
+
 class Isolation_Random_Tree():
     """
-    A class representing an Isolation tree, specifically designed for outlier detection.
+    A class representing an Isolation tree, specifically designed for
+    outlier detection.
     """
     def __init__(self, max_depth=10, seed=0, root=None):
-        self.rng = np.random.default_rng(seed)  # Random number generator for reproducibility
+        # Random number generator for reproducibility
+        self.rng = np.random.default_rng(seed)
         if root:
             self.root = root
         else:
@@ -86,7 +90,8 @@ class Isolation_Random_Tree():
 
     def get_leaf_child(self, node, sub_population):
         """
-        Creates a leaf child node with specified sub_population and increased depth.
+        Creates a leaf child node with specified sub_population and
+        increased depth.
         """
         leaf_child = Leaf(node.depth + 1)
         leaf_child.subpopulation = sub_population
@@ -103,7 +108,8 @@ class Isolation_Random_Tree():
 
     def fit_node(self, node):
         """
-        Recursively fits nodes of the tree by determining whether to create a leaf or continue splitting.
+        Recursively fits nodes of the tree by determining whether to create
+        a leaf or continue splitting.
         """
         node.feature, node.threshold = self.random_split_criterion(node)
 
@@ -135,6 +141,10 @@ class Isolation_Random_Tree():
         self.update_predict()
 
         if verbose == 1:
-            print(f"Training finished.\n - Depth: {self.depth()}\n - Number of nodes: {self.count_nodes()}\n - Number of leaves: {self.count_nodes(only_leaves=True)}")
+            print(f"Training finished.\n"
+                  f" - Depth: {self.depth()}\n"
+                  f" - Number of nodes: {self.count_nodes()}\n"
+                  f" - Number of leaves: {self.count_nodes(only_leaves=True)}")
 
-# Main functionality and testing should be defined outside this module in a separate script.
+# Main functionality and testing should be defined outside this module in
+# a separate script.
