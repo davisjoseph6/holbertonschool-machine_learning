@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-A function that adds two matrices
+A function that adds two matrices.
 """
 
 
