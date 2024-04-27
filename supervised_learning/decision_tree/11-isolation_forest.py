@@ -31,6 +31,14 @@ class Isolation_Random_Forest():
     def fit(self, explanatory, n_trees=100, verbose=0):
         """
         Fit the Isolation Forest model to the given explanatory variables.
+
+        Args:
+            explanatory (numpy.ndarray): The explanatory variables.
+            n_trees (int): The number of trees in the forest (default=100).
+            verbose (int): Verbosity mode. 0 = silent, 1 = verbose (default=0).
+
+        Returns:
+            None
         """
         self.explanatory = explanatory
         self.numpy_preds = []
@@ -38,16 +46,18 @@ class Isolation_Random_Forest():
         nodes = []
         leaves = []
         for i in range(n_trees):
-            T = Isolation_Random_Tree(max_depth=self.max_depth, seed=self.seed + i)
+            T = Isolation_Random_Tree(
+                max_depth=self.max_depth, seed=self.seed+i)
             T.fit(explanatory)
             self.numpy_preds.append(T.predict)
-            depths.append(T.root.max_depth_below())  # Collect max depth from each tree
-
+            depths.append(T.depth())
+            nodes.append(T.count_nodes())
+            leaves.append(T.count_nodes(only_leaves=True))
         if verbose == 1:
             print(f"""  Training finished.
-        - Mean depth                     : {np.mean(depths)}
-        - Mean number of nodes           : {np.mean(nodes)}
-        - Mean number of leaves          : {np.mean(leaves)}""")
+    - Mean depth                     : { np.array(depths).mean()      }
+    - Mean number of nodes           : { np.array(nodes).mean()       }
+    - Mean number of leaves          : { np.array(leaves).mean()      }""")
 
     def suspects(self, explanatory, n_suspects):
         """
@@ -63,13 +73,3 @@ class Isolation_Random_Forest():
         # explanatory (the dataset) and their depths (the predictions)
         return explanatory[sorted_indices[:n_suspects]], \
             depths[sorted_indices[:n_suspects]]
-
-    def depth(self):
-        def calculate_depth(node):
-            if not node:
-                return 0
-            left_depth = calculate_depth(node.left_child)
-            right_depth = calculate_depth(node.right_child)
-            return 1 + max(left_depth, right_depth)
-        
-        return calculate_depth(self.root)
