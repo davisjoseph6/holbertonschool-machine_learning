@@ -7,7 +7,7 @@ Decision Tree & Random Forest
 Concepts
 For this project, we expect you to look at these concepts:
 
-What is a decision tree?
+What is a decision tree??
 Decision_Tree.pred vs Decision_Tree.predict
 
 

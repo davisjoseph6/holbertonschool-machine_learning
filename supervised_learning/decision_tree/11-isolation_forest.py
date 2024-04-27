@@ -31,14 +31,6 @@ class Isolation_Random_Forest():
     def fit(self, explanatory, n_trees=100, verbose=0):
         """
         Fit the Isolation Forest model to the given explanatory variables.
-
-        Args:
-            explanatory (numpy.ndarray): The explanatory variables.
-            n_trees (int): The number of trees in the forest (default=100).
-            verbose (int): Verbosity mode. 0 = silent, 1 = verbose (default=0).
-
-        Returns:
-            None
         """
         self.explanatory = explanatory
         self.numpy_preds = []
@@ -46,26 +38,16 @@ class Isolation_Random_Forest():
         nodes = []
         leaves = []
         for i in range(n_trees):
-            T = Isolation_Random_Tree(max_depth=self.max_depth, seed=self.seed+i)
+            T = Isolation_Random_Tree(max_depth=self.max_depth, seed=self.seed + i)
             T.fit(explanatory)
             self.numpy_preds.append(T.predict)
+            depths.append(T.root.max_depth_below())  # Collect max depth from each tree
 
-            # Safely get depth, node count, and leaf count
-            try:
-                tree_depth = T.depth()
-            except TypeError:
-                tree_depth = 0  # Assign a default or error value as appropriate
-
-            depths.append(tree_depth)
-            nodes.append(T.count_nodes())
-            leaves.append(T.count_nodes(only_leaves=True))
-    
         if verbose == 1:
             print(f"""  Training finished.
-    - Mean depth                     : {np.mean(depths) if depths else 'N/A'}
-    - Mean number of nodes           : {np.mean(nodes) if nodes else 'N/A'}
-    - Mean number of leaves          : {np.mean(leaves) if leaves else 'N/A'}""")
-
+        - Mean depth                     : {np.mean(depths)}
+        - Mean number of nodes           : {np.mean(nodes)}
+        - Mean number of leaves          : {np.mean(leaves)}""")
 
     def suspects(self, explanatory, n_suspects):
         """

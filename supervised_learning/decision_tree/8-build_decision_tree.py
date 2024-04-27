@@ -35,17 +35,10 @@ class Node:
         Returns the maximum depth of the tree beneath this node.
         """
         max_depth = self.depth
-
-        # If the node has a left child, calculate the maximum depth below
-        # the left child
         if self.left_child is not None:
             max_depth = max(max_depth, self.left_child.max_depth_below())
-
-        # If the node has a right child, calculate the maximum depth below
-        # the right child
         if self.right_child is not None:
             max_depth = max(max_depth, self.right_child.max_depth_below())
-
         return max_depth
 
     def count_nodes_below(self, only_leaves=False):
