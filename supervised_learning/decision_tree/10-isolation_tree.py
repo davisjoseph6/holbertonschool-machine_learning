@@ -82,7 +82,8 @@ class Isolation_Random_Tree():
         diff = 0
         while diff == 0:
             feature = self.rng.integers(0, self.explanatory.shape[1])
-            feature_min, feature_max = self.np_extrema(self.explanatory[:, feature][node.sub_population])
+            feature_min, feature_max = self.np_extrema(
+                    self.explanatory[:, feature][node.sub_population])
             diff = feature_max - feature_min
         x = self.rng.uniform()
         threshold = (1 - x) * feature_min + x * feature_max
@@ -113,18 +114,26 @@ class Isolation_Random_Tree():
         """
         node.feature, node.threshold = self.random_split_criterion(node)
 
-        max_criterion = np.greater(self.explanatory[:, node.feature], node.threshold)
-        left_population = np.logical_and(node.sub_population, max_criterion)
-        right_population = np.logical_and(node.sub_population, np.logical_not(max_criterion))
+        max_criterion = np.greater(
+                self.explanatory[:, node.feature], node.threshold)
 
-        is_left_leaf = node.depth == self.max_depth - 1 or np.sum(left_population) <= self.min_pop
+        left_population = np.logical_and(node.sub_population, max_criterion)
+
+        right_population = np.logical_and(
+                node.sub_population, np.logical_not(max_criterion))
+
+        is_left_leaf = (node.depth == self.max_depth - 1 or
+                        np.sum(left_population) <= self.min_pop)
+        
         if is_left_leaf:
             node.left_child = self.get_leaf_child(node, left_population)
         else:
             node.left_child = self.get_node_child(node, left_population)
             self.fit_node(node.left_child)
 
-        is_right_leaf = node.depth == self.max_depth - 1 or np.sum(right_population) <= self.min_pop
+        is_right_leaf = (node.depth == self.max_depth - 1 or
+                         np.sum(right_population) <= self.min_pop)
+
         if is_right_leaf:
             node.right_child = self.get_leaf_child(node, right_population)
         else:
