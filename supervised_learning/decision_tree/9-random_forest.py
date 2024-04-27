@@ -60,8 +60,10 @@ class Random_Forest():
         if verbose == 1:
             depths = [tree.depth() for tree in self.trees]
             nodes = [tree.count_nodes() for tree in self.trees]
-            leaves = [tree.count_nodes(only_leaves=True) for tree in self.trees]
-            accuracies = [tree.accuracy(explanatory, target) for tree in self.trees]
+            leaves = [tree.count_nodes(only_leaves=True)
+                      for tree in self.trees]
+            accuracies = [tree.accuracy(explanatory, target)
+                          for tree in self.trees]
             print(f"""  Training finished.
     - Mean depth                     : {np.mean(depths)}
     - Mean number of nodes           : {np.mean(nodes)}
@@ -79,4 +81,3 @@ class Random_Forest():
         """
         predictions = self.predict(test_explanatory)
         return np.sum(predictions == test_target) / len(test_target)
-
