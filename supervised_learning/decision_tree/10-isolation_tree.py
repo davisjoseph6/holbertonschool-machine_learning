@@ -124,7 +124,7 @@ class Isolation_Random_Tree():
 
         is_left_leaf = (node.depth == self.max_depth - 1 or
                         np.sum(left_population) <= self.min_pop)
-        
+
         if is_left_leaf:
             node.left_child = self.get_leaf_child(node, left_population)
         else:
