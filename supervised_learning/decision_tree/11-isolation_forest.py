@@ -46,18 +46,26 @@ class Isolation_Random_Forest():
         nodes = []
         leaves = []
         for i in range(n_trees):
-            T = Isolation_Random_Tree(
-                max_depth=self.max_depth, seed=self.seed+i)
+            T = Isolation_Random_Tree(max_depth=self.max_depth, seed=self.seed+i)
             T.fit(explanatory)
             self.numpy_preds.append(T.predict)
-            depths.append(T.depth())
+
+            # Safely get depth, node count, and leaf count
+            try:
+                tree_depth = T.depth()
+            except TypeError:
+                tree_depth = 0  # Assign a default or error value as appropriate
+
+            depths.append(tree_depth)
             nodes.append(T.count_nodes())
             leaves.append(T.count_nodes(only_leaves=True))
+    
         if verbose == 1:
             print(f"""  Training finished.
-    - Mean depth                     : { np.array(depths).mean()      }
-    - Mean number of nodes           : { np.array(nodes).mean()       }
-    - Mean number of leaves          : { np.array(leaves).mean()      }""")
+    - Mean depth                     : {np.mean(depths) if depths else 'N/A'}
+    - Mean number of nodes           : {np.mean(nodes) if nodes else 'N/A'}
+    - Mean number of leaves          : {np.mean(leaves) if leaves else 'N/A'}""")
+
 
     def suspects(self, explanatory, n_suspects):
         """
@@ -73,3 +81,14 @@ class Isolation_Random_Forest():
         # explanatory (the dataset) and their depths (the predictions)
         return explanatory[sorted_indices[:n_suspects]], \
             depths[sorted_indices[:n_suspects]]
+
+    def depth(self):
+        def calculate_depth(node):
+            if not node:
+                return 0
+            left_depth = calculate_depth(node.left_child)
+            right_depth = calculate_depth(node.right_child)
+            return 1 + max(left_depth, right_depth)
+        
+        return calculate_depth(self.root)
+
