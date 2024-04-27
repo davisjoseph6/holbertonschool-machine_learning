@@ -72,6 +72,9 @@ class Random_Forest():
     - Accuracy of the forest on td   : {self.accuracy(explanatory, target)}""")
 
     def _train_tree(self, tree, explanatory, target):
+        """
+        Fit the tree to the provided data and return it
+        """
         tree.fit(explanatory, target)
         return tree
 
