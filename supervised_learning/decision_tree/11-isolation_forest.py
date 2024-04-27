@@ -8,19 +8,6 @@ import numpy as np
 Isolation_Random_Tree = __import__('10-isolation_tree').Isolation_Random_Tree
 
 
-class Node:
-    def __init__(self, is_root=False, depth=0):
-        self.is_root = is_root
-        self.depth = depth
-        self.left_child = None
-        self.right_child = None
-
-    def max_depth_below(self):
-        left_depth = self.left_child.max_depth_below() if self.left_child else 0
-        right_depth = self.right_child.max_depth_below() if self.right_child else 0
-        return 1 + max(left_depth, right_depth)  # +1 to include the current node
-
-
 class Isolation_Random_Forest():
     """
     Random forest class, using Isolation Trees.
@@ -96,6 +83,11 @@ class Isolation_Random_Forest():
             depths[sorted_indices[:n_suspects]]
 
     def depth(self):
-        if not self.root:
-            return 0
-        return self.root.max_depth_below()
+        def calculate_depth(node):
+            if not node:
+                return 0
+            left_depth = calculate_depth(node.left_child)
+            right_depth = calculate_depth(node.right_child)
+            return 1 + max(left_depth, right_depth)
+        
+        return calculate_depth(self.root)
