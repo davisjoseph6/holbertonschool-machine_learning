@@ -142,7 +142,7 @@ class Isolation_Random_Tree():
 
     def fit(self, explanatory, verbose=0):
         """
-        Fits the isolation tree to the dataset.
+        Fits the isolation tree to the dataset
         """
         self.explanatory = explanatory
         self.root.sub_population = np.ones(explanatory.shape[0], dtype=bool)
@@ -154,6 +154,3 @@ class Isolation_Random_Tree():
                   f" - Depth: {self.depth()}\n"
                   f" - Number of nodes: {self.count_nodes()}\n"
                   f" - Number of leaves: {self.count_nodes(only_leaves=True)}")
-
-# Main functionality and testing should be defined outside this module in
-# a separate script.
