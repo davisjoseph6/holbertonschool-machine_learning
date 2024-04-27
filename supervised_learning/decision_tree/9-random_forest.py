@@ -7,6 +7,7 @@ This is the 9-random_forest module, relying on module
 import numpy as np
 Decision_Tree = __import__('8-build_decision_tree').Decision_Tree
 
+
 class Random_Forest():
     """
     Random forest class, using Decision Trees.
@@ -32,7 +33,8 @@ class Random_Forest():
         if not self.trees:
             raise ValueError("The model has not been trained yet.")
         # Compute predictions for each tree
-        predictions = np.array([tree.predict(explanatory) for tree in self.trees])
+        predictions = np.array([tree.predict(explanatory)
+                                for tree in self.trees])
 
         # Calculate the mode (most frequent) prediction for each example
         mode_predictions = np.apply_along_axis(
@@ -52,13 +54,16 @@ class Random_Forest():
                       for i in range(self.n_trees)]
 
         # Sequential training of decision trees
-        self.trees = [self._train_tree(tree, explanatory, target) for tree in self.trees]
+        self.trees = [self._train_tree(tree, explanatory, target)
+                      for tree in self.trees]
 
         if verbose == 1:
             depths = [tree.depth() for tree in self.trees]
             nodes = [tree.count_nodes() for tree in self.trees]
-            leaves = [tree.count_nodes(only_leaves=True) for tree in self.trees]
-            accuracies = [tree.accuracy(explanatory, target) for tree in self.trees]
+            leaves = [tree.count_nodes(only_leaves=True)
+                      for tree in self.trees]
+            accuracies = [tree.accuracy(explanatory, target)
+                          for tree in self.trees]
             print(f"""  Training finished.
     - Mean depth                     : {np.mean(depths)}
     - Mean number of nodes           : {np.mean(nodes)}
@@ -79,4 +84,3 @@ class Random_Forest():
         """
         predictions = self.predict(test_explanatory)
         return np.sum(predictions == test_target) / len(test_target)
-
