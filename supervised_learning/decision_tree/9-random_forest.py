@@ -44,7 +44,7 @@ class Random_Forest():
 
     def fit(self, explanatory, target, verbose=0):
         """
-        Fits the random forest to the given training data.
+        Fits the random forest to the given training data
         """
         self.explanatory = explanatory  # Store the training features
         self.target = target            # Store the training targets
