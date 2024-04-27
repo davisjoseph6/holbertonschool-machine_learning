@@ -83,4 +83,4 @@ suspects,depths = IRF.suspects(explanatory,n_suspects=3)
 print("suspects :",suspects)
 print("depths of suspects :",depths)
 #Visualization  
-visualize_model_2D(IRF,cmap=plt.cm.PuRd)
+visualize_model_2D(IRF,cmap=plt.cm.BuRd)
