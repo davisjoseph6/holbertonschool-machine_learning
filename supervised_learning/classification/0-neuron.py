@@ -13,7 +13,7 @@ class Neuron:
     """
     def __init__(self, nx):
         """
-        Constructor for the neuron class
+        Constructor for the neuron class.
         """
         if not isinstance(nx, int):
             raise TypeError("nx must be an integer")
