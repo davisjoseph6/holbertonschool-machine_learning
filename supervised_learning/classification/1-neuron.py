@@ -44,6 +44,6 @@ class Neuron:
     @property
     def A(self):
         """
-        Getter for the private attribute __A.
+        Getter for the private attribute __A
         """
         return self.__A
