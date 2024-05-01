@@ -79,7 +79,7 @@ class Neuron:
 
     def gradient_descent(self, X, Y, A, alpha=0.05):
         """
-        Performs one pass of gradient descent on the neuron.
+        Performs one pass of gradient descent on the neuron
         """
         m = Y.shape[1]
         # Calculate the gradients
