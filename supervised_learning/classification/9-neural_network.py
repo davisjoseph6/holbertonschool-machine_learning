@@ -75,4 +75,3 @@ class NeuralNetwork:
         Getter for A2.
         """
         return self.__A2
-
