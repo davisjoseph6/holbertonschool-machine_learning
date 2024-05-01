@@ -15,14 +15,6 @@ class NeuralNetwork:
     def __init__(self, nx, nodes):
         """
         Constructor for NeuralNetwork.
-
-        Parameters:
-        nx (int): Number of input features.
-        nodes (int): Number of nodes in the hidden layer.
-
-        Raises:
-        TypeError: If nx or nodes are not integers.
-        ValueError: If nx or nodes are less than 1.
         """
         if not isinstance(nx, int):
             raise TypeError("nx must be an integer")
