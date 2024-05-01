@@ -1,34 +1,36 @@
 #!/usr/bin/env python3
+
 """
-This is the NeuralNetwork class module for binary classification.
+This module defines the NeuralNetwork class for binary classification with one hidden layer.
 """
 
 import numpy as np
 
+
 class NeuralNetwork:
     """
     Represents a neural network with one hidden layer performing binary classification.
-    
+
     Attributes:
-        W1 (numpy.ndarray): Weights vector for the hidden layer.
-        b1 (numpy.ndarray): Bias for the hidden layer, initialized as zeros.
-        A1 (float): Activated output for the hidden layer, initialized to 0.
-        W2 (numpy.ndarray): Weights vector for the output neuron.
-        b2 (float): Bias for the output neuron, initialized to 0.
-        A2 (float): Activated output for the output neuron (prediction), initialized to 0.
+        W1 (numpy.ndarray): The weights vector for the hidden layer.
+        b1 (numpy.ndarray): The bias for the hidden layer, initialized to zeros.
+        A1 (float): The activated output for the hidden layer, initialized to zero.
+        W2 (numpy.ndarray): The weights vector for the output neuron.
+        b2 (float): The bias for the output neuron, initialized to zero.
+        A2 (float): The activated output for the output neuron (prediction), initialized to zero.
     """
 
     def __init__(self, nx, nodes):
         """
-        Initializes a NeuralNetwork with one hidden layer performing binary classification.
+        Initializes a NeuralNetwork instance.
 
         Args:
-            nx (int): Number of input features.
-            nodes (int): Number of nodes in the hidden layer.
+            nx (int): The number of input features.
+            nodes (int): The number of nodes in the hidden layer.
 
         Raises:
-            TypeError: If nx or nodes are not integers.
-            ValueError: If nx or nodes are less than 1.
+            TypeError: If nx or nodes is not an integer.
+            ValueError: If nx or nodes is less than 1.
         """
         if not isinstance(nx, int):
             raise TypeError("nx must be an integer")
@@ -40,11 +42,11 @@ class NeuralNetwork:
         if nodes < 1:
             raise ValueError("nodes must be a positive integer")
 
-        # Initialize weights, biases, and activations for both layers
-        self.W1 = np.random.randn(nodes, nx) * 0.01  # Small random weights
-        self.b1 = np.zeros((nodes, 1))  # Bias vector of zeros
-        self.A1 = 0  # Activation initialized to 0
+        # Initialize weights and biases for the hidden layer and output neuron
+        self.W1 = np.random.randn(nodes, nx)  # Weights for hidden layer
+        self.b1 = np.zeros((nodes, 1))        # Biases for hidden layer
+        self.A1 = 0                           # Activation for hidden layer
 
-        self.W2 = np.random.randn(1, nodes) * 0.01  # Small random weights for output layer
-        self.b2 = 0  # Bias initialized to 0
-        self.A2 = 0  # Output activation initialized to 0
+        self.W2 = np.random.randn(1, nodes)   # Weights for output neuron
+        self.b2 = 0                           # Bias for output neuron
+        self.A2 = 0                           # Activation for output neuron
