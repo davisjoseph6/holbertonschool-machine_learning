@@ -1,32 +1,34 @@
 #!/usr/bin/env python3
+"""
+This is the NeuralNetwork class module for binary classification.
+"""
 
-"""
-This is the NeuralNetwork class module.
-"""
 import numpy as np
-
 
 class NeuralNetwork:
     """
-    Represents a neural network with one hidden layer performing binary
-    classification.
-
+    Represents a neural network with one hidden layer performing binary classification.
+    
     Attributes:
-        W1 (numpy.ndarray): The weights vector for the hidden layer.
-        b1 (numpy.ndarray): The bias for the hidden layer.
-        A1 (float): The activated output for the hidden layer.
-        W2 (numpy.ndarray): The weights vector for the output neuron.
-        b2 (float): The bias for the output neuron.
-        A2 (float): The activated output for the output neuron (prediction).
+        W1 (numpy.ndarray): Weights vector for the hidden layer.
+        b1 (numpy.ndarray): Bias for the hidden layer, initialized as zeros.
+        A1 (float): Activated output for the hidden layer, initialized to 0.
+        W2 (numpy.ndarray): Weights vector for the output neuron.
+        b2 (float): Bias for the output neuron, initialized to 0.
+        A2 (float): Activated output for the output neuron (prediction), initialized to 0.
     """
+
     def __init__(self, nx, nodes):
         """
-        Initializes a neural network with one hidden layer performing
-        binary classification.
+        Initializes a NeuralNetwork with one hidden layer performing binary classification.
 
         Args:
             nx (int): Number of input features.
             nodes (int): Number of nodes in the hidden layer.
+
+        Raises:
+            TypeError: If nx or nodes are not integers.
+            ValueError: If nx or nodes are less than 1.
         """
         if not isinstance(nx, int):
             raise TypeError("nx must be an integer")
@@ -38,10 +40,11 @@ class NeuralNetwork:
         if nodes < 1:
             raise ValueError("nodes must be a positive integer")
 
-        self.W1 = np.random.randn(nodes, nx)
-        self.b1 = np.zeros((nodes, 1))
-        self.A1 = 0
+        # Initialize weights, biases, and activations for both layers
+        self.W1 = np.random.randn(nodes, nx) * 0.01  # Small random weights
+        self.b1 = np.zeros((nodes, 1))  # Bias vector of zeros
+        self.A1 = 0  # Activation initialized to 0
 
-        self.W2 = np.random.randn(1, nodes)
-        self.b2 = 0
-        self.A2 = 0
+        self.W2 = np.random.randn(1, nodes) * 0.01  # Small random weights for output layer
+        self.b2 = 0  # Bias initialized to 0
+        self.A2 = 0  # Output activation initialized to 0
