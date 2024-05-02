@@ -106,6 +106,6 @@ class NeuralNetwork:
         Evaluates the neural network's predictions.
         """
         _, A2 = self.forward_prop(X)
-        predictions = (A2 >=0.5).astype(int)
+        predictions = (A2 >= 0.5).astype(int)
         cost = self.cost(Y, A2)
         return predictions, cost
