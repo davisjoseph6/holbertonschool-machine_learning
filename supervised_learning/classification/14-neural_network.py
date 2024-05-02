@@ -134,6 +134,10 @@ class NeuralNetwork:
         self.__b2 -= alpha * db2
 
     def train(self, X, Y, iterations=5000, alpha=0.05):
+        """
+        Trains the neural network using gradient descent for a number
+        of iterations.
+        """
         if not isinstance(iterations, int):
             raise TypeError("iterations must be an integer")
         if iterations <= 0:
