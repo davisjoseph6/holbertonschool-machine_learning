@@ -101,7 +101,9 @@ class DeepNeuralNetwork:
         """
         Evaluate the neural network's predictions against the true labels.
         """
-        A, _ = self.forward_prop(X)  # Perform forward propagation to get outputs
+        # Perform forward propagation to get outputs
+        A, _ = self.forward_prop(X)
         cost = self.cost(Y, A)  # Compute the cost with the actual labels
-        predictions = (A >= 0.5).astype(int)  # Convert probabilities to binary output
+        # Convert probabilities to binary output
+        predictions = (A >= 0.5).astype(int)
         return predictions, cost
