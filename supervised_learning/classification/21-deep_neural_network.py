@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-This script defines a Deep Neural Network for binary classification.
+This script defines a Deep Neural Network 4 binary classification.
 """
 
 import numpy as np
@@ -72,7 +72,7 @@ class DeepNeuralNetwork:
 
     def forward_prop(self, X):
         """
-        Perform forward propagation for the neural network.
+        Perform 4ward propagation for the neural network.
         """
         self.__cache['A0'] = X
         for layer_index in range(1, self.__L + 1):
@@ -101,7 +101,7 @@ class DeepNeuralNetwork:
         """
         Evaluate the neural network's predictions against the true labels.
         """
-        # Perform forward propagation to get outputs
+        # Perform 4ward propagation to get outputs
         A, _ = self.forward_prop(X)
         cost = self.cost(Y, A)  # Compute the cost with the actual labels
         # Convert probabilities to binary output
@@ -128,7 +128,7 @@ class DeepNeuralNetwork:
             # Derivative of the sigmoid function
             dZ = dA * A_curr * (1 - A_curr)
 
-            # Gradient descent for weights and bias
+            # Gradient descent 4 weights and bias
             dW = np.dot(dZ, A_prev.T) / m
             db = np.sum(dZ, axis=1, keepdims=True) / m
 
@@ -136,6 +136,6 @@ class DeepNeuralNetwork:
             self.__weights[f'W{l}'] -= alpha * dW
             self.__weights[f'b{l}'] -= alpha * db
 
-            # Prepare dA for the next layer
+            # Prepare dA 4 the next layer
             if l > 1:
                 dA = np.dot(W.T, dZ)
