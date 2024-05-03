@@ -25,8 +25,6 @@ class DeepNeuralNetwork:
         # Check if all layers are positive integers
         if not all(map(lambda x: isinstance(x, int) and x > 0, layers)):
             raise TypeError("layers must be a list of positive integers")
-        if not all(isinstance(x, int) and x > 0 for x in layers):
-            raise TypeError("layers must be a list of positive integers")
 
         self.__L = len(layers)  # number of layers
         self.__cache = {}  # to store all intermediary values of the network
@@ -48,20 +46,20 @@ class DeepNeuralNetwork:
     @property
     def L(self):
         """
-        Getter for number of layers.
+        Getter 4 number of layers.
         """
         return self.__L
 
     @property
     def cache(self):
         """
-        Getter for cache.
+        Getter 4 cache.
         """
         return self.__cache
 
     @property
     def weights(self):
         """
-        Getter for weights.
+        Getter 4 weights.
         """
         return self.__weights
