@@ -91,5 +91,8 @@ class DeepNeuralNetwork:
         cost function.
         """
         m = Y.shape[1]  # number of examples
-        cost = -(1 / m) * np.sum(Y * np.log(A) + (1 - Y) * np.log(1.0000001 - A))
+        cost = -(1 / m) * np.sum(Y * np.log(A) + (
+            1 - Y
+            ) * np.log(1.0000001 - A)
+            )
         return cost
