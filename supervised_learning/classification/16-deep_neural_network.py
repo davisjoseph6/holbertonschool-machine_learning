@@ -8,6 +8,10 @@ class DeepNeuralNetwork:
     Define a deep neural network doing binary classification.
     """
     def __init__(self, nx, layers):
+        """
+        Initialize a deep neural network with given number of input features
+        and layers.
+        """
         if not isinstance(nx, int):
             raise TypeError("nx must be an integer")
         if nx < 1:
