@@ -119,11 +119,11 @@ class DeepNeuralNetwork:
         # Initialize backward propagation
         dA = - (np.divide(Y, A) - np.divide(1 - Y, 1.0000001 - A))
 
-        for l in reversed(range(1, L + 1)):
-            A_prev = cache[f'A{l-1}']
-            A_curr = cache[f'A{l}']
-            W = self.__weights[f'W{l}']
-            b = self.__weights[f'b{l}']
+        for layer_index in reversed(range(1, L + 1)):
+            A_prev = cache[f'A{layer_index-1}']
+            A_curr = cache[f'A{layer_index}']
+            W = self.__weights[f'W{layer_index}']
+            b = self.__weights[f'b{layer_index}']
 
             # Derivative of the sigmoid function
             dZ = dA * A_curr * (1 - A_curr)
@@ -133,9 +133,9 @@ class DeepNeuralNetwork:
             db = np.sum(dZ, axis=1, keepdims=True) / m
 
             # Update the weights and biases
-            self.__weights[f'W{l}'] -= alpha * dW
-            self.__weights[f'b{l}'] -= alpha * db
+            self.__weights[f'W{layer_index}'] -= alpha * dW
+            self.__weights[f'b{layer_index}'] -= alpha * db
 
             # Prepare dA 4 the next layer
-            if l > 1:
+            if layer_index > 1:
                 dA = np.dot(W.T, dZ)
