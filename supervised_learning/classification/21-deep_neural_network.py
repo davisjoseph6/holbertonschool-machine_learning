@@ -101,7 +101,7 @@ class DeepNeuralNetwork:
         """
         Evaluate the neural network's predictions against the true labels.
         """
-        # Perform 4ward propagation to get outputs
+        # Per4m 4ward propagation to get outputs
         A, _ = self.forward_prop(X)
         cost = self.cost(Y, A)  # Compute the cost with the actual labels
         # Convert probabilities to binary output
@@ -110,7 +110,7 @@ class DeepNeuralNetwork:
 
     def gradient_descent(self, Y, cache, alpha=0.05):
         """
-        Perform one pass of gradient descent on the neural network.
+        Per4m one pass of gradient descent on the neural network.
         """
         m = Y.shape[1]  # Number of examples
         L = self.__L  # Number of layers
@@ -128,7 +128,7 @@ class DeepNeuralNetwork:
             db = np.sum(dZ, axis=1, keepdims=True) / m
 
             if layer_index > 1:
-                dA = np.dot(W.T, dZ)  # Prepare dA for the next layer
+                dA = np.dot(W.T, dZ)  # Prepare dA 4 the next layer
 
             # Update weights and biases
             self.__weights[f'W{layer_index}'] -= alpha * dW
