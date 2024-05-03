@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+"""
+This script defines a Deep Neural Network for binary classification.
+"""
 
 import numpy as np
 
