@@ -20,8 +20,8 @@ class DeepNeuralNetwork:
         self.cache = {}  # to store all intermediary values of the network
         self.weights = {}  # to hold all weights and biases of the network
 
-        # Initialize weights and biases
-        layer_sizes = [nx] + layers  # prepend the input layer size
+        # Initialize weights and biases using He et al. method for each layer
+        layer_dims = [nx] + layers  # layer dimensions from input to last layer
         for l in range(1, self.L + 1):
-            self.weights['W' + str(l)] = np.random.randn(layer_sizes[l], layer_sizes[l - 1]) * np.sqrt(2 / layer_sizes[l - 1])
-            self.weights['b' + str(l)] = np.zeros((layer_sizes[l], 1))
+            self.weights[f'W{l}'] = np.random.randn(layer_dims[l], layer_dims[l-1]) * np.sqrt(2 / layer_dims[l-1])
+            self.weights[f'b{l}'] = np.zeros((layer_dims[l], 1))
