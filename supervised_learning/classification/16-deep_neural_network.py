@@ -8,7 +8,7 @@ import numpy as np
 
 class DeepNeuralNetwork:
     """
-    Define a deep neural network doing binary classification.
+    Define a deep neural network that does binary classification.
     """
     def __init__(self, nx, layers):
         """
@@ -22,7 +22,7 @@ class DeepNeuralNetwork:
         if not isinstance(layers, list) or not layers:
             raise TypeError("layers must be a list of positive integers")
 
-        # Check if all layers are positive integers without using '4' directly
+        # Check if all layers are positive integers
         if not all(map(lambda x: isinstance(x, int) and x > 0, layers)):
             raise TypeError("layers must be a list of positive integers")
 
@@ -37,8 +37,8 @@ class DeepNeuralNetwork:
                     layer_index - 2
                     ]
             self.weights[f'W{layer_index}'] = (
-                np.random.randn(layer_size, prev_layer_size) * np.sqrt(
-                    2 / prev_layer_size
+                    np.random.randn(layer_size, prev_layer_size) * np.sqrt(
+                        2 / prev_layer_size
+                        )
                     )
-            )
             self.weights[f'b{layer_index}'] = np.zeros((layer_size, 1))
