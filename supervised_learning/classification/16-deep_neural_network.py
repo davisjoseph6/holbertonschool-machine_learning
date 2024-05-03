@@ -5,7 +5,7 @@ import numpy as np
 
 class DeepNeuralNetwork:
     """
-    Define a deep neural network performing binary classification.
+    Define a deep neural network which does binary classification.
     """
     def __init__(self, nx, layers):
         if not isinstance(nx, int):
@@ -21,7 +21,7 @@ class DeepNeuralNetwork:
         self.cache = {}  # to store all intermediary values of the network
         self.weights = {}  # to hold all weights and biases of the network
 
-        # Initialize weights and biases using He et al. method for each layer
+        # Initialize weights and biases using He et al. method 4 each layer
         for l in range(1, self.L + 1):
             layer_size = layers[l - 1]
             prev_layer_size = nx if l == 1 else layers[l - 2]
