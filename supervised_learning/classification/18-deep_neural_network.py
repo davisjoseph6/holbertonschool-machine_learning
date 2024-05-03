@@ -84,4 +84,3 @@ class DeepNeuralNetwork:
 
         AL = self.__cache[f'A{self.__L}']
         return AL, self.__cache
-
