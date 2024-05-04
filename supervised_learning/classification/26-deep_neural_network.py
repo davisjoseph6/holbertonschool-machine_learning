@@ -142,11 +142,11 @@ class DeepNeuralNetwork:
 
     def train(self, X, Y, iterations=5000, alpha=0.05, verbose=True, graph=True, step=100):
         if not isinstance(iterations, int) or iterations <= 0:
-            raise TypeError("iterations must be a positive integer")
+            raise ValueError("iterations must be a positive integer")
         if not isinstance(alpha, float) or alpha <= 0:
-            raise TypeError("alpha must be a positive float")
+            raise ValueError("alpha must be a positive float")
         if not isinstance(step, int) or step <= 0:
-            raise TypeError("step must be a positive integer")
+            raise ValueError("step must be a positive integer")
         if step > iterations:
             raise ValueError("step must be less than or equal to iterations")
 
@@ -169,6 +169,7 @@ class DeepNeuralNetwork:
             plt.show()
 
         return self.evaluate(X, Y)
+
 
     def save(self, filename):
         if not filename.endswith('.pkl'):
