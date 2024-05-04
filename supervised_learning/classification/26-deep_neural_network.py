@@ -6,6 +6,7 @@ This script defines a Deep Neural Network 4 binary classification.
 import matplotlib.pyplot as plt
 import numpy as np
 import pickle
+import os
 
 
 class DeepNeuralNetwork:
@@ -145,41 +146,35 @@ class DeepNeuralNetwork:
             raise ValueError("iterations must be a positive integer")
         if not isinstance(alpha, float) or alpha <= 0:
             raise ValueError("alpha must be a positive float")
+
         costs = []
         for i in range(iterations + 1):
             A, _ = self.forward_prop(X)
             cost = self.cost(Y, A)
             if i % step == 0 or i == iterations:
-                costs.append(cost)
                 if verbose:
                     print(f"Cost after {i} iterations: {cost}")
+                costs.append(cost)
             self.gradient_descent(Y, self.__cache, alpha)
+
         if graph:
-            plt.plot(costs)
+            plt.plot(range(0, iterations + 1, step), costs)
             plt.ylabel('cost')
             plt.xlabel('iterations')
             plt.title("Training Cost")
             plt.show()
+
         return self.evaluate(X, Y)
 
     def save(self, filename):
-        """
-        Saves the instance object to a file in pickle format.
-        If filename does not have the extension .pkl, add it.
-        """
-        if not filename.endswith('.pkl'):
-            filename += '.pkl'
+        if not filename.endswith(".pkl"):
+            filename += ".pkl"
         with open(filename, 'wb') as file:
             pickle.dump(self, file)
 
     @staticmethod
     def load(filename):
-        """
-        Loads a pickled DeepNeuralNetwork object.
-        Returns the loaded object, or None if the file doesn’t exist.
-        """
-        try:
-            with open(filename, 'rb') as file:
-                return pickle.load(file)
-        except FileNotFoundError:
+        if not os.path.isfile(filename):
             return None
+        with open(filename, 'rb') as file:
+            return pickle.load(file)
