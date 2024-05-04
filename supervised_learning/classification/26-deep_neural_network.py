@@ -140,31 +140,68 @@ class DeepNeuralNetwork:
 
         return self.__weights
 
-    def train(self, X, Y, iterations=5000, alpha=0.05, verbose=True, graph=True, step=100):
-        if not isinstance(iterations, int) or iterations <= 0:
+    def train(self, X, Y, iterations=5000, alpha=0.05,
+              verbose=True, graph=True, step=100):
+        """
+            Method to train deep neural network
+
+            :param X: ndarray, shape(nx,m), input data
+            :param Y: ndarray, shapte(1,m), correct labels
+            :param iterations: number of iterations to train over
+            :param alpha: learning rate
+            :param verbose: boolean print or not information
+            :param graph: boolean print or not graph
+            :param step: int
+
+            :return: evaluation of training after iterations
+        """
+
+        if not isinstance(iterations, int):
+            raise TypeError("iterations must be an integer")
+        if iterations <= 0:
             raise ValueError("iterations must be a positive integer")
-        if not isinstance(alpha, float) or alpha <= 0:
-            raise ValueError("alpha must be a positive float")
-        if not isinstance(step, int) or step <= 0:
-            raise ValueError("step must be a positive integer and greater than zero")
-        if step > iterations:
-            raise ValueError("step must be less than or equal to iterations")
+        if not isinstance(alpha, float):
+            raise TypeError("alpha must be a float")
+        if alpha <= 0:
+            raise ValueError("alpha must be positive")
+        if not isinstance(verbose, bool):
+            raise TypeError("verbose must be a boolean")
+        if not isinstance(graph, bool):
+            raise TypeError("graph must be a boolean")
+        if verbose is True or graph is True:
+            if not isinstance(step, int):
+                raise TypeError("step must be an integer")
+            if step <= 0 or step > iterations:
+                raise ValueError("step must be positive and <= iterations")
 
+        # list to store cost /iter
         costs = []
-        for i in range(iterations + 1):  # +1 to include the last iteration explicitly
-            A, cache = self.forward_prop(X)
-            if i < iterations:  # Only perform gradient descent if not the last iteration
-                self.gradient_descent(Y, cache, alpha)
-            if i % step == 0 or i == iterations:
-                cost = self.cost(Y, A)
-                costs.append(cost)
-                if verbose:
-                    print(f"Cost after {i} iterations: {cost}")
+        count = []
 
+        for i in range(iterations + 1):
+            # run forward propagation
+            A, cache = self.forward_prop(X)
+
+            # run gradient descent for all iterations except the last one
+            if i != iterations:
+                self.gradient_descent(Y, self.cache, alpha)
+
+            cost = self.cost(Y, A)
+
+            # store cost for graph
+            costs.append(cost)
+            count.append(i)
+
+            # verbose TRUE, every step + first and last iteration
+            if verbose and (i % step == 0 or i == 0 or i == iterations):
+                # run evaluate
+                print("Cost after {} iterations: {}".format(i, cost))
+
+        # graph TRUE after training complete
         if graph:
-            plt.plot(range(0, iterations + 1, step), costs)
-            plt.xlabel('Iteration')
-            plt.ylabel('Cost')
+            plt.plot(count, costs, 'b-')
+            plt.xlabel('iteration')
+            plt.ylabel('cost')
             plt.title('Training Cost')
             plt.show()
 
