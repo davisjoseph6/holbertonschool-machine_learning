@@ -139,6 +139,10 @@ class DeepNeuralNetwork:
         return self.__weights
 
     def train(self, X, Y, iterations=5000, alpha=0.05):
+        """
+        Trains the deep neural network by performing forward propagation and
+        gradient descent across a number of iterations.
+        """
         if not isinstance(iterations, int):
             raise TypeError("iterations must be an integer")
         if iterations <= 0:
