@@ -116,14 +116,16 @@ class DeepNeuralNetwork:
         L = self.__L  # Number of layers
 
         A = cache[f'A{L}']  # Output of the last layer
-        dA = - (np.divide(Y, A) - np.divide(1 - Y, 1 - A))  # Derivative of cost with respect to A
+        # Derivative of cost with respect to A
+        dA = - (np.divide(Y, A) - np.divide(1 - Y, 1 - A))
 
         for layer_index in reversed(range(1, L + 1)):
             A_prev = cache[f'A{layer_index-1}']
             A_curr = cache[f'A{layer_index}']
             W = self.__weights[f'W{layer_index}']
 
-            dZ = dA * A_curr * (1 - A_curr)  # Element-wise product assumes sigmoid activation
+            # Element-wise product assumes sigmoid activation
+            dZ = dA * A_curr * (1 - A_curr)
             dW = np.dot(dZ, A_prev.T) / m
             db = np.sum(dZ, axis=1, keepdims=True) / m
 
