@@ -155,6 +155,8 @@ class DeepNeuralNetwork:
             raise TypeError("graph must be a boolean")
         if not isinstance(step, int) or step <= 0 or step > iterations:
             raise ValueError("step must be a positive integer and <= iterations")
+        if step > iterations:
+            step = iterations
 
         costs = []
         steps_list = []
