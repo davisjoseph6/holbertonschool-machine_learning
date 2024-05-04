@@ -142,38 +142,35 @@ class DeepNeuralNetwork:
 
     def train(self, X, Y, iterations=5000, alpha=0.05, verbose=True, graph=True, step=100):
         """
-        Trains the deep neural network by performing forward propagation and gradient descent across a number of iterations.
+        Trains the network and updates weights and biases.
         """
         if not isinstance(iterations, int):
             raise TypeError("iterations must be an integer")
-        if iterations <= 0:
+        if iterations < 1:
             raise ValueError("iterations must be a positive integer")
         if not isinstance(alpha, float):
             raise TypeError("alpha must be a float")
         if alpha <= 0:
             raise ValueError("alpha must be positive")
-
         if verbose or graph:
             if not isinstance(step, int):
                 raise TypeError("step must be an integer")
             if step <= 0 or step > iterations:
                 raise ValueError("step must be positive and <= iterations")
 
-        costs = []
+        cost_history = []
         for i in range(iterations + 1):
             A, _ = self.forward_prop(X)
             cost = self.cost(Y, A)
             if i % step == 0 or i == iterations:
                 if verbose:
                     print(f"Cost after {i} iterations: {cost}")
-                if graph:
-                    costs.append(cost)
-            
+                cost_history.append(cost)
             self.gradient_descent(Y, self.__cache, alpha)
 
         if graph:
-            plt.plot(range(0, iterations + 1, step), costs)
-            plt.xlabel('Iteration')
+            plt.plot(range(0, iterations + 1, step), cost_history, '-b')
+            plt.xlabel('Iterations')
             plt.ylabel('Cost')
             plt.title('Training Cost')
             plt.show()
