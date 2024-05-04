@@ -155,12 +155,6 @@ class DeepNeuralNetwork:
         if alpha <= 0:
             raise ValueError("alpha must be positive")
 
-        if verbose or graph:
-            if not isinstance(step, int):
-                raise TypeError("step must be an integer")
-            if step <= 0 or step > iterations:
-                raise ValueError("step must be positive and <= iterations")
-
         costs = []
         for i in range(iterations + 1):
             A, _ = self.forward_prop(X)
@@ -168,13 +162,11 @@ class DeepNeuralNetwork:
             if i % step == 0 or i == iterations:
                 if verbose:
                     print(f"Cost after {i} iterations: {cost}")
-                if graph:
-                    costs.append(cost)
-
+                costs.append(cost)
             self.gradient_descent(Y, self.__cache, alpha)
 
         if graph:
-            plt.plot(range(0, iterations + 1, step), costs)
+            plt.plot(range(0, iterations + 1, step), costs, 'b-')
             plt.xlabel('Iteration')
             plt.ylabel('Cost')
             plt.title('Training Cost')
@@ -182,8 +174,10 @@ class DeepNeuralNetwork:
 
         return self.evaluate(X, Y)
 
-
     def save(self, filename):
+        """
+        Saves the instance object to a file in pickle format.
+        """
         if not filename.endswith(".pkl"):
             filename += ".pkl"
         with open(filename, 'wb') as file:
@@ -191,7 +185,11 @@ class DeepNeuralNetwork:
 
     @staticmethod
     def load(filename):
-        if not os.path.isfile(filename):
+        """
+        Load a pickled DeepNeuralNetwork object.
+        """
+        try:
+            with open(filename, 'rb') as file:
+                return pickle.load(file)
+        except FileNotFoundError:
             return None
-        with open(filename, 'rb') as file:
-            return pickle.load(file)
