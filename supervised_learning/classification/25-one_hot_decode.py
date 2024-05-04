@@ -21,6 +21,7 @@ def one_hot_encode(Y, classes):
     except IndexError as e:
         return None
 
+
 def one_hot_decode(one_hot):
     """
     Converts a one-hot matrix into a vector of labels.
