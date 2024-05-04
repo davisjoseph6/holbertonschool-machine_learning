@@ -146,12 +146,12 @@ class DeepNeuralNetwork:
         if not isinstance(alpha, float) or alpha <= 0:
             raise ValueError("alpha must be a positive float")
         if not isinstance(step, int) or step <= 0:
-            raise ValueError("step must be a positive integer")
+            raise ValueError("step must be a positive integer and greater than zero")
         if step > iterations:
             raise ValueError("step must be less than or equal to iterations")
 
         costs = []
-        for i in range(iterations + 1):  # Including the final iteration
+        for i in range(iterations + 1):  # +1 to include the last iteration explicitly
             A, cache = self.forward_prop(X)
             if i < iterations:  # Only perform gradient descent if not the last iteration
                 self.gradient_descent(Y, cache, alpha)
