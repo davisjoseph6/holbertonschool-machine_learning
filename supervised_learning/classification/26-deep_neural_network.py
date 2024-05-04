@@ -141,47 +141,37 @@ class DeepNeuralNetwork:
         return self.__weights
 
     def train(self, X, Y, iterations=5000, alpha=0.05, verbose=True, graph=True, step=100):
-        """
-        Trains the deep neural network using forward propagation and batch gradient descent.
-        """
-
         if not isinstance(iterations, int) or iterations <= 0:
             raise ValueError("iterations must be a positive integer")
         if not isinstance(alpha, float) or alpha <= 0:
             raise ValueError("alpha must be a positive float")
-        if not isinstance(verbose, bool):
-            raise TypeError("verbose must be a boolean")
-        if not isinstance(graph, bool):
-            raise TypeError("graph must be a boolean")
         if not isinstance(step, int) or step <= 0 or step > iterations:
             raise ValueError("step must be a positive integer and <= iterations")
-        if step > iterations:
-            step = iterations
 
         costs = []
-        steps_list = []
+        steps = []  # This will store the actual steps at which costs are recorded
 
-        for i in range(iterations + 1):
-            A, _ = self.forward_prop(X)
-            self.gradient_descent(Y, self.__cache, alpha)
+        for i in range(iterations + 1):  # Include the last iteration explicitly
+            A, cache = self.forward_prop(X)
+            self.gradient_descent(Y, cache, alpha)
 
             if i % step == 0 or i == iterations:
                 cost = self.cost(Y, A)
                 costs.append(cost)
-                steps_list.append(i)
+                steps.append(i)  # Record the actual step
                 if verbose:
-                    print(f"Cost after {i} iterations: {cost:.6f}")
+                    print(f"Cost after {i} iterations: {cost}")
 
         if graph:
-            plt.plot(steps_list, costs, label='Training Cost', marker='o')
+            plt.plot(steps, costs, label='Training Cost')
             plt.xlabel('Iteration')
             plt.ylabel('Cost')
-            plt.title('Training Cost over Iterations')
+            plt.title('Training Cost')
             plt.legend()
-            plt.grid(True)
             plt.show()
 
         return self.evaluate(X, Y)
+
 
     def save(self, filename):
         if not filename.endswith('.pkl'):
