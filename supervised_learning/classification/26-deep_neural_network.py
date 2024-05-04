@@ -142,47 +142,44 @@ class DeepNeuralNetwork:
 
     def train(self, X, Y, iterations=5000, alpha=0.05, verbose=True, graph=True, step=100):
         """
-        Trains the deep neural network by performing forward propagation and
-        gradient descent across a number of iterations.
+        Trains the deep neural network using forward propagation and batch gradient descent.
         """
-        if not isinstance(iterations, int):
-            raise TypeError("iterations must be an integer")
-        if iterations <= 0:
+
+        if not isinstance(iterations, int) or iterations <= 0:
             raise ValueError("iterations must be a positive integer")
-        if not isinstance(alpha, float):
-            raise TypeError("alpha must be a float")
-        if alpha <= 0:
-            raise ValueError("alpha must be positive")
+        if not isinstance(alpha, float) or alpha <= 0:
+            raise ValueError("alpha must be a positive float")
+        if not isinstance(verbose, bool):
+            raise TypeError("verbose must be a boolean")
+        if not isinstance(graph, bool):
+            raise TypeError("graph must be a boolean")
         if not isinstance(step, int) or step <= 0 or step > iterations:
-            raise TypeError(
-                    "step must be a positive integer and <= iterations"
-                    )
+            raise ValueError("step must be a positive integer and <= iterations")
 
         costs = []
-        # This will store the iterations at which we record the costs
-        x_vals = []
+        steps_list = []
 
         for i in range(iterations + 1):
-            A, cache = self.forward_prop(X)
-            self.gradient_descent(Y, cache, alpha)
+            A, _ = self.forward_prop(X)
+            self.gradient_descent(Y, self.__cache, alpha)
 
             if i % step == 0 or i == iterations:
                 cost = self.cost(Y, A)
                 costs.append(cost)
-                x_vals.append(i)
+                steps_list.append(i)
                 if verbose:
-                    print(f"Cost after {i} iterations: {cost}")
+                    print(f"Cost after {i} iterations: {cost:.6f}")
 
         if graph:
-            plt.plot(x_vals, costs, label='Training Cost')
-            plt.xlabel('iteration')
-            plt.ylabel('cost')
-            plt.title('Training Cost')
+            plt.plot(steps_list, costs, label='Training Cost', marker='o')
+            plt.xlabel('Iteration')
+            plt.ylabel('Cost')
+            plt.title('Training Cost over Iterations')
             plt.legend()
+            plt.grid(True)
             plt.show()
 
         return self.evaluate(X, Y)
-
 
     def save(self, filename):
         if not filename.endswith('.pkl'):
