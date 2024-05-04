@@ -141,22 +141,7 @@ class DeepNeuralNetwork:
 
         return self.__weights
 
-    def train(self, X, Y, iterations=5000, alpha=0.05,
-              verbose=True, graph=True, step=100):
-        """
-            Method to train deep neural network
-
-            :param X: ndarray, shape(nx,m), input data
-            :param Y: ndarray, shapte(1,m), correct labels
-            :param iterations: number of iterations to train over
-            :param alpha: learning rate
-            :param verbose: boolean print or not information
-            :param graph: boolean print or not graph
-            :param step: int
-
-            :return: evaluation of training after iterations
-        """
-
+    def train(self, X, Y, iterations=5000, alpha=0.05, verbose=True, graph=True, step=100):
         if not isinstance(iterations, int):
             raise TypeError("iterations must be an integer")
         if iterations <= 0:
@@ -165,73 +150,47 @@ class DeepNeuralNetwork:
             raise TypeError("alpha must be a float")
         if alpha <= 0:
             raise ValueError("alpha must be positive")
-        if not isinstance(verbose, bool):
-            raise TypeError("verbose must be a boolean")
-        if not isinstance(graph, bool):
-            raise TypeError("graph must be a boolean")
-        if verbose is True or graph is True:
+        if verbose or graph:
             if not isinstance(step, int):
                 raise TypeError("step must be an integer")
             if step <= 0 or step > iterations:
                 raise ValueError("step must be positive and <= iterations")
 
-        # list to store cost /iter
         costs = []
-        count = []
-
         for i in range(iterations + 1):
-            # run forward propagation
-            A, cache = self.forward_prop(X)
-
-            # run gradient descent for all iterations except the last one
-            if i != iterations:
-                self.gradient_descent(Y, self.cache, alpha)
-
+            A, _ = self.forward_prop(X)
             cost = self.cost(Y, A)
+            if i % step == 0 or i == iterations:
+                if verbose:
+                    print(f"Cost after {i} iterations: {cost}")
+                costs.append(cost)
+            self.gradient_descent(Y, self.__cache, alpha)
 
-            # store cost for graph
-            costs.append(cost)
-            count.append(i)
-
-            # verbose TRUE, every step + first and last iteration
-            if verbose and (i % step == 0 or i == 0 or i == iterations):
-                # run evaluate
-                print("Cost after {} iterations: {}".format(i, cost))
-
-        # graph TRUE after training complete
         if graph:
-            plt.plot(count, costs, 'b-')
-            plt.xlabel('iteration')
-            plt.ylabel('cost')
-            plt.title('Training Cost')
+            plt.plot(np.squeeze(costs))
+            plt.ylabel('Cost')
+            plt.xlabel('Iterations (per %i)' % step)
+            plt.title("Training Cost")
             plt.show()
 
         return self.evaluate(X, Y)
 
     def save(self, filename):
         """
-        Saves the instance object to a file in pickle format.
-        filename is the file to which the object will be saved.
-        If filename does not have the extension .pkl, adds it.
+        Save the deep neural network object to a file in pickle format.
         """
-        if not filename.endswith(".pkl"):
-            filename += ".pkl"
-
-        with open(filename, "wb") as file:
-            pickle.dump(self, file)
+        if not filename.endswith('.pkl'):
+            filename += '.pkl'
+        with open(filename, 'wb') as f:
+            pickle.dump(self, f)
 
     @staticmethod
     def load(filename):
         """
-        Loads a pickled DeepNeuralNetwork object.
-        filename is the file from which the object should be loaded.
-        Returns: the loaded object, or None if filename doesn't exist.
+        Load a deep neural network object from a file in pickle format.
         """
-
         try:
-            with open(filename, "rb") as file:
-                unpickled_obj = pickle.load(file)
-            return unpickled_obj
-
+            with open(filename, 'rb') as f:
+                return pickle.load(f)
         except FileNotFoundError:
             return None
