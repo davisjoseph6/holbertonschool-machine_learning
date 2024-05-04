@@ -140,39 +140,63 @@ class DeepNeuralNetwork:
         return self.__weights
 
 
-    def train(self, X, Y, iterations=5000, alpha=0.05, verbose=True, graph=True, step=100):
+    def train(self, X, Y, iterations=5000, alpha=0.05, verbose=True,
+              graph=True, step=100):
         """
-        Trains the network and updates weights and biases.
+        Trains the deep neural network.
+
+        X (ndarray): Matrix with shape (nx, m) that contains the input data
+        Y (ndarray): Matrix with shape (1, m) that contains the correct
+            labels for the input data.
+        iterations (int): The number of iterations to train over.
+        alpha (float): The learning rate.
+        verbose (bool): Defines whether or not to print information about the
+            training.
+        graph (bool): Defines whether or not to graph information about the
+            training once the training has completed
+        step (int): Defines the number of steps between each information
+            printing. Defaults to 100.
+
+        Returns:
+            The evaluation of the training data after iterations.
         """
         if not isinstance(iterations, int):
             raise TypeError("iterations must be an integer")
         if iterations < 1:
             raise ValueError("iterations must be a positive integer")
+
         if not isinstance(alpha, float):
             raise TypeError("alpha must be a float")
         if alpha <= 0:
             raise ValueError("alpha must be positive")
-        if verbose or graph:
+
+        if verbose:
             if not isinstance(step, int):
                 raise TypeError("step must be an integer")
-            if step <= 0 or step > iterations:
+            if step < 1 or step > iterations:
                 raise ValueError("step must be positive and <= iterations")
 
-        cost_history = []
+        cost_values = []
+
         for i in range(iterations + 1):
-            A, _ = self.forward_prop(X)
-            cost = self.cost(Y, A)
+            A, cache = self.forward_prop(X)
+
             if i % step == 0 or i == iterations:
+                cost = self.cost(Y, A)
+                cost_values.append(cost)
+
                 if verbose:
                     print(f"Cost after {i} iterations: {cost}")
-                cost_history.append(cost)
-            self.gradient_descent(Y, self.__cache, alpha)
+
+            # Gradient descent on DNN activated output
+            self.gradient_descent(Y, cache, alpha)
 
         if graph:
-            plt.plot(range(0, iterations + 1, step), cost_history, '-b')
-            plt.xlabel('Iterations')
-            plt.ylabel('Cost')
+            plt.plot(range(0, iterations + 1, step), cost_values, 'b-')
+            plt.xlabel('iteration')
+            plt.ylabel('cost')
             plt.title('Training Cost')
             plt.show()
-
+            plt.savefig("iteration_over_cost.png")
+        # Returning new evaluation of the NN's prediction after training
         return self.evaluate(X, Y)
