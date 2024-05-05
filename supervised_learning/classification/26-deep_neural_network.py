@@ -139,7 +139,8 @@ class DeepNeuralNetwork:
 
         return self.__weights
 
-    def train(self, X, Y, iterations=5000, alpha=0.05, verbose=True, graph=True, step=100):
+    def train(self, X, Y, iterations=5000, alpha=0.05,
+            verbose=True, graph=True, step=100):
         """
         Trains the deep neural network using forward propagation and gradient
         descent.
@@ -200,21 +201,28 @@ class DeepNeuralNetwork:
 
     def save(self, filename):
         """
-        Save the model to a file in pickle format.
+        Saves the instance object to a file in pickle format.
+        filename is the file to which the object will be saved.
+        If filename does not have the extension .pkl, adds it.
         """
         if not filename.endswith(".pkl"):
             filename += ".pkl"
-        with open(filename, 'wb') as file:
+
+        with open(filename, "wb") as file:
             pickle.dump(self, file)
 
     @staticmethod
     def load(filename):
         """
-        Load a saved deep neural network model.
+        Loads a pickled DeepNeuralNetwork object.
+        filename is the file from which the object should be loaded.
+        Returns: the loaded object, or None if filename doesn't exist.
         """
+
         try:
-            with open(filename, 'rb') as file:
-                loaded = pickle.load(file)
-            return loaded
+            with open(filename, "rb") as file:
+                unpickled_obj = pickle.load(file)
+            return unpickled_obj
+
         except FileNotFoundError:
             return None
