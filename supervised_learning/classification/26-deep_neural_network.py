@@ -200,7 +200,7 @@ class DeepNeuralNetwork:
 
     def save(self, filename):
         """
-        Save the model to a fil in pickle format.
+        Save the model to a file in pickle format.
         """
         if not filename.endswith(".pkl"):
             filename += ".pkl"
