@@ -141,9 +141,10 @@ class DeepNeuralNetwork:
 
     def train(self, X, Y, iterations=5000, alpha=0.05, verbose=True, graph=True, step=100):
         """
-        Train the deep neural network by performing forward propagation and
-        gradient descent across a number of iterations.
+        Trains the deep neural network using forward propagation and back
+        propagation.
         """
+
         if not isinstance(iterations, int):
             raise TypeError("iterations must be an integer")
         if iterations <= 0:
@@ -152,24 +153,36 @@ class DeepNeuralNetwork:
             raise TypeError("alpha must be a float")
         if alpha <= 0:
             raise ValueError("alpha must be positive")
-        if not isinstance(step, int) or step <= 0 or step > iterations:
-            raise TypeError("step must be a positive integer and <= iterations")
+        if not isinstance(verbose, bool):
+            raise TypeError("verbose must be a boolean")
+        if not isinstance(graph, bool):
+            raise TypeError("graph must be a boolean")
+        if verbose or graph:
+            if not isinstance(step, int):
+                raise TypeError("step must be an integer")
+            if step <= 0 or step > iterations:
+                raise ValueError("step must be positive and <= iterations")
 
-        costs = []
-        for i in range(iterations):
-            A, cache = self.forward_prop(X)
-            if i == 0 or i % step == 0 or i == iterations - 1:
-                cost = self.cost(Y, A)
+        costs = []  # list to store the cost at each step (for graphing)
+
+        for i in range(iterations + 1):
+            A, cache = self.forward_prop(X)  # Perform forward propagation
+
+            if i != iterations:  # GradientDescent4AllIterationsExceptTheLast
+                self.gradient_descent(Y, cache, alpha)
+
+            cost = self.cost(Y, A)  # Calculate the cost
+
+            if verbose and (i % step == 0 or i == 0 or i == iterations):
+                print(f"Cost after {i} iterations: {cost}")
+            if graph:
                 costs.append(cost)
-                if verbose:
-                    print(f"Cost after {i} iterations: {cost}")
-            self.gradient_descent(Y, cache, alpha)
 
         if graph:
-            plt.plot(range(0, iterations, step), costs)
-            plt.xlabel("iteration")
-            plt.ylabel("cost")
-            plt.title("Training Cost")
+            plt.plot(range(0, iterations + 1, step), costs)
+            plt.xlabel('iteration')
+            plt.ylabel('cost')
+            plt.title('Training Cost')
             plt.show()
 
-        return self.evaluate(X, Y)
+        return self.evaluate(X, Y)  # Evaluate and return the performance
