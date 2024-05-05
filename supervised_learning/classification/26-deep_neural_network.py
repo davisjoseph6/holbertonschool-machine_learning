@@ -5,6 +5,7 @@ This script defines a Deep Neural Network 4 binary classification.
 
 import matplotlib.pyplot as plt
 import numpy as np
+import pickle
 
 
 class DeepNeuralNetwork:
@@ -139,22 +140,13 @@ class DeepNeuralNetwork:
 
         return self.__weights
 
-    def train(self, X, Y, iterations=5000, alpha=0.05,
-              verbose=True, graph=True, step=100):
+    def train(self, X, Y, iterations=5000, alpha=0.05, verbose=True, graph=True, step=100):
         """
-            Method to train deep neural network
-
-            :param X: ndarray, shape(nx,m), input data
-            :param Y: ndarray, shapte(1,m), correct labels
-            :param iterations: number of iterations to train over
-            :param alpha: learning rate
-            :param verbose: boolean print or not information
-            :param graph: boolean print or not graph
-            :param step: int
-
-            :return: evaluation of training after iterations
+        Trains the deep neural network using forward propagation and gradient
+        descent.
         """
 
+        # Validate inputs for types and value constraints
         if not isinstance(iterations, int):
             raise TypeError("iterations must be an integer")
         if iterations <= 0:
@@ -173,30 +165,30 @@ class DeepNeuralNetwork:
             if step <= 0 or step > iterations:
                 raise ValueError("step must be positive and <= iterations")
 
-        # list to store cost /iter
+        # List to store costs for potential plotting
         costs = []
         count = []
 
         for i in range(iterations + 1):
-            # run forward propagation
+            # Forward propagation
             A, cache = self.forward_prop(X)
 
-            # run gradient descent for all iterations except the last one
+            # Gradient descent on all iterations except the last
             if i != iterations:
                 self.gradient_descent(Y, self.cache, alpha)
 
-            cost = self.cost(Y, A)
+                # Calculate cost
+                cost = self.cost(Y, A)
 
-            # store cost for graph
-            costs.append(cost)
-            count.append(i)
+                # Store costs for plotting
+                costs.append(cost)
+                count.append(i)
 
-            # verbose TRUE, every step + first and last iteration
-            if verbose and (i % step == 0 or i == 0 or i == iterations):
-                # run evaluate
-                print("Cost after {} iterations: {}".format(i, cost))
+                # Verbose condition to print the cost periodically
+                if verbose and (i % step == 0 or i == 0 or i == iterations):
+                    print("Cost after {} iterations: {}".format(i, cost))
 
-        # graph TRUE after training complete
+        # Plotting the cost graph if required
         if graph:
             plt.plot(count, costs, 'b-')
             plt.xlabel('iteration')
@@ -204,32 +196,26 @@ class DeepNeuralNetwork:
             plt.title('Training Cost')
             plt.show()
 
+        # Evaluate and return the final performance after training
         return self.evaluate(X, Y)
 
     def save(self, filename):
         """
-        Saves the instance object to a file in pickle format.
-        filename is the file to which the object will be saved.
-        If filename does not have the extension .pkl, adds it.
+        Save the model to a file in pickle format.
         """
         if not filename.endswith(".pkl"):
             filename += ".pkl"
-
-        with open(filename, "wb") as file:
+        with open(filename, 'wb') as file:
             pickle.dump(self, file)
 
     @staticmethod
     def load(filename):
         """
-        Loads a pickled DeepNeuralNetwork object.
-        filename is the file from which the object should be loaded.
-        Returns: the loaded object, or None if filename doesn't exist.
+        Load a saved deep neural network model.
         """
-
         try:
-            with open(filename, "rb") as file:
-                unpickled_obj = pickle.load(file)
-            return unpickled_obj
-
+            with open(filename, 'rb') as file:
+                loaded = pickle.load(file)
+            return loaded
         except FileNotFoundError:
             return None
