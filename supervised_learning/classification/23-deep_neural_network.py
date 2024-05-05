@@ -173,7 +173,7 @@ class DeepNeuralNetwork:
 
             cost = self.cost(Y, A)  # Calculate the cost
 
-            if verbose and (i % step == 0 or i == 0 or i == iterations):
+            if verbose:
                 print(f"Cost after {i} iterations: {cost}")
             if graph:
                 costs.append(cost)
