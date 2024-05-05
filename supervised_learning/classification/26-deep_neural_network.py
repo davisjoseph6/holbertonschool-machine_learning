@@ -140,20 +140,19 @@ class DeepNeuralNetwork:
 
         return self.__weights
 
-    def train(self, X, Y, iterations=5000, alpha=0.05,
-              verbose=True, graph=True, step=100):
+    def train(self, X, Y, iterations=5000, alpha=0.05, verbose=True, graph=True, step=100):
         """
-            Method to train deep neural network
+        Trains the deep neural network using forward propagation and back propagation.
 
-            :param X: ndarray, shape(nx,m), input data
-            :param Y: ndarray, shapte(1,m), correct labels
-            :param iterations: number of iterations to train over
-            :param alpha: learning rate
-            :param verbose: boolean print or not information
-            :param graph: boolean print or not graph
-            :param step: int
+        :param X: numpy.ndarray of shape (nx, m) containing the input data.
+        :param Y: numpy.ndarray of shape (1, m) containing the correct labels.
+        :param iterations: int representing the number of iterations to train over.
+        :param alpha: float representing the learning rate.
+        :param verbose: bool determining if output should be printed during training.
+        :param graph: bool determining if a graph of the cost should be displayed.
+        :param step: int representing the interval of iterations to report the cost.
 
-            :return: evaluation of training after iterations
+        :return: The output predictions and the cost of the network after training.
         """
 
         if not isinstance(iterations, int):
@@ -168,44 +167,35 @@ class DeepNeuralNetwork:
             raise TypeError("verbose must be a boolean")
         if not isinstance(graph, bool):
             raise TypeError("graph must be a boolean")
-        if verbose is True or graph is True:
+        if verbose or graph:
             if not isinstance(step, int):
                 raise TypeError("step must be an integer")
             if step <= 0 or step > iterations:
                 raise ValueError("step must be positive and <= iterations")
 
-        # list to store cost /iter
-        costs = []
-        count = []
+        costs = []  # list to store the cost at each step (for graphing)
 
         for i in range(iterations + 1):
-            # run forward propagation
-            A, cache = self.forward_prop(X)
+            A, cache = self.forward_prop(X)  # Perform forward propagation
 
-            # run gradient descent for all iterations except the last one
-            if i != iterations:
-                self.gradient_descent(Y, self.cache, alpha)
+            if i != iterations:  # Gradient descent for all iterations except the last
+                self.gradient_descent(Y, cache, alpha)
 
-            cost = self.cost(Y, A)
+            cost = self.cost(Y, A)  # Calculate the cost
 
-            # store cost for graph
-            costs.append(cost)
-            count.append(i)
-
-            # verbose TRUE, every step + first and last iteration
             if verbose and (i % step == 0 or i == 0 or i == iterations):
-                # run evaluate
-                print("Cost after {} iterations: {}".format(i, cost))
+                print(f"Cost after {i} iterations: {cost}")
+            if graph:
+                costs.append(cost)
 
-        # graph TRUE after training complete
         if graph:
-            plt.plot(count, costs, 'b-')
+            plt.plot(range(0, iterations + 1, step), costs)
             plt.xlabel('iteration')
             plt.ylabel('cost')
             plt.title('Training Cost')
             plt.show()
 
-        return self.evaluate(X, Y)
+        return self.evaluate(X, Y)  # Evaluate and return the performance of the model
 
     def save(self, filename):
         """
