@@ -111,7 +111,7 @@ class DeepNeuralNetwork:
 
     def train(self, X, Y, iterations=5000, alpha=0.05, verbose=True, graph=True, step=100):
         """
-        Trains the deep neural network
+        Trains the neural network
         """
         if not isinstance(iterations, int):
             raise TypeError("iterations must be an integer")
