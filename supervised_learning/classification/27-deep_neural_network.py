@@ -114,23 +114,30 @@ class DeepNeuralNetwork:
     def gradient_descent(self, Y, cache, alpha=0.05):
         """
         Perform one pass of gradient descent on the neural network.
-
-        Args:
-            Y (np.ndarray): Correct labels.
-            cache (dict): Cache returned from forward propagation.
-            alpha (float): Learning rate.
         """
         m = Y.shape[1]
-        A_prev = self.__cache['A0']
-        for l in reversed(range(1, self.__L + 1)):
-            A = cache['A' + str(l)]
-            A_prev = cache['A' + str(l - 1)] if l > 1 else self.__cache['A0']
-            W = self.__weights['W' + str(l)]
-            dZ = A - Y if l == self.__L else np.multiply(np.dot(W.T, dZ), A * (1 - A))
+        A = cache[f'A{self.__L}']
+
+        # Start with the gradient of cost with respect to the output activation
+        dZ = A - Y
+
+        for layer_index in reversed(range(1, self.__L + 1)):
+            A_prev = cache[f'A{layer_index-1}']
+            A_curr = cache[f'A{layer_index}']
+            W = self.__weights[f'W{layer_index}']
+
+            # Gradient computation
             dW = np.dot(dZ, A_prev.T) / m
             db = np.sum(dZ, axis=1, keepdims=True) / m
-            self.__weights['W' + str(l)] -= alpha * dW
-            self.__weights['b' + str(l)] -= alpha * db
+
+            if layer_index > 1:
+                # Compute dZ for the next layer
+                dZ = np.dot(W.T, dZ) * A_prev * (1 - A_prev)
+
+            # Update weights and biases
+            self.__weights[f'W{layer_index}'] -= alpha * dW
+            self.__weights[f'b{layer_index}'] -= alpha * db
+
 
     def train(self, X, Y, iterations=5000, alpha=0.05, verbose=True, graph=True, step=100):
         """
