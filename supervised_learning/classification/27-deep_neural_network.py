@@ -3,26 +3,25 @@
 This script defines a Deep Neural Network for multiclass classification.
 """
 
-import numpy as np
 import matplotlib.pyplot as plt
+import numpy as np
 import pickle
 
 class DeepNeuralNetwork:
     """
-    Represents a deep neural network performing multiclass classification.
+    Represents a deep neural network for multiclass classification.
     """
-
     def __init__(self, nx, layers):
         """
-        Class constructor
+        Initialize the deep neural network.
 
         Parameters:
-        nx (int): number of input features
-        layers (list of int): number of nodes in each layer of the network
+            nx (int): Number of input features.
+            layers (list of int): Number of nodes in each layer.
 
-        Exceptions:
-        TypeError: If nx is not an integer or layers is not a list of the positive integers.
-        ValueError: If nx is less than 1.
+        Raises:
+            TypeError: If nx is not an integer or layers is not a list of the correct format.
+            ValueError: If nx is less than 1 or layers contains non-positive integers.
         """
         if not isinstance(nx, int):
             raise TypeError("nx must be an integer")
@@ -30,7 +29,7 @@ class DeepNeuralNetwork:
             raise ValueError("nx must be a positive integer")
         if not isinstance(layers, list) or not layers:
             raise TypeError("layers must be a list of positive integers")
-        if any(not isinstance(x, int) or x <= 0 for x in layers):
+        if any(type(layer) != int or layer <= 0 for layer in layers):
             raise TypeError("layers must be a list of positive integers")
 
         self.__L = len(layers)
@@ -40,7 +39,6 @@ class DeepNeuralNetwork:
         for l in range(1, self.__L + 1):
             layer_size = layers[l - 1]
             prev_layer_size = nx if l == 1 else layers[l - 2]
-
             self.__weights['W' + str(l)] = np.random.randn(layer_size, prev_layer_size) * np.sqrt(2 / prev_layer_size)
             self.__weights['b' + str(l)] = np.zeros((layer_size, 1))
 
@@ -58,60 +56,96 @@ class DeepNeuralNetwork:
 
     def forward_prop(self, X):
         """
-        Calculates the forward propagation of the neural network
+        Perform forward propagation of the neural network.
+
+        Args:
+            X (np.ndarray): The input data.
+
+        Returns:
+            tuple: The output of the last layer and the cache.
         """
         self.__cache['A0'] = X
         for l in range(1, self.__L + 1):
+            A_prev = self.__cache['A' + str(l - 1)]
             W = self.__weights['W' + str(l)]
             b = self.__weights['b' + str(l)]
-            A_prev = self.__cache['A' + str(l - 1)]
             Z = np.dot(W, A_prev) + b
-            if l == self.__L:  # Apply softmax activation function at the output layer
+            if l == self.__L:
+                # Softmax activation function on the output layer
                 t = np.exp(Z - np.max(Z, axis=0, keepdims=True))
                 self.__cache['A' + str(l)] = t / np.sum(t, axis=0, keepdims=True)
-            else:  # Apply sigmoid activation function to hidden layers
+            else:
+                # Sigmoid activation function for hidden layers
                 self.__cache['A' + str(l)] = 1 / (1 + np.exp(-Z))
         return self.__cache['A' + str(self.__L)], self.__cache
 
     def cost(self, Y, A):
         """
-        Calculates the cost of the model using categorical cross-entropy
+        Calculate the cross-entropy cost of the network.
+
+        Args:
+            Y (np.ndarray): Correct labels for input data.
+            A (np.ndarray): Output from the forward propagation.
+
+        Returns:
+            float: Cost.
         """
         m = Y.shape[1]
-        cost = -np.sum(Y * np.log(A + 1e-8)) / m
+        cost = -(1 / m) * np.sum(Y * np.log(A + 1e-8))
         return cost
 
     def evaluate(self, X, Y):
         """
-        Evaluates the neural network’s predictions
+        Evaluate the neural network's predictions.
+
+        Args:
+            X (np.ndarray): Input data.
+            Y (np.ndarray): True labels for input data.
+
+        Returns:
+            tuple: Predictions and the cost.
         """
         A, _ = self.forward_prop(X)
-        cost = self.cost(Y, A)
         predictions = np.argmax(A, axis=0)
-        return predictions, cost
+        one_hot_predictions = np.eye(Y.shape[0])[predictions]
+        cost = self.cost(Y, A)
+        return one_hot_predictions, cost
 
-    def gradient_descent(self, Y, alpha=0.05):
+    def gradient_descent(self, Y, cache, alpha=0.05):
         """
-        Performs one pass of gradient descent on the neural network
+        Perform one pass of gradient descent on the neural network.
+
+        Args:
+            Y (np.ndarray): Correct labels.
+            cache (dict): Cache returned from forward propagation.
+            alpha (float): Learning rate.
         """
         m = Y.shape[1]
-        A = self.__cache['A' + str(self.__L)]
-        dA = -(Y - A)
-
+        A_prev = self.__cache['A0']
         for l in reversed(range(1, self.__L + 1)):
-            A_prev = self.__cache['A' + str(l - 1)]
+            A = cache['A' + str(l)]
+            A_prev = cache['A' + str(l - 1)] if l > 1 else self.__cache['A0']
             W = self.__weights['W' + str(l)]
-            dZ = dA
+            dZ = A - Y if l == self.__L else np.multiply(np.dot(W.T, dZ), A * (1 - A))
             dW = np.dot(dZ, A_prev.T) / m
             db = np.sum(dZ, axis=1, keepdims=True) / m
-            if l > 1:
-                dA = np.dot(W.T, dZ) * A_prev * (1 - A_prev)
             self.__weights['W' + str(l)] -= alpha * dW
             self.__weights['b' + str(l)] -= alpha * db
 
     def train(self, X, Y, iterations=5000, alpha=0.05, verbose=True, graph=True, step=100):
         """
-        Trains the neural network
+        Train the neural network.
+
+        Args:
+            X (np.ndarray): Input data.
+            Y (np.ndarray): True labels.
+            iterations (int): Number of iterations.
+            alpha (float): Learning rate.
+            verbose (bool): Whether to print progress.
+            graph (bool): Whether to plot a graph.
+
+        Returns:
+            tuple: The output predictions and cost of the network.
         """
         if not isinstance(iterations, int):
             raise TypeError("iterations must be an integer")
@@ -121,25 +155,16 @@ class DeepNeuralNetwork:
             raise TypeError("alpha must be a float")
         if alpha <= 0:
             raise ValueError("alpha must be positive")
-        if not isinstance(verbose, bool):
-            raise TypeError("verbose must be a boolean")
-        if not isinstance(graph, bool):
-            raise TypeError("graph must be a boolean")
-        if verbose or graph:
-            if not isinstance(step, int):
-                raise TypeError("step must be an integer")
-            if step <= 0 or step > iterations:
-                raise ValueError("step must be positive and <= iterations")
 
         costs = []
-        for i in range(iterations):
+        for i in range(iterations + 1):
             A, _ = self.forward_prop(X)
-            self.gradient_descent(Y, alpha)
             cost = self.cost(Y, A)
-            if verbose and (i % step == 0 or i == iterations - 1):
-                print(f"Cost after {i} iterations: {cost}")
-            if graph:
+            if i % step == 0 or i == iterations:
+                if verbose:
+                    print(f"Cost after {i} iterations: {cost}")
                 costs.append(cost)
+            self.gradient_descent(Y, self.__cache, alpha)
 
         if graph:
             plt.plot(np.squeeze(costs))
@@ -152,21 +177,31 @@ class DeepNeuralNetwork:
 
     def save(self, filename):
         """
-        Save the instance to a file in pickle format.
+        Save the neural network to a file.
+
+        Args:
+            filename (str): The file path where the object should be saved.
         """
-        if not filename.endswith(".pkl"):
-            filename += ".pkl"
+        if not filename.endswith('.pkl'):
+            filename += '.pkl'
         with open(filename, 'wb') as file:
             pickle.dump(self, file)
 
     @staticmethod
     def load(filename):
         """
-        Load a saved instance from a file.
+        Load a neural network from a file.
+
+        Args:
+            filename (str): The file path to load the neural network from.
+
+        Returns:
+            DeepNeuralNetwork: The loaded neural network or None if file does not exist.
         """
         try:
             with open(filename, 'rb') as file:
-                return pickle.load(file)
+                loaded_network = pickle.load(file)
+            return loaded_network
         except FileNotFoundError:
             return None
 
