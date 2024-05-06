@@ -80,22 +80,16 @@ class DeepNeuralNetwork:
         return expZ / expZ.sum(axis=0, keepdims=True)
 
     def forward_prop(self, X):
-        """
-        Perform forward propagation with softmax on the last layer for multiclass classification.
-        """
         self.__cache['A0'] = X
-        for layer_index in range(1, self.__L):
+        for layer_index in range(1, self.__L + 1):
             W = self.__weights[f'W{layer_index}']
             b = self.__weights[f'b{layer_index}']
             A_prev = self.__cache[f'A{layer_index-1}']
             Z = np.dot(W, A_prev) + b
-            self.__cache[f'A{layer_index}'] = self.sigmoid(Z)
-        # Apply softmax on the last layer
-        W_last = self.__weights[f'W{self.__L}']
-        b_last = self.__weights[f'b{self.__L}']
-        A_last = self.__cache[f'A{self.__L - 1}']
-        Z_last = np.dot(W_last, A_last) + b_last
-        self.__cache[f'A{self.__L}'] = self.softmax(Z_last)
+            if layer_index == self.__L:
+                self.__cache[f'A{layer_index}'] = self.softmax(Z)
+            else:
+                self.__cache[f'A{layer_index}'] = self.sigmoid(Z)
         return self.__cache[f'A{self.__L}'], self.__cache
 
     def cost(self, Y, A):
@@ -107,15 +101,12 @@ class DeepNeuralNetwork:
         return cost
 
     def evaluate(self, X, Y):
-        """
-        Evaluate the model's predictions with one-hot encoding.
-        """
         A, _ = self.forward_prop(X)
         cost = self.cost(Y, A)
-        predictions = np.argmax(A, axis=0)  # ensure this matches the expected dimensions
-        if predictions.ndim == 1:
-            predictions = predictions.reshape(1, -1)  # reshape for consistency if needed
-        return predictions, cost
+        predictions = np.argmax(A, axis=0)
+        labels = np.argmax(Y, axis=0)
+        accuracy = np.mean(predictions == labels)
+        return predictions, cost, accuracy
 
     def gradient_descent(self, Y, cache, alpha=0.05):
         """
