@@ -5,7 +5,6 @@ This script defines a Deep Neural Network 4 binary classification.
 
 import matplotlib.pyplot as plt
 import numpy as np
-np.random.seed(42)
 import pickle
 
 
@@ -18,6 +17,7 @@ class DeepNeuralNetwork:
         Initialize a deep neural network with given number of input features
         and layers.
         """
+        np.random.seed(0)
         if not isinstance(nx, int):
             raise TypeError("nx must be an integer")
         if nx < 1:
@@ -66,6 +66,12 @@ class DeepNeuralNetwork:
         Getter 4 weights.
         """
         return self.__weights
+
+    def sigmoid(self, Z):
+        """
+        Sigmoid activation function.
+        """
+        return 1 / (1 + np.exp(-Z))
 
     def softmax(self, Z):
         """Softmax activation function for output layer"""
