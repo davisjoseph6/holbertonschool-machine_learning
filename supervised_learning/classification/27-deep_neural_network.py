@@ -66,44 +66,38 @@ class DeepNeuralNetwork:
         """
         return self.__weights
 
-    def sigmoid(self, Z):
-        """
-        Sigmoid activation function.
-        """
-        return 1 / (1 + np.exp(-Z))
+    def softmax(self, Z):
+        """Softmax activation function for output layer"""
+        exp_Z = np.exp(Z - np.max(Z, axis=0, keepdims=True))  # Numerical stability
+        return exp_Z / np.sum(exp_Z, axis=0, keepdims=True)
 
     def forward_prop(self, X):
+        """Calculate the forward propagation of the neural network, including softmax for the final layer"""
         self.__cache['A0'] = X
-        for layer_index in range(1, self.__L):
-            W = self.__weights[f'W{layer_index}']
-            b = self.__weights[f'b{layer_index}']
-            A_prev = self.__cache[f'A{layer_index-1}']
-            Z = np.dot(W, A_prev) + b
-            self.__cache[f'A{layer_index}'] = 1 / (1 + np.exp(-Z))  # Using sigmoid for hidden layers
+        for i in range(1, self.__L):
+            W = self.__weights[f'W{i}']
+            b = self.__weights[f'b{i}']
+            Z = np.dot(W, self.__cache[f'A{i-1}']) + b
+            self.__cache[f'A{i}'] = 1 / (1 + np.exp(-Z))  # Sigmoid activation for hidden layers
 
         # Softmax activation for the output layer
-        W = self.__weights[f'W{self.__L}']
-        b = self.__weights[f'b{self.__L}']
-        Z = np.dot(W, self.__cache[f'A{self.__L - 1}']) + b
-        expZ = np.exp(Z - np.max(Z, axis=0, keepdims=True))
-        self.__cache[f'A{self.__L}'] = expZ / expZ.sum(axis=0, keepdims=True)
-
+        Z_final = np.dot(self.__weights[f'W{self.__L}'], self.__cache[f'A{self.__L-1}']) + self.__weights[f'b{self.__L}']
+        self.__cache[f'A{self.__L}'] = self.softmax(Z_final)
         return self.__cache[f'A{self.__L}'], self.__cache
 
-
     def cost(self, Y, A):
+        """Calculate the cost of the model using softmax output"""
         m = Y.shape[1]
-        cost = -np.sum(Y * np.log(A + 1e-8)) / m  # Adding a small epsilon to prevent log(0)
+        cost = -np.sum(Y * np.log(A + 1e-8)) / m  # Adding a small value to avoid log(0)
         return cost
 
     def evaluate(self, X, Y):
+        """Evaluate the neural network's predictions"""
         A, _ = self.forward_prop(X)
         predictions = np.argmax(A, axis=0)
-        correct_labels = np.argmax(Y, axis=0)
-        accuracy = np.mean(predictions == correct_labels)
+        one_hot_predictions = np.eye(Y.shape[0])[predictions].T  # Convert predictions to one-hot
         cost = self.cost(Y, A)
-        return predictions, cost
-
+        return one_hot_predictions, cost
 
     def gradient_descent(self, Y, cache, alpha=0.05):
         """
@@ -215,3 +209,4 @@ class DeepNeuralNetwork:
             return loaded
         except FileNotFoundError:
             return None
+
