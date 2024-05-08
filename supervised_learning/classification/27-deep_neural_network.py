@@ -63,12 +63,14 @@ class DeepNeuralNetwork:
             W = self.__weights[f'W{i}']
             b = self.__weights[f'b{i}']
             Z = np.dot(W, self.__cache[f'A{i-1}']) + b
-            self.__cache[f'A{i}'] = 1 / (1 + np.exp(-Z))  # Sigmoid activation for hidden layers
-
-        # Softmax activation for the output layer
-        Z_final = np.dot(self.__weights[f'W{self.__L}'], self.__cache[f'A{self.__L-1}']) + self.__weights[f'b{self.__L}']
-        self.__cache[f'A{self.__L}'] = self.softmax(Z_final)
+            # Use sigmoid for hidden layers
+            if i < self.__L:
+                self.__cache[f'A{i}'] = 1 / (1 + np.exp(-Z))
+            else:
+                # Softmax for the output layer
+                self.__cache[f'A{i}'] = self.softmax(Z)
         return self.__cache[f'A{self.__L}'], self.__cache
+
 
     def cost(self, Y, A):
         """Calculate the cost of the model using softmax output"""
@@ -91,25 +93,32 @@ class DeepNeuralNetwork:
         m = Y.shape[1]  # Number of examples
         L = self.__L  # Number of layers
 
-        dZ = cache[f'A{L}'] - Y  # Difference at output layer
+        # Derivative of the cost with respect to the output (A - Y)
+        dZ = cache[f'A{L}'] - Y
 
         for layer_index in reversed(range(1, L + 1)):
             A_prev = cache[f'A{layer_index-1}']
-            A_curr = cache[f'A{layer_index}']
             W = self.__weights[f'W{layer_index}']
 
             dW = np.dot(dZ, A_prev.T) / m
             db = np.sum(dZ, axis=1, keepdims=True) / m
 
             if layer_index > 1:
-                # Prepare dZ for the next layer (element-wise)
-                dZ = np.dot(W.T, dZ) * A_prev * (1 - A_prev)
+                # Previous layer's activation
+                A_prev = cache[f'A{layer_index-1}']
+                if layer_index == L:
+                    # If it's just below the output layer, we need to adjust for the activation function used there
+                    dZ = np.dot(W.T, dZ) * (A_prev * (1 - A_prev))
+                else:
+                    # For all other layers using sigmoid
+                    dZ = np.dot(W.T, dZ) * (A_prev * (1 - A_prev))
 
             # Update weights and biases
             self.__weights[f'W{layer_index}'] -= alpha * dW
             self.__weights[f'b{layer_index}'] -= alpha * db
 
         return self.__weights
+
 
     def train(self, X, Y, iterations=5000, alpha=0.05, verbose=True, graph=True, step=100):
         """
