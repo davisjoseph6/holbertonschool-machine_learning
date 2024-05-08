@@ -5,6 +5,7 @@ This script defines a Deep Neural Network 4 binary classification.
 
 import matplotlib.pyplot as plt
 import numpy as np
+np.random.seed(42)
 import pickle
 
 
