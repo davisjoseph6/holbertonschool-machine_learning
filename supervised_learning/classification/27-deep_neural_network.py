@@ -5,6 +5,7 @@ This script defines a Deep Neural Network 4 binary classification.
 
 import matplotlib.pyplot as plt
 import numpy as np
+np.random.seed(42)
 import pickle
 
 
@@ -100,30 +101,34 @@ class DeepNeuralNetwork:
         return one_hot_predictions, cost
 
     def gradient_descent(self, Y, cache, alpha=0.05):
+        """
+        Per4m one pass of gradient descent on the neural network.
+        """
         m = Y.shape[1]  # Number of examples
         L = self.__L  # Number of layers
 
-        # Output layer gradient, where A is the softmax output
-        A = cache[f'A{L}']
-        dZ = A - Y
+        A = cache[f'A{L}']  # Output of the last layer
+        # Derivative of cost with respect to A
+        dA = - (np.divide(Y, A) - np.divide(1 - Y, 1 - A))
 
         for layer_index in reversed(range(1, L + 1)):
             A_prev = cache[f'A{layer_index-1}']
+            A_curr = cache[f'A{layer_index}']
             W = self.__weights[f'W{layer_index}']
 
+            # Element-wise product assumes sigmoid activation
+            dZ = dA * A_curr * (1 - A_curr)
             dW = np.dot(dZ, A_prev.T) / m
             db = np.sum(dZ, axis=1, keepdims=True) / m
 
             if layer_index > 1:
-                # Backpropagate the gradient
-                dZ = np.dot(W.T, dZ) * (A_prev * (1 - A_prev))  # Sigmoid derivative
+                dA = np.dot(W.T, dZ)  # Prepare dA 4 the next layer
 
             # Update weights and biases
             self.__weights[f'W{layer_index}'] -= alpha * dW
             self.__weights[f'b{layer_index}'] -= alpha * db
 
         return self.__weights
-
 
     def train(self, X, Y, iterations=5000, alpha=0.05, verbose=True,
               graph=True, step=100):
@@ -205,4 +210,3 @@ class DeepNeuralNetwork:
             return loaded
         except FileNotFoundError:
             return None
-
