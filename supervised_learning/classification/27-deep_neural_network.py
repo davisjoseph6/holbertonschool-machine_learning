@@ -3,89 +3,146 @@
 This script defines a Deep Neural Network 4 binary classification.
 """
 
+import matplotlib.pyplot as plt
 import numpy as np
 import pickle
-import matplotlib.pyplot as plt
+
 
 class DeepNeuralNetwork:
+    """
+    Define a deep neural network that does binary classification.
+    """
     def __init__(self, nx, layers):
+        """
+        Initialize a deep neural network with given number of input features
+        and layers.
+        """
         if not isinstance(nx, int):
             raise TypeError("nx must be an integer")
         if nx < 1:
             raise ValueError("nx must be a positive integer")
         if not isinstance(layers, list) or not layers:
             raise TypeError("layers must be a list of positive integers")
-        if any(isinstance(layer, int) and layer <= 0 for layer in layers):
+
+        # Check if all layers are positive integers
+        if not all(map(lambda x: isinstance(x, int) and x > 0, layers)):
             raise TypeError("layers must be a list of positive integers")
 
-        self.__L = len(layers)
-        self.__cache = {}
-        self.__weights = {}
-        for i in range(self.__L):
-            layer_size = layers[i]
-            weight_key = 'W' + str(i + 1)
-            bias_key = 'b' + str(i + 1)
-            prev_layer_size = nx if i == 0 else layers[i - 1]
-            self.__weights[weight_key] = np.random.randn(layer_size, prev_layer_size) * np.sqrt(2 / prev_layer_size)
-            self.__weights[bias_key] = np.zeros((layer_size, 1))
+        self.__L = len(layers)  # number of layers
+        self.__cache = {}  # to store all intermediary values of the network
+        self.__weights = {}  # to hold all weights and biases of the network
+
+        # Initialize weights and biases using He et al. method 4 each layer
+        for layer_index in range(1, self.__L + 1):
+            layer_size = layers[layer_index - 1]
+            prev_layer_size = nx if layer_index == 1 else layers[
+                    layer_index - 2
+                    ]
+            self.__weights[f'W{layer_index}'] = (
+                    np.random.randn(layer_size, prev_layer_size) * np.sqrt(
+                        2 / prev_layer_size
+                        )
+                    )
+            self.__weights[f'b{layer_index}'] = np.zeros((layer_size, 1))
 
     @property
     def L(self):
+        """
+        Getter 4 number of layers.
+        """
         return self.__L
 
     @property
     def cache(self):
+        """
+        Getter 4 cache.
+        """
         return self.__cache
 
     @property
     def weights(self):
+        """
+        Getter 4 weights.
+        """
         return self.__weights
 
-    def softmax(self, Z):
-        expZ = np.exp(Z - np.max(Z, axis=0, keepdims=True))
-        return expZ / expZ.sum(axis=0, keepdims=True)
+    def sigmoid(self, Z):
+        """
+        Sigmoid activation function.
+        """
+        return 1 / (1 + np.exp(-Z))
 
     def forward_prop(self, X):
         self.__cache['A0'] = X
-        for i in range(1, self.__L + 1):
-            W = self.__weights['W' + str(i)]
-            b = self.__weights['b' + str(i)]
-            A_prev = self.__cache['A' + str(i - 1)]
+        for layer_index in range(1, self.__L):
+            W = self.__weights[f'W{layer_index}']
+            b = self.__weights[f'b{layer_index}']
+            A_prev = self.__cache[f'A{layer_index-1}']
             Z = np.dot(W, A_prev) + b
-            if i == self.__L:  # Apply softmax on the output layer
-                self.__cache['A' + str(i)] = self.softmax(Z)
-            else:
-                self.__cache['A' + str(i)] = 1 / (1 + np.exp(-Z))  # Sigmoid for hidden layers
-        return self.__cache['A' + str(self.__L)], self.__cache
+            self.__cache[f'A{layer_index}'] = 1 / (1 + np.exp(-Z))  # Using sigmoid for hidden layers
+
+        # Softmax activation for the output layer
+        W = self.__weights[f'W{self.__L}']
+        b = self.__weights[f'b{self.__L}']
+        Z = np.dot(W, self.__cache[f'A{self.__L - 1}']) + b
+        expZ = np.exp(Z - np.max(Z, axis=0, keepdims=True))
+        self.__cache[f'A{self.__L}'] = expZ / expZ.sum(axis=0, keepdims=True)
+
+        return self.__cache[f'A{self.__L}'], self.__cache
+
 
     def cost(self, Y, A):
         m = Y.shape[1]
-        cost = -np.sum(Y * np.log(A + 1e-8)) / m  # Avoid log(0) with epsilon
+        cost = -np.sum(Y * np.log(A + 1e-8)) / m  # Adding a small epsilon to prevent log(0)
         return cost
 
     def evaluate(self, X, Y):
         A, _ = self.forward_prop(X)
-        cost = self.cost(Y, A)
         predictions = np.argmax(A, axis=0)
-        labels = np.argmax(Y, axis=0)
-        accuracy = np.mean(predictions == labels)
-        return predictions, cost, accuracy
+        correct_labels = np.argmax(Y, axis=0)
+        accuracy = np.mean(predictions == correct_labels)
+        cost = self.cost(Y, A)
+        return predictions, cost
+
 
     def gradient_descent(self, Y, cache, alpha=0.05):
-        m = Y.shape[1]
-        A = cache['A' + str(self.__L)]
-        dZ = A - Y
-        for i in reversed(range(1, self.__L + 1)):
-            A_prev = cache['A' + str(i - 1)]
-            W = self.__weights['W' + str(i)]
+        """
+        Per4m one pass of gradient descent on the neural network.
+        """
+        m = Y.shape[1]  # Number of examples
+        L = self.__L  # Number of layers
+
+        A = cache[f'A{L}']  # Output of the last layer
+        # Derivative of cost with respect to A
+        dA = - (np.divide(Y, A) - np.divide(1 - Y, 1 - A))
+
+        for layer_index in reversed(range(1, L + 1)):
+            A_prev = cache[f'A{layer_index-1}']
+            A_curr = cache[f'A{layer_index}']
+            W = self.__weights[f'W{layer_index}']
+
+            # Element-wise product assumes sigmoid activation
+            dZ = dA * A_curr * (1 - A_curr)
             dW = np.dot(dZ, A_prev.T) / m
             db = np.sum(dZ, axis=1, keepdims=True) / m
-            if i > 1:
-                dZ = np.dot(W.T, dZ) * (A_prev * (1 - A_prev))
-            self.__weights['W' + str(i)] -= alpha * dW
-            self.__weights['b' + str(i)] -= alpha * db
 
-    def train(self, X, Y, iterations=5000, alpha=0.05, verbose=True, graph=True, step=100):
+            if layer_index > 1:
+                dA = np.dot(W.T, dZ)  # Prepare dA 4 the next layer
+
+            # Update weights and biases
+            self.__weights[f'W{layer_index}'] -= alpha * dW
+            self.__weights[f'b{layer_index}'] -= alpha * db
+
+        return self.__weights
+
+    def train(self, X, Y, iterations=5000, alpha=0.05, verbose=True,
+              graph=True, step=100):
+        """
+        Trains the deep neural network using forward propagation and gradient
+        descent.
+        """
+
+        # Validate inputs for types and value constraints
         if not isinstance(iterations, int):
             raise TypeError("iterations must be an integer")
         if iterations <= 0:
@@ -98,26 +155,63 @@ class DeepNeuralNetwork:
             raise TypeError("verbose must be a boolean")
         if not isinstance(graph, bool):
             raise TypeError("graph must be a boolean")
-        if verbose or graph:
+        if verbose is True or graph is True:
             if not isinstance(step, int):
                 raise TypeError("step must be an integer")
             if step <= 0 or step > iterations:
                 raise ValueError("step must be positive and <= iterations")
 
-        cost_list = []
-        for i in range(iterations):
-            A, _ = self.forward_prop(X)
-            self.gradient_descent(Y, self.__cache, alpha)
-            cost = self.cost(Y, A)
-            if verbose and (i % step == 0 or i == iterations - 1):
-                print(f"Cost after {i} iterations: {cost}")
-            if graph:
-                cost_list.append(cost)
+        # List to store costs for potential plotting
+        costs = []
+        count = []
+
+        for i in range(iterations + 1):
+            # Forward propagation
+            A, cache = self.forward_prop(X)
+
+            # Gradient descent on all iterations except the last
+            if i != iterations:
+                self.gradient_descent(Y, self.cache, alpha)
+
+                # Calculate cost
+                cost = self.cost(Y, A)
+
+                # Store costs for plotting
+                costs.append(cost)
+                count.append(i)
+
+                # Verbose condition to print the cost periodically
+                if verbose and (i % step == 0 or i == 0 or i == iterations):
+                    print("Cost after {} iterations: {}".format(i, cost))
+
+        # Plotting the cost graph if required
         if graph:
-            plt.plot(range(0, iterations, step), cost_list)
-            plt.xlabel('Iterations')
-            plt.ylabel('Cost')
+            plt.plot(count, costs, 'b-')
+            plt.xlabel('iteration')
+            plt.ylabel('cost')
             plt.title('Training Cost')
             plt.show()
+
+        # Evaluate and return the final performance after training
         return self.evaluate(X, Y)
 
+    def save(self, filename):
+        """
+        Save the model to a file in pickle format.
+        """
+        if not filename.endswith(".pkl"):
+            filename += ".pkl"
+        with open(filename, 'wb') as file:
+            pickle.dump(self, file)
+
+    @staticmethod
+    def load(filename):
+        """
+        Load a saved deep neural network model.
+        """
+        try:
+            with open(filename, 'rb') as file:
+                loaded = pickle.load(file)
+            return loaded
+        except FileNotFoundError:
+            return None
