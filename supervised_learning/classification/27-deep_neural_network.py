@@ -16,21 +16,6 @@ class DeepNeuralNetwork:
     def __init__(self, nx, layers):
         """
         Initialize the deep neural network object.
-
-        Args:
-            nx (int): The number of input features.
-            layers (list): A list of positive integers representing the
-                number of nodes in each layer.
-
-        Raises:
-            TypeError: If nx is not an integer or layers is not a list of
-                positive integers.
-            ValueError: If nx is not a positive integer.
-
-        Attributes:
-            L (int): The number of layers in the neural network.
-            cache (dict): A dictionary to hold intermediate values.
-            weights (dict): A dictionary to hold the weights and biases.
         """
         if not isinstance(nx, int):
             raise TypeError("nx must be an integer")
@@ -56,7 +41,7 @@ class DeepNeuralNetwork:
 
             # He Normal (He-et-al) initialization
             self.__weights[f"W{i + 1}"] = np.random.randn(
-                layers[i], prev_layer) * np.sqrt(2 / prev_layer)
+                    layers[i], prev_layer) * np.sqrt(2 / prev_layer)
 
             self.__weights[f"b{i + 1}"] = np.zeros((layers[i], 1))
 
@@ -80,7 +65,7 @@ class DeepNeuralNetwork:
         self.__cache["A0"] = X
 
         for i in range(1, self.__L + 1):
-            # Previous layer activation ouput, used as input
+            # Previous layer activation output, used as input
             prev_A = self.__cache[f"A{i - 1}"]
 
             Z = np.matmul(self.__weights[f"W{i}"], prev_A)\
@@ -103,26 +88,13 @@ class DeepNeuralNetwork:
     def cost(self, Y, A):
         """
         Calculates the cost of the model using logistic regression.
-        Y is a a one-hot numpy.ndarray of shape (classes, m) encoding the
-        correct labels
-        A is a numpy.ndarray with shape (1, m) containing the activated
-            output of the network for each example.
         """
         m = Y.shape[1]
         return -(1 / m) * np.sum(Y * np.log(A))
 
     def evaluate(self, X, Y):
         """
-        Evaluates the neural network's predictions.
-
-        X is a numpy.ndarray with shape (nx, m) that contains the input data.
-        nx is the number of input features to the neuron.
-        m is the number of examples.
-        Y is a numpy.ndarray with shape (classes, m) that contains the correct
-        one-hot encoded labels for the input data.
-
-        Returns the NN's prediction (a numpy.ndarray with shape (1, m))
-        and the cost of the network, respectively.
+        Evaluates the neural netowrk's predictions
         """
         output, cache = self.forward_prop(X)
 
@@ -137,15 +109,7 @@ class DeepNeuralNetwork:
     def gradient_descent(self, Y, cache, alpha=0.05):
         """
         Calculates one pass of gradient descent on the network.
-
-        Y is a numpy.ndarray with shape (classes, m) that contains the correct
-        one-hot encoded labels for the input data.
-        cache is a dictionary containing all the intermediary values
-        alpha is the learning rate
-
-        Updates the private attribute __weights
         """
-
         m = Y.shape[1]
         dZ = cache[f"A{self.__L}"] - Y
 
@@ -168,18 +132,7 @@ class DeepNeuralNetwork:
     def train(self, X, Y, iterations=5000, alpha=0.05,
               verbose=True, graph=True, step=100):
         """
-            Method to train deep neural network
-
-            :param X: ndarray, shape(nx,m), input data
-            :param Y: ndarray, shape (classes, m) one-hot encoded labels
-                for the correct output data.
-            :param iterations: number of iterations to train over
-            :param alpha: learning rate
-            :param verbose: boolean print or not information
-            :param graph: boolean print or not graph
-            :param step: int
-
-            :return: evaluation of training after iterations
+        Method to train deep neural network
         """
 
         if not isinstance(iterations, int):
@@ -236,8 +189,6 @@ class DeepNeuralNetwork:
     def save(self, filename):
         """
         Saves the instance object to a file in pickle format.
-        filename is the file to which the object will be saved.
-        If filename does not have the extension .pkl, adds it.
         """
         if not filename.endswith(".pkl"):
             filename += ".pkl"
@@ -248,9 +199,7 @@ class DeepNeuralNetwork:
     @staticmethod
     def load(filename):
         """
-        Loads a pickled DeepNeuralNetwork object.
-        filename is the file from which the object should be loaded.
-        Returns: the loaded object, or None if filename doesn't exist.
+        Loads a pickled DeepNeuralNetowrk object.
         """
 
         try:
