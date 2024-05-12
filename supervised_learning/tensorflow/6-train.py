@@ -18,20 +18,6 @@ def train(X_train, Y_train, X_valid, Y_valid, layer_sizes, activations,
           alpha, iterations, save_path="/tmp/model.ckpt"):
     """
     Builds, trains, and saves a neural network classifier.
-
-    Arguments:
-    X_train: numpy.ndarray containing the training input data
-    Y_train: numpy.ndarray containing the training labels
-    X_valid: numpy.ndarray containing the validation input data
-    Y_valid: numpy.ndarray containing the validation labels
-    layer_sizes: list containing the number of nodes in each layer
-    activations: list containing the activation functions for each layer
-    alpha: the learning rate
-    iterations: the number of iterations to train over
-    save_path: designates where to save the model
-
-    Returns:
-    the path where the model was saved
     """
     nx = X_train.shape[1]
     classes = Y_train.shape[1]
@@ -64,9 +50,9 @@ def train(X_train, Y_train, X_valid, Y_valid, layer_sizes, activations,
         # Training loop
         for i in range(iterations + 1):
             train_loss, train_accuracy = sess.run(
-                [loss, accuracy], feed_dict={x: X_train, y: Y_train})
+                    [loss, accuracy], feed_dict={x: X_train, y: Y_train})
             valid_loss, valid_accuracy = sess.run(
-                [loss, accuracy], feed_dict={x: X_valid, y: Y_valid})
+                    [loss, accuracy], feed_dict={x: X_valid, y: Y_valid})
 
             # Print metrics after every 100 iterations, the 0th & the last
             if i % 100 == 0 or i == iterations:
