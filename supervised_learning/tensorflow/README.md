@@ -66,6 +66,7 @@ What is a checkpoint?
 How to save/load a model with tensorflow
 What is the graph collection?
 How to add and get variables from the collection
+
 Requirements:
 General
 Allowed editors: vi, vim, emacs
