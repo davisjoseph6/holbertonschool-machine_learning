@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """
-6th task on tensoflow project
+Builds, trains, and saves a neural network classifier.
 """
+
 import tensorflow.compat.v1 as tf
-tf.disable_eager_execution()
 
 calculate_accuracy = __import__('3-calculate_accuracy').calculate_accuracy
 calculate_loss = __import__('4-calculate_loss').calculate_loss
@@ -15,50 +15,69 @@ forward_prop = __import__('2-forward_prop').forward_prop
 def train(X_train, Y_train, X_valid, Y_valid, layer_sizes, activations,
           alpha, iterations, save_path="/tmp/model.ckpt"):
     """
-    Its get harder,
+    Builds, trains, and saves a neural network classifier.
+
+    Arguments:
+    X_train: numpy.ndarray containing the training input data
+    Y_train: numpy.ndarray containing the training labels
+    X_valid: numpy.ndarray containing the validation input data
+    Y_valid: numpy.ndarray containing the validation labels
+    layer_sizes: list containing the number of nodes in each layer
+    activations: list containing the activation functions for each layer
+    alpha: the learning rate
+    iterations: the number of iterations to train over
+    save_path: designates where to save the model
+
+    Returns:
+    the path where the model was saved
     """
-    # size of the input
     nx = X_train.shape[1]
-    # number of output
     classes = Y_train.shape[1]
 
-    # Placeholders, input X_pl and true labels Y_pl
-    X_pl, Y_pl = create_placeholders(nx, classes)
+    # Use previous functions to prepare placeholders & tensors
+    x, y = create_placeholders(nx, classes)
+    y_pred = forward_prop(x, layer_sizes, activations)
+    loss = calculate_loss(y, y_pred)
+    accuracy = calculate_accuracy(y, y_pred)
+    train_op = create_train_op(loss, alpha)
 
-    # using coding from last sessions tasks: 2,3,4,5
-    Y_pred = forward_prop(X_pl, layer_sizes, activations)
-    loss = calculate_loss(Y_pl, Y_pred)
-    accuracy = calculate_accuracy(Y_pl, Y_pred)
-    train_step = create_train_op(loss, alpha)
+    # Add an op to initialize the variables.
+    init_op = tf.global_variables_initializer()
 
-    # Initialize variables
-    init = tf.initialize_all_variables()
-
-    sess = tf.Session()
-    sess.run(init)
-
-    for i in range(iterations + 1):
-        # training data
-        train_data = {X_pl: X_train, Y_pl: Y_train}
-        a, c = sess.run([accuracy, loss], feed_dict=train_data)
-
-        # other set of datas, testing datas
-        test_data = {X_pl: X_valid, Y_pl: Y_valid}
-        test_a, test_c = sess.run([accuracy, loss], feed_dict=test_data)
-
-        if i < iterations:
-            sess.run(train_step, feed_dict=train_data)
-
-        if i == 0 or i == iterations or i % 100 == 0:
-            print("After {} iterations:".format(i))
-            print("\tTraining Cost: {}".format(c))
-            print("\tTraining Accuracy: {}".format(a))
-            print("\tValidation Cost: {}".format(test_c))
-            print("\tValidation Accuracy: {}".format(test_a))
-
-    # Create a saver object
+    # Add ops to save and restore all the variables (saver object)
     saver = tf.train.Saver()
 
-    # Save the variables to disk
-    saver.save(sess, save_path)
+    # Add tensors to graph's collection
+    tf.add_to_collection('x', x)
+    tf.add_to_collection('y', y)
+    tf.add_to_collection('y_pred', y_pred)
+    tf.add_to_collection('loss', loss)
+    tf.add_to_collection('accuracy', accuracy)
+    tf.add_to_collection('train_op', train_op)
+
+    with tf.Session() as sess:
+        # Initialize variables
+        sess.run(init_op)
+
+        # Training loop
+        for i in range(iterations + 1):
+            train_loss, train_accuracy = sess.run(
+                [loss, accuracy], feed_dict={x: X_train, y: Y_train})
+            valid_loss, valid_accuracy = sess.run(
+                [loss, accuracy], feed_dict={x: X_valid, y: Y_valid})
+
+            # Print metrics after every 100 iterations, the 0th & the last
+            if i % 100 == 0 or i == iterations:
+                print(f"After {i} iterations:")
+                print(f"\tTraining Cost: {train_loss}")
+                print(f"\tTraining Accuracy: {train_accuracy}")
+                print(f"\tValidation Cost: {valid_loss}")
+                print(f"\tValidation Accuracy: {valid_accuracy}")
+
+            if i < iterations:
+                sess.run(train_op, feed_dict={x: X_train, y: Y_train})
+
+        # Save the model
+        save_path = saver.save(sess, save_path)
+
     return save_path
