@@ -1,51 +1,38 @@
 #!/usr/bin/env python3
-
+"""
+Evaluates the output of a neural network
+"""
 
 import tensorflow.compat.v1 as tf
+tf.disable_eager_execution()
 
 def evaluate(X, Y, save_path):
     """
-    Evaluates the output of a neural network.
-
-    Parameters:
-    X (numpy.ndarray): Input data to evaluate.
-    Y (numpy.ndarray): One-hot labels for X.
-    save_path (str): Location to load the model from.
-
+    Evaluates the output of a neural network
+    Args:
+        X (np.ndarray): The input data to evaluate
+        Y (np.ndarray): The one-hot labels for X
+        save_path (str): The location to load the model from
     Returns:
-    tuple: (predictions, accuracy, loss)
+        np.ndarray: The network's prediction
+        float: The accuracy of the model
+        float: The loss of the model
     """
-    # Disable eager execution to use TensorFlow 1.x features
-    tf.disable_eager_execution()
-
-    # Create placeholders for inputs and labels
-    x = tf.placeholder(tf.float32, [None, X.shape[1]])
-    y = tf.placeholder(tf.float32, [None, Y.shape[1]])
-
-    # Correctly define your model architecture to match the checkpoint
-    layer = tf.layers.dense(inputs=x, units=256, activation=tf.nn.relu, name='layer')
-    layer_1 = tf.layers.dense(inputs=layer, units=256, activation=tf.nn.relu, name='layer_1')
-    logits = tf.layers.dense(inputs=layer_1, units=10, activation=None, name='layer_2')
-
-    # Apply softmax to logits
-    y_pred = tf.nn.softmax(logits)
-
-    # Calculate loss
-    loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits_v2(labels=y, logits=logits))
-
-    # Calculate accuracy
-    correct_prediction = tf.equal(tf.argmax(y_pred, 1), tf.argmax(y, 1))
-    accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
-
-    # Create a saver object to load the model
-    saver = tf.train.Saver()
-
     with tf.Session() as sess:
         # Load the saved model
+        saver = tf.train.import_meta_graph(save_path + '.meta')
         saver.restore(sess, save_path)
 
-        # Run the session to get predictions, accuracy, and loss
-        predictions, acc, cost = sess.run([y_pred, accuracy, loss], feed_dict={x: X, y: Y})
+        # Retrieve the necessary tensors from the graph
+        graph = tf.get_default_graph()
+        x = tf.get_collection('x')[0]
+        y = tf.get_collection('y')[0]
+        y_pred = tf.get_collection('y_pred')[0]
+        loss = tf.get_collection('loss')[0]
+        accuracy = tf.get_collection('accuracy')[0]
 
-    return predictions, acc, cost
+        # Evaluate the model on the given data
+        prediction, accuracy_value, loss_value = sess.run(
+            [y_pred, accuracy, loss], feed_dict={x: X, y: Y})
 
+    return prediction, accuracy_value, loss_value
