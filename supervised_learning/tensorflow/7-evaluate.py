@@ -6,6 +6,7 @@ Evaluates the output of a neural network
 import tensorflow.compat.v1 as tf
 tf.disable_eager_execution()
 
+
 def evaluate(X, Y, save_path):
     """
     Evaluates the output of a neural network
