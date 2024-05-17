@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+"""
+Calculates the wieghted moving average of a data set with bias correction.
+"""
 
 
 def moving_average(data, beta):
