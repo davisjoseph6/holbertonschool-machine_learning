@@ -22,7 +22,7 @@ def one_hot(Y, classes):
     one_hot[np.arange(Y.shape[0]), Y] = 1
     return one_hot
 
-lib = np.load('MNIST.npz')
+lib = np.load('../data/MNIST.npz')
 X_3D = lib['X_train']
 Y = lib['Y_train']
 X = X_3D.reshape((X_3D.shape[0], -1))
