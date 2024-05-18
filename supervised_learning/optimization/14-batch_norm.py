@@ -31,8 +31,10 @@ def create_batch_norm_layer(prev, n, activation):
 
     # Create trainable parameters gamma & beta
     # NOTE initialized as trainable vectors of 1 and 0 respectively
-    gamma = tf.Variable(initial_value=tf.ones([n]), name='gamma', trainable=True)
-    beta = tf.Variable(initial_value=tf.zeros([n]), name='beta', trainable=True)
+    gamma = tf.Variable(initial_value=tf.ones([n]), name='gamma',
+                        trainable=True)
+    beta = tf.Variable(initial_value=tf.zeros([n]), name='beta',
+                       trainable=True)
 
     # Given epsilon value
     epsilon = 1e-7
@@ -49,4 +51,3 @@ def create_batch_norm_layer(prev, n, activation):
         variance_epsilon=epsilon)
 
     return activation(Z_batch_norm)
-
