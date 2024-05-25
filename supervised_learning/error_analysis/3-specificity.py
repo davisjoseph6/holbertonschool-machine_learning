@@ -16,7 +16,7 @@ def specificity(confusion):
     # True Positives are the diagonal elements of the confusion matrix
     true_positives = np.diag(confusion)
 
-    # False Positives are the sum of each column, 
+    # False Positives are the sum of each column,
     # excluding the diagonal element
     false_positives = np.sum(confusion, axis=0) - true_positives
 
