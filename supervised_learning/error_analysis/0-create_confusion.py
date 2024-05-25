@@ -14,7 +14,7 @@ def create_confusion_matrix(labels, logits):
     classes = labels.shape[1]
 
     # Initialize the confusion matrix with zeros
-    confusion_matrix = np.zeros((classes, classes), dtype=int)
+    confusion_matrix = np.zeros((classes, classes), dtype=float)
 
     # Convert one-hot encoded labels to class indices
     true_classes = np.argmax(labels, axis=1)
@@ -22,6 +22,6 @@ def create_confusion_matrix(labels, logits):
 
     # Populate the confusion matrix
     for true, pred in zip(true_classes, predicted_classes):
-        confusion_matrix[true, pred] += 1
+        confusion_matrix[true, pred] += 1.0
 
     return confusion_matrix
