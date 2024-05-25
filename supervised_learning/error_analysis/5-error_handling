@@ -1,4 +1,4 @@
 1. High Bias, High Variance: B,C,D,E
 2. High Bias, Low Variance: B,D
 3. Low Bias, High Variance: A,C,E
-4. Low Bias, Low Variance: F,E
+4. Low Bias, Low Variance: F
