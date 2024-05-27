@@ -3,7 +3,7 @@
 Converts a label vector into a one-hot matrix
 """
 
-import numpy as np
+import tensorflow.keras as K
 
 
 def one_hot(labels, classes=None):
@@ -18,6 +18,5 @@ def one_hot(labels, classes=None):
     Returns:
         np.ndarray: One-hot matrix
     """
-    if classes is None:
-        classes = np.max(labels) + 1
-    return np.eye(classes)[labels]
+    one_hot_matrix = K.utils.to_categorical(labels, num_classes=classes)
+    return one_hot_matrix
