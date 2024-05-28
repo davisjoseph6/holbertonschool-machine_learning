@@ -5,7 +5,6 @@ Loads a model with a specific configuration
 """
 
 import tensorflow.keras as K
-import json
 
 
 def save_config(network, filename):
