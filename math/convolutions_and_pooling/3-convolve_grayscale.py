@@ -23,13 +23,14 @@ def convolve_grayscale(images, kernel, padding='same', stride=(1, 1)):
     elif padding == 'valid':
         ph = 0
         pw = 0
-    
+
     # Calculate output dimensions
     output_h = (h + 2 * ph - kh) // sh + 1
     output_w = (w + 2 * pw - kw) // sw + 1
 
     # Pading indexes: (before, after), shortcut is (padding,)
-    padded_imgs = np.pad(images, ((0, 0), (ph, ph), (pw, pw)), mode='constant',)
+    padded_imgs = np.pad(images, ((0, 0), (ph, ph), (pw, pw)),
+                         mode='constant',)
 
     # Initialize convolution output array
     convolved = np.zeros((m, output_h, output_w))
