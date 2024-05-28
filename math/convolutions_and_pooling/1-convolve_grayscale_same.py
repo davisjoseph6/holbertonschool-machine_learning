@@ -4,23 +4,10 @@ Same Convolution (grayscale)
 """
 import numpy as np
 
+
 def convolve_grayscale_same(images, kernel):
     """
-    Performs a same convolution on grayscale images.
-
-    Parameters:
-    - images: numpy.ndarray with shape (m, h, w) containing multiple
-              grayscale images
-        - m: the number of images
-        - h: the height in pixels of the images
-        - w: the width in pixels of the images
-    - kernel: numpy.ndarray with shape (kh, kw) containing the kernel
-              for the convolution
-        - kh: the height of the kernel
-        - kw: the width of the kernel
-
-    Returns:
-    - A numpy.ndarray containing the convolved images
+    Performs a same convolution on grayscale images
     """
     # Setup matrix dimensions
     m, h, w = images.shape
@@ -31,7 +18,9 @@ def convolve_grayscale_same(images, kernel):
 
     # Calculate padding sizes and apply padding to the images
     pad_width = ((0, 0), (kh // 2, kh // 2), (kw // 2, kw // 2))
-    padded_imgs = np.pad(images, pad_width=pad_width, mode="constant", constant_values=0)
+    padded_imgs = np.pad(
+            images, pad_width=pad_width, mode="constant", constant_values=0
+            )
 
     # Perform the convolution
     for i in range(h):
@@ -42,4 +31,3 @@ def convolve_grayscale_same(images, kernel):
             convolved[:, i, j] = np.sum(region * kernel, axis=(1, 2))
 
     return convolved
-
