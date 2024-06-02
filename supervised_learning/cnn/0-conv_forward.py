@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """
-A function that performs forward propagation over a convolutional neural network.
+A function that performs forward propagation over a
+convolutional neural network.
 """
 
 import numpy as np
@@ -8,7 +9,8 @@ import numpy as np
 
 def conv_forward(A_prev, W, b, activation, padding="same", stride=(1, 1)):
     """
-    A function that performs forward propagation over a convolutional neural network.
+    A function that performs forward propagation over a
+    convolutional neural network.
     """
     # Get dimensions from A_prev's shape
     (m, h_prev, w_prev, c_prev) = A_prev.shape
@@ -29,7 +31,9 @@ def conv_forward(A_prev, W, b, activation, padding="same", stride=(1, 1)):
         raise ValueError("Padding must be 'same' or 'valid'")
 
     # Pad A_prev if necessary
-    A_prev_pad = np.pad(A_prev, ((0, 0), (ph, ph), (pw, pw), (0, 0)), 'constant')
+    A_prev_pad = np.pad(A_prev, (
+        (0, 0), (ph, ph), (pw, pw), (0, 0)), 'constant'
+        )
 
     # Determine the dimensions of the output
     h_new = int((h_prev - kh + 2 * ph) / sh) + 1
@@ -52,7 +56,8 @@ def conv_forward(A_prev, W, b, activation, padding="same", stride=(1, 1)):
                     A_slice = A_prev_pad[i, h_start:h_end, w_start:w_end, :]
 
                     # Perform the convolution
-                    Z[i, h, w, c] = np.sum(A_slice * W[:, :, :, c]) + float(b[:, :, :, c])
+                    Z[i, h, w, c] = np.sum(
+                            A_slice * W[:, :, :, c]) + float(b[:, :, :, c])
 
     # Apply the activation function
     A = activation(Z)
