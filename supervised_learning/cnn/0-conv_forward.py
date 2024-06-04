@@ -1,10 +1,15 @@
 #!/usr/bin/env python3
+"""
+Performs forward propagation over a convolutional layer of a neural network.
+"""
+
 import numpy as np
+
 
 def conv_forward(A_prev, W, b, activation, padding="same", stride=(1, 1)):
     """
     Perform forward propagation over a convolutional layer of a neural network.
-    
+
     Parameters:
     - A_prev (numpy.ndarray): output of the previous layer with shape (m, h_prev, w_prev, c_prev)
     - W (numpy.ndarray): kernels for the convolution with shape (kh, kw, c_prev, c_new)
@@ -12,7 +17,7 @@ def conv_forward(A_prev, W, b, activation, padding="same", stride=(1, 1)):
     - activation (function): activation function applied to the convolution
     - padding (str): 'same' or 'valid', indicating the type of padding used
     - stride (tuple): (sh, sw) containing the strides for the convolution
-    
+
     Returns:
     - numpy.ndarray: the output of the convolutional layer
     """
@@ -32,7 +37,7 @@ def conv_forward(A_prev, W, b, activation, padding="same", stride=(1, 1)):
     w_new = int((w_prev - kw + 2 * pw) / sw + 1)
 
     A_prev_padded = np.pad(A_prev, ((0, 0), (ph, ph), (pw, pw), (0, 0)), mode='constant', constant_values=0)
-    
+
     Z = np.zeros((m, h_new, w_new, c_new))
 
     for i in range(h_new):
@@ -45,8 +50,8 @@ def conv_forward(A_prev, W, b, activation, padding="same", stride=(1, 1)):
 
                 A_slice = A_prev_padded[:, vert_start:vert_end, horiz_start:horiz_end, :]
                 Z[:, i, j, k] = np.sum(A_slice * W[:, :, :, k], axis=(1, 2, 3))
-    
+
     Z = Z + b
     A = activation(Z)
-    
+
     return A
