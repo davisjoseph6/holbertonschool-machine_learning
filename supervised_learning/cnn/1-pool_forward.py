@@ -45,7 +45,8 @@ def pool_forward(A_prev, kernel_shape, stride=(1, 1), mode='max'):
     # Perform the pooling operation
     for i in range(h_new):
         for j in range(w_new):
-            # Define the vertical and horizontal start and end points for the slice
+            # Define the vertical and horizontal start and
+            # end points for the slice
             vert_start = i * sh
             vert_end = vert_start + kh
             horiz_start = j * sw
