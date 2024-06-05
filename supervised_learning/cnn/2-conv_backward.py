@@ -26,6 +26,12 @@ def conv_backward(dZ, A_prev, W, b, padding="same", stride=(1, 1)):
     - dW (numpy.ndarray): partial derivatives with respect to the kernels
     - db (numpy.ndarray): partial derivatives with respect to the biases
     """
+    # Convert all inputs to float64 for consistency
+    dZ = dZ.astype(np.float64)
+    A_prev = A_prev.astype(np.float64)
+    W = W.astype(np.float64)
+    b = b.astype(np.float64)
+
     # Get dimensions from the input shapes
     m, h_new, w_new, c_new = dZ.shape
     m, h_prev, w_prev, c_prev = A_prev.shape
@@ -82,7 +88,10 @@ def conv_backward(dZ, A_prev, W, b, padding="same", stride=(1, 1)):
 
     # Remove padding from dA_prev
     if padding == "same":
-        dA_prev = dA_prev_padded[:, ph:-ph, pw:-pw, :]
+        if ph > 0:
+            dA_prev = dA_prev_padded[:, ph:-ph, pw:-pw, :]
+        else:
+            dA_prev = dA_prev_padded
     elif padding == "valid":
         dA_prev = dA_prev_padded
 
