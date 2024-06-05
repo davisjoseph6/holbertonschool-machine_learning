@@ -33,9 +33,9 @@ def conv_backward(dZ, A_prev, W, b, padding="same", stride=(1, 1)):
     sh, sw = stride
 
     # Initialize derivatives with zeros
-    dA_prev = np.zeros_like(A_prev)
-    dW = np.zeros_like(W)
-    db = np.zeros_like(b)
+    dA_prev = np.zeros_like(A_prev, dtype=np.float64)
+    dW = np.zeros_like(W, dtype=np.float64)
+    db = np.zeros_like(b, dtype=np.float64)
 
     # Determine padding values
     if padding == "same":
