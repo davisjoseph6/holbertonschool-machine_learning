@@ -15,8 +15,10 @@ def conv_backward(dZ, A_prev, W, b, padding="same", stride=(1, 1)):
     with respect to the unactivated output of the convolutional layer
     - A_prev (numpy.ndarray): shape (m, h_prev, w_prev, c_prev) output of
     the previous layer
-    - W (numpy.ndarray): shape (kh, kw, c_prev, c_new) kernels for the convolution
-    - b (numpy.ndarray): shape (1, 1, 1, c_new) biases applied to the convolution
+    - W (numpy.ndarray): shape (kh, kw, c_prev, c_new) kernels
+    for the convolution
+    - b (numpy.ndarray): shape (1, 1, 1, c_new) biases applied
+    to the convolution
     - padding (str): 'same' or 'valid', indicating the type of padding used
     - stride (tuple): (sh, sw) containing the strides for the convolution
 
@@ -44,8 +46,8 @@ def conv_backward(dZ, A_prev, W, b, padding="same", stride=(1, 1)):
 
     # Apply padding to A_prev
     A_prev_pad = np.pad(A_prev,
-            [(0, 0), (ph, ph), (pw, pw), (0, 0)],
-            mode='constant')
+                        [(0, 0), (ph, ph), (pw, pw), (0, 0)],
+                        mode='constant')
 
     # Calculate the bias gradient
     db = np.sum(dZ, axis=(0, 1, 2), keepdims=True)
@@ -67,9 +69,14 @@ def conv_backward(dZ, A_prev, W, b, padding="same", stride=(1, 1)):
                     h_end = h_start + kw
 
                     # Update the gradient for the padded input
-                    dA_pad[i, v_start:v_end, h_start:h_end, :] += W[:, :, :, f] * dZ[i, h, w, f]
+                    dA_pad[i, v_start:v_end, h_start:h_end, :] += (
+                            W[:, :, :, f] * dZ[i, h, w, f]
+                            )
                     # Update the gradient for the filter weights
-                    dW[:, :, :, f] += A_prev_pad[i, v_start:v_end, h_start:h_end, :] * dZ[i, h, w, f]
+                    dW[:, :, :, f] += (
+                            A_prev_pad[i, v_start:v_end, h_start:h_end, :] *
+                            dZ[i, h, w, f]
+                            )
 
     # Remove padding from the gradient if necessary
     if padding == "same":
