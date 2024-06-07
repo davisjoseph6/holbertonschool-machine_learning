@@ -32,15 +32,22 @@ def pool_backward(dA, A_prev, kernel_shape, stride=(1, 1), mode='max'):
 
                     if mode == 'max':
                         # Find the maximum value in the slice and its mask
-                        A_slice = A_prev[i, vert_start:vert_end, horiz_start:horiz_end, channel]
+                        A_slice = A_prev[i, vert_start:vert_end,
+                                         horiz_start:horiz_end, channel]
                         mask = (A_slice == np.max(A_slice))
-                        dA_prev[i, vert_start:vert_end, horiz_start:horiz_end, channel] += mask * dA[i, h, w, channel]
+                        dA_prev[i, vert_start:vert_end,
+                                horiz_start:horiz_end, channel] += (
+                                        mask * dA[i, h, w, channel]
+                                        )
 
                     elif mode == 'avg':
                         # Compute the average gradient distribution
                         da = dA[i, h, w, channel]
                         shape = (kh, kw)
                         average_dA = da / (kh * kw)
-                        dA_prev[i, vert_start:vert_end, horiz_start:horiz_end, channel] += np.ones(shape) * average_dA
+                        dA_prev[i, vert_start:vert_end,
+                                horiz_start:horiz_end, channel] += (
+                                        np.ones(shape) * average_dA
+                                        )
 
     return dA_prev
