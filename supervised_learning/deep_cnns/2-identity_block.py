@@ -3,7 +3,7 @@
 Identity block module
 """
 
-from tensorflow import keras as K
+import tensorflow.keras as K
 
 
 def identity_block(A_prev, filters):
