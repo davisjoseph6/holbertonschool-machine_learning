@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Identity Block.
+Identity Block
 """
 
 from tensorflow import keras as K
@@ -21,7 +21,7 @@ def identity_block(A_prev, filters):
             F3 : int
                 Number of filters in the 3x3 convolution.
             F12 : int
-                Number of filters in the second 1x1 convolution.
+            Number of filters in the second 1x1 convolution.
 
     Returns:
     tensor
@@ -41,7 +41,7 @@ def identity_block(A_prev, filters):
 
     norm1 = K.layers.BatchNormalization(axis=-1)(conv1)
     relu1 = K.layers.Activation(activation="relu")(norm1)
-    # NOTE could also use layers.ReLU() directly instead
+    # note: could also use layers.ReLU() directly instead
 
     # Second layer of left branch
     conv2 = K.layers.Conv2D(filters=F3,
@@ -65,4 +65,3 @@ def identity_block(A_prev, filters):
 
     # Return activated output of merge, using ReLU
     return K.layers.Activation(activation="relu")(merged)
-
