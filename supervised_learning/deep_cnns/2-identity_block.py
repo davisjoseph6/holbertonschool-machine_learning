@@ -17,7 +17,7 @@ def identity_block(A_prev, filters):
         - F12 is the number of filters in the second 1x1 convolution
 
     Returns:
-    - The activated output of the identity block
+    - The activated output of the identity block.
     """
     F11, F3, F12 = filters
     initializer = K.initializers.he_normal(seed=0)
