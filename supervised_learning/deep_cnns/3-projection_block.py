@@ -5,6 +5,7 @@ Projection Block
 
 from tensorflow import keras as K
 
+
 def projection_block(A_prev, filters, s=2):
     """
     Builds a projection block as described in
@@ -20,9 +21,11 @@ def projection_block(A_prev, filters, s=2):
             F3 : int
                 Number of filters in the 3x3 convolution.
             F12 : int
-                Number of filters in the second 1x1 convolution as well as the 1x1 convolution in the shortcut connection.
+                Number of filters in the second 1x1 convolution as well
+                as the 1x1 convolution in the shortcut connection.
     s : int
-        Stride of the first convolution in both the main path and the shortcut connection.
+        Stride of the first convolution in both the main path and the shortcut
+        connection.
 
     Returns:
     tensor
@@ -70,6 +73,5 @@ def projection_block(A_prev, filters, s=2):
     # Merge output of main path and shortcut path
     merged = K.layers.Add()([norm3, norm_shortcut])
 
-    # Return activated output of merge, using ReLU
+    # Return activated output of merge, using ReLU.
     return K.layers.Activation(activation="relu")(merged)
-
