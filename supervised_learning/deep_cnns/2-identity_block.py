@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Identity Block
+Identity Block.
 """
 
 from tensorflow import keras as K
@@ -65,3 +65,4 @@ def identity_block(A_prev, filters):
 
     # Return activated output of merge, using ReLU
     return K.layers.Activation(activation="relu")(merged)
+
