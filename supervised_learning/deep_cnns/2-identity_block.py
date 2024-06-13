@@ -5,7 +5,6 @@ Identity block module
 
 
 from tensorflow import keras as K
-from tensorflow.keras import layers
 
 
 def identity_block(A_prev, filters):
@@ -27,25 +26,25 @@ def identity_block(A_prev, filters):
     he_normal = K.initializers.he_normal(seed=0)
 
     # First component of the main path
-    conv1 = layers.Conv2D(
+    conv1 = K.layers.Conv2D(
             F11, (1, 1), padding='same', kernel_initializer=he_normal)(A_prev)
-    bn1 = layers.BatchNormalization(axis=3)(conv1)
-    act1 = layers.Activation('relu')(bn1)
+    bn1 = K.layers.BatchNormalization(axis=3)(conv1)
+    act1 = K.layers.Activation('relu')(bn1)
 
     # Second component of the main path
-    conv2 = layers.Conv2D(
+    conv2 = K.layers.Conv2D(
             F3, (3, 3), padding='same', kernel_initializer=he_normal)(act1)
-    bn2 = layers.BatchNormalization(axis=3)(conv2)
-    act2 = layers.Activation('relu')(bn2)
+    bn2 = K.layers.BatchNormalization(axis=3)(conv2)
+    act2 = K.layers.Activation('relu')(bn2)
 
     # Third component of the main path
-    conv3 = layers.Conv2D(
+    conv3 = K.layers.Conv2D(
             F12, (1, 1), padding='same', kernel_initializer=he_normal)(act2)
-    bn3 = layers.BatchNormalization(axis=3)(conv3)
+    bn3 = K.layers.BatchNormalization(axis=3)(conv3)
 
     # Add shortcut value to the main path,
     # and pass it through a RELU activation
-    add = layers.Add()([bn3, A_prev])
-    act3 = layers.Activation('relu')(add)
+    add = K.layers.Add()([bn3, A_prev])
+    act3 = K.layers.Activation('relu')(add)
 
     return act3
