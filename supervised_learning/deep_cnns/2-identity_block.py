@@ -3,7 +3,6 @@
 Identity block module
 """
 
-
 from tensorflow import keras as K
 
 
