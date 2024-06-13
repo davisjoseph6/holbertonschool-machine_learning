@@ -8,7 +8,8 @@ from tensorflow import keras as K
 
 def transition_layer(X, nb_filters, compression):
     """
-    Builds a transition layer as described in 'Densely Connected Convolutional Networks' (2016).
+    Builds a transition layer as described in
+    'Densely Connected Convolutional Networks' (2016).
 
     Parameters:
     X : tensor
@@ -20,7 +21,8 @@ def transition_layer(X, nb_filters, compression):
 
     Returns:
     tensor, int
-        The output of the transition layer and the number of filters within the output, respectively.
+        The output of the transition layer and the number of filters
+        within the output, respectively.
     """
     init = K.initializers.HeNormal(seed=0)
     compressed_filters = int(nb_filters * compression)
@@ -30,9 +32,13 @@ def transition_layer(X, nb_filters, compression):
     relu = K.layers.Activation('relu')(bn)
 
     # 1x1 Convolution
-    conv = K.layers.Conv2D(compressed_filters, (1, 1), padding='same', kernel_initializer=init)(relu)
+    conv = K.layers.Conv2D(compressed_filters,
+                           (1, 1), padding='same',
+                           kernel_initializer=init)(relu)
 
     # Average Pooling
-    avg_pool = K.layers.AveragePooling2D((2, 2), strides=(2, 2), padding='same')(conv)
+    avg_pool = K.layers.AveragePooling2D((2, 2),
+                                         strides=(2, 2),
+                                         padding='same')(conv)
 
     return avg_pool, compressed_filters
