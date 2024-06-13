@@ -7,6 +7,7 @@ from tensorflow import keras as K
 identity_block = __import__('2-identity_block').identity_block
 projection_block = __import__('3-projection_block').projection_block
 
+
 def resnet50():
     """
     Builds the ResNet-50 architecture as described in
@@ -57,4 +58,3 @@ def resnet50():
     model = K.models.Model(inputs=input_layer, outputs=output_layer)
 
     return model
-
