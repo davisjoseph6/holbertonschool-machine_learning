@@ -25,9 +25,9 @@ def densenet121(growth_rate=32, compression=1.0):
     X_input = K.Input(shape=input_shape)
 
     # Initial Convolution and Pooling
-    X = K.layers.BatchNormalization(axis=-1)(X_input)
+    X = K.layers.Conv2D(64, (7, 7), strides=(2, 2), padding='same', kernel_initializer=init)(X_input)
+    X = K.layers.BatchNormalization(axis=-1)(X)
     X = K.layers.ReLU()(X)
-    X = K.layers.Conv2D(64, (7, 7), strides=(2, 2), padding='same', kernel_initializer=init)(X)
     X = K.layers.MaxPooling2D((3, 3), strides=(2, 2), padding='same')(X)
 
     # Dense Block 1
@@ -63,4 +63,3 @@ def densenet121(growth_rate=32, compression=1.0):
 
     model = K.Model(inputs=X_input, outputs=X)
     return model
-
