@@ -28,11 +28,17 @@ def densenet121(growth_rate=32, compression=1.0):
     ReLU_0 = K.layers.Activation(activation='relu')(BN_0)
 
     # Initial convolution with 64 filters, 7x7 kernel size, and stride of 2
-    conv_0 = K.layers.Conv2D(filters=64, kernel_size=(7, 7), strides=(2, 2),
-                             kernel_initializer=K.initializers.he_normal(seed=0), padding="same")(ReLU_0)
+    conv_0 = K.layers.Conv2D(
+            filters=64,
+            kernel_size=(7, 7),
+            strides=(2, 2),
+            kernel_initializer=K.initializers.he_normal(seed=0),
+            padding="same")(ReLU_0)
 
     # Max pooling with 3x3 pool size and stride of 2
-    pool_0 = K.layers.MaxPooling2D(pool_size=(3, 3), strides=2, padding="same")(conv_0)
+    pool_0 = K.layers.MaxPooling2D(pool_size=(3, 3),
+                                   strides=2,
+                                   padding="same")(conv_0)
 
     # First dense block with 6 layers
     out_1, nb = dense_block(pool_0, pool_0.shape[3], growth_rate, 6)
@@ -53,10 +59,13 @@ def densenet121(growth_rate=32, compression=1.0):
     out_4, nb = dense_block(trans_3, trans_3.shape[3], growth_rate, 16)
 
     # Global average pooling layer
-    avg_pooling = K.layers.AveragePooling2D(pool_size=(7, 7), padding="same")(out_4)
+    avg_pooling = K.layers.AveragePooling2D(pool_size=(7, 7),
+                                            padding="same")(out_4)
 
-    # Fully connected layer with 1000 units and softmax activation for classification
-    dense = K.layers.Dense(units=1000, activation='softmax')(avg_pooling)
+    # Fully connected layer with 1000 units and softmax
+    # activation for classification
+    dense = K.layers.Dense(units=1000,
+                           activation='softmax')(avg_pooling)
 
     # Create the Keras model
     model = K.Model(input_0, dense)
