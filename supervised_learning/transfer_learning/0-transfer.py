@@ -2,7 +2,6 @@
 
 from tensorflow import keras as K
 import numpy as np
-from tqdm import tqdm  # for progress bar
 
 def preprocess_data(X, Y):
     """
@@ -20,53 +19,54 @@ def preprocess_data(X, Y):
     Y_p = K.utils.to_categorical(Y, 10)
     return X_p, Y_p
 
-def resize_and_predict(model, X, batch_size=500, target_size=(224, 224)):
+def resize_and_compute_features(model, X, batch_size=100, target_size=(128, 128)):
     """
-    Resize images in batches and predict using the model to avoid OOM issues
+    Resize images in batches and compute features using the model to avoid OOM issues
 
     Args:
-    model: the pre-trained model to use for prediction
+    model: the pre-trained model to use for feature extraction
     X: numpy.ndarray of shape (m, 32, 32, 3) containing the CIFAR 10 data
     batch_size: number of images to process at a time
     target_size: tuple of (height, width) to resize images to
 
     Returns:
-    features: numpy.ndarray containing the model predictions
+    features: numpy.ndarray containing the model features
     """
     num_images = X.shape[0]
     features = []
-    for start in tqdm(range(0, num_images, batch_size), desc="Processing batches"):
+    for start in range(0, num_images, batch_size):
         end = min(start + batch_size, num_images)
         X_batch = X[start:end]
         X_resized = np.array([K.preprocessing.image.smart_resize(img, target_size) for img in X_batch])
         batch_features = model.predict(X_resized)
         features.append(batch_features)
+        print(f'Processed batch {start // batch_size + 1}/{(num_images + batch_size - 1) // batch_size}')
     return np.vstack(features)
 
 if __name__ == "__main__":
-    # Load CIFAR-10 data
+    print("Loading CIFAR-10 data...")
     (X_train, Y_train), (X_test, Y_test) = K.datasets.cifar10.load_data()
     X_train_p, Y_train_p = preprocess_data(X_train, Y_train)
     X_test_p, Y_test_p = preprocess_data(X_test, Y_test)
 
-    # Load the pre-trained ConvNeXtXLarge model
+    print("Loading pre-trained ConvNeXtXLarge model...")
     base_model = K.applications.ConvNeXtXLarge(
         include_top=False,
         weights='imagenet',
-        input_shape=(224, 224, 3)
+        input_shape=(128, 128, 3)
     )
 
-    # Freeze the base model layers
+    print("Freezing base model layers...")
     for layer in base_model.layers:
         layer.trainable = False
 
-    # Precompute the output of the frozen layers for the training set
-    train_features = resize_and_predict(base_model, X_train_p)
+    print("Computing features for the training set...")
+    train_features = resize_and_compute_features(base_model, X_train_p, batch_size=50)
 
-    # Precompute the output of the frozen layers for the validation set
-    val_features = resize_and_predict(base_model, X_test_p)
+    print("Computing features for the validation set...")
+    val_features = resize_and_compute_features(base_model, X_test_p, batch_size=50)
 
-    # Add new trainable layers on top of the frozen layers
+    print("Building new model...")
     model = K.Sequential([
         K.layers.InputLayer(input_shape=train_features.shape[1:]),
         K.layers.Flatten(),
@@ -75,14 +75,14 @@ if __name__ == "__main__":
         K.layers.Dense(10, activation='softmax')
     ])
 
-    # Compile the model
+    print("Compiling the model...")
     model.compile(
         optimizer=K.optimizers.Adam(),
         loss='categorical_crossentropy',
         metrics=['accuracy']
     )
 
-    # Train the model using the precomputed features
+    print("Training the model...")
     model.fit(
         train_features, Y_train_p,
         epochs=20,
@@ -90,6 +90,7 @@ if __name__ == "__main__":
         batch_size=128
     )
 
-    # Save the model
+    print("Saving the model to cifar10.h5...")
     model.save('cifar10.h5')
+    print("Model saved successfully.")
 
