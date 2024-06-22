@@ -2,6 +2,7 @@
 
 from tensorflow import keras as K
 import numpy as np
+from tqdm import tqdm  # for progress bar
 
 def preprocess_data(X, Y):
     """
@@ -34,13 +35,12 @@ def resize_and_predict(model, X, batch_size=500, target_size=(224, 224)):
     """
     num_images = X.shape[0]
     features = []
-    for start in range(0, num_images, batch_size):
+    for start in tqdm(range(0, num_images, batch_size), desc="Processing batches"):
         end = min(start + batch_size, num_images)
         X_batch = X[start:end]
         X_resized = np.array([K.preprocessing.image.smart_resize(img, target_size) for img in X_batch])
-        batch_features = model.predict(X_resized, verbose=1)
+        batch_features = model.predict(X_resized)
         features.append(batch_features)
-        print(f'Processed batch {start // batch_size + 1}/{(num_images + batch_size - 1) // batch_size}')
     return np.vstack(features)
 
 if __name__ == "__main__":
@@ -61,11 +61,9 @@ if __name__ == "__main__":
         layer.trainable = False
 
     # Precompute the output of the frozen layers for the training set
-    print("Precomputing training features...")
     train_features = resize_and_predict(base_model, X_train_p)
 
     # Precompute the output of the frozen layers for the validation set
-    print("Precomputing validation features...")
     val_features = resize_and_predict(base_model, X_test_p)
 
     # Add new trainable layers on top of the frozen layers
@@ -85,7 +83,6 @@ if __name__ == "__main__":
     )
 
     # Train the model using the precomputed features
-    print("Training the model...")
     model.fit(
         train_features, Y_train_p,
         epochs=20,
@@ -95,5 +92,4 @@ if __name__ == "__main__":
 
     # Save the model
     model.save('cifar10.h5')
-    print("Model saved as cifar10.h5")
 
