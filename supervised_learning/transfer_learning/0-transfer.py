@@ -2,6 +2,7 @@
 
 from tensorflow import keras as K
 import numpy as np
+import os
 
 def preprocess_data(X, Y):
     """
@@ -19,7 +20,7 @@ def preprocess_data(X, Y):
     Y_p = K.utils.to_categorical(Y, 10)
     return X_p, Y_p
 
-def resize_and_compute_features(model, X, batch_size=50, target_size=(64, 64)):
+def resize_and_compute_features(model, X, batch_size=50, target_size=(64, 64), save_path="features.npy"):
     """
     Resize images in batches and compute features using the model to avoid OOM issues
 
@@ -28,6 +29,7 @@ def resize_and_compute_features(model, X, batch_size=50, target_size=(64, 64)):
     X: numpy.ndarray of shape (m, 32, 32, 3) containing the CIFAR 10 data
     batch_size: number of images to process at a time
     target_size: tuple of (height, width) to resize images to
+    save_path: path to save the computed features
 
     Returns:
     features: numpy.ndarray containing the model features
@@ -41,7 +43,9 @@ def resize_and_compute_features(model, X, batch_size=50, target_size=(64, 64)):
         batch_features = model.predict(X_resized)
         features.append(batch_features)
         print(f'Processed batch {start // batch_size + 1}/{(num_images + batch_size - 1) // batch_size}')
-    return np.vstack(features)
+    features = np.vstack(features)
+    np.save(save_path, features)
+    return features
 
 if __name__ == "__main__":
     print("Loading CIFAR-10 data...")
@@ -60,11 +64,19 @@ if __name__ == "__main__":
     for layer in base_model.layers:
         layer.trainable = False
 
-    print("Computing features for the training set...")
-    train_features = resize_and_compute_features(base_model, X_train_p, batch_size=50)
+    if not os.path.exists('train_features.npy'):
+        print("Computing features for the training set...")
+        train_features = resize_and_compute_features(base_model, X_train_p, batch_size=50, save_path='train_features.npy')
+    else:
+        print("Loading precomputed training features...")
+        train_features = np.load('train_features.npy')
 
-    print("Computing features for the validation set...")
-    val_features = resize_and_compute_features(base_model, X_test_p, batch_size=50)
+    if not os.path.exists('val_features.npy'):
+        print("Computing features for the validation set...")
+        val_features = resize_and_compute_features(base_model, X_test_p, batch_size=50, save_path='val_features.npy')
+    else:
+        print("Loading precomputed validation features...")
+        val_features = np.load('val_features.npy')
 
     print("Building new model...")
     model = K.Sequential([
