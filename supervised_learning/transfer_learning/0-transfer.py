@@ -2,7 +2,6 @@
 
 from tensorflow import keras as K
 import numpy as np
-import os
 
 def preprocess_data(X, Y):
     """
@@ -20,7 +19,7 @@ def preprocess_data(X, Y):
     Y_p = K.utils.to_categorical(Y, 10)
     return X_p, Y_p
 
-def resize_and_compute_features(model, X, batch_size=50, target_size=(64, 64), save_path="features.npy"):
+def resize_and_compute_features(model, X, batch_size=50, target_size=(224, 224), save_path="features.npy"):
     """
     Resize images in batches and compute features using the model to avoid OOM issues
 
@@ -57,26 +56,26 @@ if __name__ == "__main__":
     base_model = K.applications.ConvNeXtXLarge(
         include_top=False,
         weights='imagenet',
-        input_shape=(64, 64, 3)
+        input_shape=(224, 224, 3)
     )
 
     print("Freezing base model layers...")
     for layer in base_model.layers:
         layer.trainable = False
 
-    if not os.path.exists('train_features.npy'):
-        print("Computing features for the training set...")
-        train_features = resize_and_compute_features(base_model, X_train_p, batch_size=50, save_path='train_features.npy')
-    else:
+    try:
         print("Loading precomputed training features...")
         train_features = np.load('train_features.npy')
+    except FileNotFoundError:
+        print("Computing features for the training set...")
+        train_features = resize_and_compute_features(base_model, X_train_p, batch_size=50, save_path='train_features.npy')
 
-    if not os.path.exists('val_features.npy'):
-        print("Computing features for the validation set...")
-        val_features = resize_and_compute_features(base_model, X_test_p, batch_size=50, save_path='val_features.npy')
-    else:
+    try:
         print("Loading precomputed validation features...")
         val_features = np.load('val_features.npy')
+    except FileNotFoundError:
+        print("Computing features for the validation set...")
+        val_features = resize_and_compute_features(base_model, X_test_p, batch_size=50, save_path='val_features.npy')
 
     print("Building new model...")
     model = K.Sequential([
@@ -97,9 +96,9 @@ if __name__ == "__main__":
     print("Training the model...")
     model.fit(
         train_features, Y_train_p,
-        epochs=20,
+        epochs=10,  # Reduced the number of epochs
         validation_data=(val_features, Y_test_p),
-        batch_size=128
+        batch_size=32  # Reduced batch size for training
     )
 
     print("Saving the model to cifar10.h5...")
