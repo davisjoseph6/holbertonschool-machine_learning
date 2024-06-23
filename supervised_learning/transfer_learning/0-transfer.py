@@ -19,7 +19,7 @@ def preprocess_data(X, Y):
     Y_p = K.utils.to_categorical(Y, 10)
     return X_p, Y_p
 
-def resize_and_compute_features(model, X, batch_size=100, target_size=(128, 128)):
+def resize_and_compute_features(model, X, batch_size=50, target_size=(64, 64)):
     """
     Resize images in batches and compute features using the model to avoid OOM issues
 
@@ -53,7 +53,7 @@ if __name__ == "__main__":
     base_model = K.applications.ConvNeXtXLarge(
         include_top=False,
         weights='imagenet',
-        input_shape=(128, 128, 3)
+        input_shape=(64, 64, 3)
     )
 
     print("Freezing base model layers...")
