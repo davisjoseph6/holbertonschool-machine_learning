@@ -4,78 +4,72 @@ from tensorflow import keras as K
 import numpy as np
 
 def preprocess_data(X, Y):
-    X_p = K.applications.convnext.preprocess_input(X)
+    """Preprocess the CIFAR-10 data."""
+    X_p = K.applications.convnext.preprocess_input(X.astype('float32'))
     Y_p = K.utils.to_categorical(Y, 10)
     return X_p, Y_p
 
-def resize_and_compute_features(model, X, batch_size=50, target_size=(224, 224), save_path="features.npy"):
-    num_images = X.shape[0]
-    features = []
-    for start in range(0, num_images, batch_size):
-        end = min(start + batch_size, num_images)
-        X_batch = X[start:end]
-        X_resized = np.array([K.preprocessing.image.smart_resize(img, target_size) for img in X_batch])
-        batch_features = model.predict(X_resized)
-        features.append(batch_features)
-        print(f'Processed batch {start // batch_size + 1}/{(num_images + batch_size - 1) // batch_size}')
-    features = np.vstack(features)
-    np.save(save_path, features)
-    return features
-
 if __name__ == "__main__":
-    print("Loading CIFAR-10 data...")
+    print("Loading CIFAR-10 data.....")
+    # Load the CIFAR-10 dataset
     (X_train, Y_train), (X_test, Y_test) = K.datasets.cifar10.load_data()
-    X_train_p, Y_train_p = preprocess_data(X_train, Y_train)
-    X_test_p, Y_test_p = preprocess_data(X_test, Y_test)
+    X_train, Y_train = preprocess_data(X_train, Y_train)
+    X_test, Y_test = preprocess_data(X_test, Y_test)
+    print("Data loaded and preprocessed.")
 
-    print("Loading pre-trained ConvNeXtSmall model...")  # Using a smaller model
-    base_model = K.applications.ConvNeXtSmall(
-        include_top=False,
-        weights='imagenet',
-        input_shape=(224, 224, 3)
-    )
+    # Define input shape and resize layer
+    input_shape = (32, 32, 3)
+    resize_shape = (224, 224)
+    inputs = K.layers.Input(shape=input_shape)
+    resize_layer = K.layers.Lambda(lambda image: K.backend.resize_images(image, resize_shape[0] // input_shape[0], 
+                                                                        resize_shape[1] // input_shape[1], 
+                                                                        "channels_last"))(inputs)
+    
+    print("Loading pre-trained ConvNeXtTiny model...")
+    # Load the ConvNeXtTiny model with pre-trained weights
+    base_model = K.applications.ConvNeXtTiny(weights='imagenet', include_top=False, input_tensor=resize_layer)
+    print("Model loaded.")
 
     print("Freezing base model layers...")
+    # Freeze the base model layers
     for layer in base_model.layers:
         layer.trainable = False
+    print("Base model layers frozen.")
 
-    # Recompute and save training features
     print("Computing features for the training set...")
-    train_features = resize_and_compute_features(base_model, X_train_p, batch_size=25, save_path='train_features.npy')
+    # Extract features with the frozen base model for training set
+    X_train_features = base_model.predict(X_train)
+    print("Features computed for the training set.")
 
-    # Recompute and save validation features
     print("Computing features for the validation set...")
-    val_features = resize_and_compute_features(base_model, X_test_p, batch_size=25, save_path='val_features.npy')
-
-    # Save the preprocessed test data to match the expected format in 0-main.py
-    np.save('cifar10_X_test.npy', X_test_p)
-    np.save('cifar10_Y_test.npy', Y_test_p)
+    # Extract features with the frozen base model for validation set
+    X_test_features = base_model.predict(X_test)
+    print("Features computed for the validation set.")
 
     print("Building new model...")
-    model = K.Sequential([
-        K.layers.InputLayer(input_shape=train_features.shape[1:]),
-        K.layers.Flatten(),
-        K.layers.Dense(256, activation='relu'),
-        K.layers.Dropout(0.5),
-        K.layers.Dense(10, activation='softmax')
-    ])
+    # Add custom top layers for CIFAR-10 classification
+    x = K.layers.GlobalAveragePooling2D()(base_model.output)
+    x = K.layers.Dense(256, activation='relu')(x)
+    x = K.layers.Dropout(0.5)(x)
+    outputs = K.layers.Dense(10, activation='softmax')(x)
+
+    # Create the model
+    model = K.models.Model(inputs=inputs, outputs=outputs)
+    print("Model built.")
 
     print("Compiling the model...")
-    model.compile(
-        optimizer=K.optimizers.Adam(),
-        loss='categorical_crossentropy',
-        metrics=['accuracy']
-    )
+    # Compile the model
+    model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
+    print("Model compiled.")
 
     print("Training the model...")
-    model.fit(
-        train_features, Y_train_p,
-        epochs=10,
-        validation_data=(val_features, Y_test_p),
-        batch_size=16  # Reduced batch size for training
-    )
+    # Train the model
+    model.fit(X_train, Y_train, validation_data=(X_test, Y_test), epochs=10, batch_size=128)
+    print("Model trained.")
 
     print("Saving the model to cifar10.h5...")
-    model.save('cifar10.h5')
+    # Save the model
+    with K.utils.custom_object_scope({'LayerScale': K.layers.Layer}):
+        model.save('cifar10.h5')
     print("Model saved successfully.")
 
