@@ -39,19 +39,17 @@ if __name__ == "__main__":
     for layer in base_model.layers:
         layer.trainable = False
 
-    try:
-        print("Loading precomputed training features...")
-        train_features = np.load('train_features.npy')
-    except FileNotFoundError:
-        print("Computing features for the training set...")
-        train_features = resize_and_compute_features(base_model, X_train_p, batch_size=25, save_path='train_features.npy')
+    # Recompute and save training features
+    print("Computing features for the training set...")
+    train_features = resize_and_compute_features(base_model, X_train_p, batch_size=25, save_path='train_features.npy')
 
-    try:
-        print("Loading precomputed validation features...")
-        val_features = np.load('val_features.npy')
-    except FileNotFoundError:
-        print("Computing features for the validation set...")
-        val_features = resize_and_compute_features(base_model, X_test_p, batch_size=25, save_path='val_features.npy')
+    # Recompute and save validation features
+    print("Computing features for the validation set...")
+    val_features = resize_and_compute_features(base_model, X_test_p, batch_size=25, save_path='val_features.npy')
+
+    # Save the preprocessed test data to match the expected format in 0-main.py
+    np.save('cifar10_X_test.npy', X_test_p)
+    np.save('cifar10_Y_test.npy', Y_test_p)
 
     print("Building new model...")
     model = K.Sequential([
