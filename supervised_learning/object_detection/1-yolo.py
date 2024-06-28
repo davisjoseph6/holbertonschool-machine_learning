@@ -35,9 +35,9 @@ class Yolo:
             grid_height, grid_width, anchor_boxes, _ = output.shape
             anchors = self.anchors[i]
             box_xy = K.activations.sigmoid(output[..., :2])
-            box_wh = K.exp(output[..., 2:4]) * anchors
+            box_wh = np.exp(output[..., 2:4]) * anchors
             box_confidence = K.activations.sigmoid(output[..., 4:5])
-            box_class_probs = K.activations.sigmoid(output[..., 5:])
+            box_class_probs_array = K.activations.sigmoid(output[..., 5:])
 
             col = np.tile(np.arange(0, grid_width), grid_height).reshape(-1, grid_width)
             row = np.tile(np.arange(0, grid_height), grid_width).reshape(-1, grid_height).T
@@ -54,7 +54,7 @@ class Yolo:
 
             boxes.append(box)
             box_confidences.append(box_confidence.numpy())
-            box_class_probs.append(box_class_probs.numpy())
+            box_class_probs.append(box_class_probs_array.numpy())
 
         return boxes, box_confidences, box_class_probs
 
