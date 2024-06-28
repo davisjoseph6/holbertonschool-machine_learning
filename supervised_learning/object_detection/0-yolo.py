@@ -6,7 +6,11 @@ Initialize the Yolo class with the specified parameters.
 import tensorflow.keras as K
 import numpy as np
 
+
 class Yolo:
+    """
+    Yolo class
+    """
     def __init__(self, model_path, classes_path, class_t, nms_t, anchors):
         """
         Initialize the Yolo class with the specified parameters
