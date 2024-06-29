@@ -193,7 +193,7 @@ class Yolo:
             image_resized = cv2.resize(image, (input_w, input_h), interpolation=cv2.INTER_CUBIC)
 
             # Rescale pixel values to range [0, 1]
-            image_rescaled = image_resized / 255.0
+            image_rescaled = image_resized.astype(np.float32) / 255.0
 
             pimages.append(image_rescaled)
 
