@@ -179,21 +179,7 @@ class Yolo:
 
     def preprocess_images(self, images):
         """
-            method to preprocess images
-            resize with intercubic interpolation
-            rescale image in range [0, 1]
-
-            :param images: list of images as ndarray
-
-            :return: tuple of (pimages, image_shapes)
-                pimages: ndarray, shape(ni,input_h,input_w,3)
-                    ni: number of images that were preprocessed
-                    input_h: input height for Darknet model
-                    input_w: input width for Darknet model
-                    3: number of channels
-                image_shapes: ndarray, shape(ni,2)
-                    original height and width
-                    2 => (image_height, image_width)
+        Preprocess the images for the Darknet model
         """
         pimages = []
         image_shapes = []
