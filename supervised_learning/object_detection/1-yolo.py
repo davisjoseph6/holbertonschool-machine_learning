@@ -1,10 +1,15 @@
 #!/usr/bin/env python3
-
+"""
+Yolo class
+"""
 import tensorflow.keras as K
 import numpy as np
 
 
 class Yolo:
+    """
+    Yolo class
+    """
     def __init__(self, model_path, classes_path, class_t, nms_t, anchors):
         """
         Initialize the Yolo class with the specified parameters
@@ -41,16 +46,21 @@ class Yolo:
             box_confidence = K.activations.sigmoid(output[..., 4:5])
             box_class_probs_array = K.activations.sigmoid(output[..., 5:])
 
-            col = np.tile(np.arange(0, grid_width), grid_height).reshape(-1, grid_width)
-            row = np.tile(np.arange(0, grid_height), grid_width).reshape(-1, grid_height).T
-            col = col.reshape(grid_height, grid_width, 1, 1).repeat(anchor_boxes, axis=-2)
-            row = row.reshape(grid_height, grid_width, 1, 1).repeat(anchor_boxes, axis=-2)
+            col = np.tile(np.arange(0, grid_width),
+                          grid_height).reshape(-1, grid_width)
+            row = np.tile(np.arange(0, grid_height),
+                          grid_width).reshape(-1, grid_height).T
+            col = col.reshape(grid_height,
+                              grid_width, 1, 1).repeat(anchor_boxes, axis=-2)
+            row = row.reshape(grid_height,
+                              grid_width, 1, 1).repeat(anchor_boxes, axis=-2)
             grid = np.concatenate((col, row), axis=-1)
 
             box_xy += grid
             box_xy /= (grid_width, grid_height)
-            box_wh /= np.array([self.model.input.shape[1], self.model.input.shape[2]])
-            
+            box_wh /= np.array([self.model.input.shape[1],
+                                self.model.input.shape[2]])
+
             box_xy -= (box_wh / 2)
             box = np.concatenate((box_xy, box_xy + box_wh), axis=-1)
 
@@ -63,4 +73,3 @@ class Yolo:
             box_class_probs.append(box_class_probs_array.numpy())
 
         return boxes, box_confidences, box_class_probs
-
