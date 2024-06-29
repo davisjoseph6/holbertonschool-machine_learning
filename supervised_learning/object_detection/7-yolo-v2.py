@@ -213,78 +213,51 @@ class Yolo:
         """
         Displays the image with all boundary boxes, class names, and box scores
         """
-        # draw each boundary box
-        for idx, box in enumerate(boxes):
-            x1, y1, x2, y2 = box
-            cv2.rectangle(image,
-                          (int(x1), int(y1)),
-                          (int(x2), int(y2)),
-                          color=(255, 0, 0),
-                          thickness=2
-                          )
-            # preprocess text
-            class_name = self.class_names[box_classes[idx]]
-            class_score = np.round(box_scores[idx], 2)
-            full_text = f'{class_name} {class_score}'
+        for i, box in enumerate(boxes):
+            x1, y1, x2, y2 = map(int, box)
+            class_name = self.class_names[box_classes[i]]
+            score = box_scores[i]
 
-            # add text on boundary box
-            cv2.putText(image,
-                        text=full_text,
-                        org=(int(x1), int(y1) - 5),
-                        fontFace=cv2.FONT_HERSHEY_SIMPLEX,
-                        fontScale=0.5,
-                        color=(0, 0, 255),
-                        lineType=cv2.LINE_AA,
-                        thickness=1
-                        )
-        # show image
-        name_img = os.path.basename(file_name)
-        cv2.imshow(name_img, image)
-        key_pressed = cv2.waitKey(0)
-        if key_pressed == ord('s'):
+            # Draw the box
+            cv2.rectangle(image, (x1, y1), (x2, y2), (255, 0, 0), 2)
+
+            # Draw the class name and score
+            text = f'{class_name} {score:.2f}'
+            cv2.putText(image, text, (x1, y1 - 5), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 1, cv2.LINE_AA)
+
+        # Show the image
+        window_name = os.path.basename(file_name)
+        cv2.imshow(window_name, image)
+        key = cv2.waitKey(0)
+
+        if key == ord('s'):
+            # Create detections directory if it doesn't exist
             if not os.path.exists('detections'):
                 os.makedirs('detections')
-            cv2.imwrite(f'detections/{name_img}', image)
+
+            # Save the image
+            save_path = os.path.join('detections', file_name)
+            cv2.imwrite(save_path, image)
+
+        # Close the image window
         cv2.destroyAllWindows()
 
     def predict(self, folder_path):
         """
-        Method to apply predictions on images
+        Predicts the bounding boxes, class names, and box scores for each image
         """
+        images, image_paths = self.load_images(folder_path)
+        pimages, image_shapes = self.preprocess_images(images)
         predictions = []
 
-        # load images
-        images, image_paths = self.load_images(folder_path)
-        # preprocess images and load model predictions on these preprocessed images
-        pimages, image_shapes = self.preprocess_images(images)
-        model_predictions = self.model.predict(pimages)
-
-        # loop on model prediction
-        for idx in range(len(pimages)):
-            output = [p[idx] for p in model_predictions]
-            (boxes,
-                    box_confidences,
-                    box_class_probs) = self.process_outputs(output, image_shapes[idx])
-
-            (filtered_boxes,
-                    box_classes,
-                    box_scores) = self.filter_boxes(boxes, box_confidences, box_class_probs)
-
-            (box_predictions,
-                    predicted_box_classes,
-                    predicted_box_scores) = self.non_max_suppression(filtered_boxes, box_classes, box_scores)
-
-            predictions.append((box_predictions,
-                predicted_box_classes,
-                predicted_box_scores))
-
-            self.show_boxes(
-                    image=images[idx],
-                    boxes=box_predictions,
-                    box_classes=predicted_box_classes,
-                    box_scores=predicted_box_scores,
-                    file_name=image_paths[idx]
-                    )
+        for i, pimage in enumerate(pimages):
+            pimage_exp = np.expand_dims(pimage, axis=0)
+            outputs = self.model.predict(pimage_exp)
+            outputs = [output[0] for output in outputs]  # Extract the batch dimensions
+            boxes, box_confidences, box_class_probs = self.process_outputs(outputs, image_shapes[i])
+            filtered_boxes, box_classes, box_scores = self.filter_boxes(boxes, box_confidences, box_class_probs)
+            nms_boxes, nms_classes, nms_scores = self.non_max_suppression(filtered_boxes, box_classes, box_scores)
+            self.show_boxes(images[i], nms_boxes, nms_classes, nms_scores, image_paths[i])
+            predictions.append((nms_boxes, nms_classes, nms_scores))
 
         return predictions, image_paths
-
