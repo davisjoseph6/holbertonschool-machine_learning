@@ -179,7 +179,7 @@ class Yolo:
 
     def preprocess_images(self, images):
         """
-        Preprocess the images for the Darknet model
+        Preprocess the images for the Darknet model.
         """
         pimages = []
         image_shapes = []
