@@ -64,7 +64,7 @@ What is IOU and how do you calculate it?
 What is non-max suppression?
 What are anchor boxes?
 What is mAP and how do you calculate it?
-Requirements
+Requirements:
 Python Scripts
 Allowed editors: vi, vim, emacs
 All your files will be interpreted/compiled on Ubuntu 20.04 LTS using python3 (version 3.9)
