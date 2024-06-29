@@ -197,7 +197,7 @@ class Yolo:
 
             pimages.append(image_rescaled)
 
-        pimages = np.array(pimages)
+        pimages = np.array(pimages, dtype=np.float32)
         image_shapes = np.array(image_shapes)
 
         return pimages, image_shapes
