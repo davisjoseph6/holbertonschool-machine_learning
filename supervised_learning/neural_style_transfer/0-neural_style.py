@@ -31,6 +31,9 @@ class NST:
         if not isinstance(image, np.ndarray) or image.shape[-1] != 3:
             raise TypeError("image must be a numpy.ndarray with shape (h, w, 3)")
 
+        # Normalize the image to range [0, 1]
+        image = image / 255.0
+
         # Convert the image to a TensorFlow tensor and add a batch dimension
         image = tf.convert_to_tensor(image, dtype=tf.float32)
         image = tf.image.convert_image_dtype(image, tf.float32)
@@ -48,9 +51,9 @@ class NST:
             new_h = int(h * 512 / w)
 
         # Resize the image using bicubic interpolation
-        resized_image = tf.image.resize(image, (new_h, new_w), method='bicubic')
+        resized_image = tf.image.resize(image, (new_h, new_w), method=tf.image.ResizeMethod.BICUBIC)
 
-        # Rescale pixel values from [0, 255] to [0, 1]
-        scaled_image = tf.clip_by_value(resized_image, 0.0, 1.0)
+        # Ensure pixel values are clipped to range [0, 1]
+        resized_image = tf.clip_by_value(resized_image, 0.0, 1.0)
 
-        return scaled_image
+        return resized_image
