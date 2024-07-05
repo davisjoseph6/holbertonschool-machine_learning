@@ -45,12 +45,13 @@ class NST:
         else:
             self.beta = beta
 
-        self.model = self.load_model()
+            self.model = None
+            self.load_model()
 
     @staticmethod
     def scale_image(image):
         """
-        Rescales an image such that its pixel values are between 0 and 1
+        rescales an image such that its pixel values are between 0 and 1
         and its largest side is 512 px
         """
         if not isinstance(image, np.ndarray) or image.shape[-1] != 3:
@@ -82,19 +83,28 @@ class NST:
 
     def load_model(self):
         """
-        Creates the model used to calculate cost
+        create the model used to calculate the cost
         """
-        # Load VGG19 model pre-trained on ImageNet
-        vgg = tf.keras.applications.VGG19(include_top=False, weights='imagenet')
-        vgg.trainable = False
+        # Keras API
+        modelVGG19 = tf.keras.applications.VGG19(
+                include_top=False,
+                weights='imagenet'
+                )
 
-        # Get the outputs for the specified style and content layers
-        style_outputs = [vgg.get_layer(layer).output for layer in self.style_layers]
-        content_output = vgg.get_layer(self.content_layer).output
-        model_outputs = style_outputs + [content_output]
+        modelVGG19.trainable = False
 
-        # Create the model that takes image input and outputs selected layers' outputs
-        model = tf.keras.Model(vgg.input, model_outputs)
+        # selected layers
+        selected_layers = self.style_layers + [self.content_layer]
 
-        return model
+        outputs = [modelVGG19.get_layer(name).output for name in selected_layers]
+
+        # construct model
+        model = tf.keras.Model([modelVGG19.input], outputs)
+
+        # for replace MaxPooling layer by AveragePooling layer
+        custom_objects = {'MaxPooling2D': tf.keras.layers.AveragePooling2D}
+        tf.keras.models.save_model(model, 'vgg_base.h5')
+        model_avg = tf.keras.models.load_model('vgg_base.h5', custom_objects=custom_objects)
+
+        self.model = model_avg
 
