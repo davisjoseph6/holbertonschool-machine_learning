@@ -83,7 +83,7 @@ class NST:
 
     def load_model(self):
         """
-        create the model used to calculate the cost
+        create the model used to calculate cost
         """
         # Keras API
         modelVGG19 = tf.keras.applications.VGG19(
