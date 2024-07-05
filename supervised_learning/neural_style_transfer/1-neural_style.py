@@ -5,8 +5,6 @@ Neural style transfer
 
 import numpy as np
 import tensorflow as tf
-from tensorflow.keras.applications import VGG19
-from tensorflow.keras.models import Model
 
 
 class NST:
@@ -52,7 +50,7 @@ class NST:
     @staticmethod
     def scale_image(image):
         """
-        rescales an image such that its pixel values are between 0 and 1
+        Rescales an image such that its pixel values are between 0 and 1
         and its largest side is 512 px
         """
         if not isinstance(image, np.ndarray) or image.shape[-1] != 3:
@@ -84,14 +82,19 @@ class NST:
 
     def load_model(self):
         """
-        creates the model used to calculate cost
+        Creates the model used to calculate cost
         """
-        vgg = VGG19(include_top=False, weights='imagenet')
+        # Load VGG19 model pre-trained on ImageNet
+        vgg = tf.keras.applications.VGG19(include_top=False, weights='imagenet')
         vgg.trainable = False
 
-        outputs = [vgg.get_layer(name).output for name in self.style_layers]
-        outputs.append(vgg.get_layer(self.content_layer).output)
+        # Get the outputs for the specified style and content layers
+        style_outputs = [vgg.get_layer(layer).output for layer in self.style_layers]
+        content_output = vgg.get_layer(self.content_layer).output
+        model_outputs = style_outputs + [content_output]
 
-        model = Model([vgg.input], outputs)
+        # Create the model that takes image input and outputs selected layers' outputs
+        model = tf.keras.Model(vgg.input, model_outputs)
 
         return model
+
