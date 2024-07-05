@@ -96,7 +96,9 @@ class NST:
         # selected layers
         selected_layers = self.style_layers + [self.content_layer]
 
-        outputs = [modelVGG19.get_layer(name).output for name in selected_layers]
+        outputs = [
+                modelVGG19.get_layer(name).output for name in selected_layers
+                ]
 
         # construct model
         model = tf.keras.Model([modelVGG19.input], outputs)
@@ -104,7 +106,8 @@ class NST:
         # for replace MaxPooling layer by AveragePooling layer
         custom_objects = {'MaxPooling2D': tf.keras.layers.AveragePooling2D}
         tf.keras.models.save_model(model, 'vgg_base.h5')
-        model_avg = tf.keras.models.load_model('vgg_base.h5', custom_objects=custom_objects)
+        model_avg = tf.keras.models.load_model(
+                'vgg_base.h5', custom_objects=custom_objects
+                )
 
         self.model = model_avg
-
