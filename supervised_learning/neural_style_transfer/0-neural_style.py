@@ -36,7 +36,6 @@ class NST:
 
         # Convert the image to a TensorFlow tensor and add a batch dimension
         image = tf.convert_to_tensor(image, dtype=tf.float32)
-        image = tf.image.convert_image_dtype(image, tf.float32)
         image = tf.expand_dims(image, axis=0)
 
         # Get the height and width of the image
