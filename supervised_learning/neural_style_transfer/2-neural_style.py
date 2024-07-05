@@ -117,7 +117,10 @@ class NST:
         """
         calculates the gram matrix of an input layer
         """
-        if not isinstance(input_layer, (tf.Tensor, tf.Variable)) or len(input_layer.shape) != 4:
+        if not isinstance(
+                input_layer,
+                (tf.Tensor, tf.Variable)
+                ) or len(input_layer.shape) != 4:
             raise TypeError("input_layer must be a tensor of rank 4")
 
         # Get the dimensions
@@ -127,7 +130,9 @@ class NST:
         input_layer_reshaped = tf.reshape(input_layer, (h * w, c))
 
         # Compute the gram matrix
-        gram = tf.matmul(input_layer_reshaped, input_layer_reshaped, transpose_a=True)
+        gram = tf.matmul(input_layer_reshaped,
+                         input_layer_reshaped,
+                         transpose_a=True)
 
         # Normalize the gram matrix
         gram_matrix = tf.expand_dims(gram / tf.cast(h * w, tf.float32), axis=0)
