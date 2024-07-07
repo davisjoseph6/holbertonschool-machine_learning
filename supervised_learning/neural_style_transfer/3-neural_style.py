@@ -47,7 +47,8 @@ class NST:
 
         self.model = None
         self.load_model()
-        self.gram_style_features, self.content_feature = self.generate_features()
+        self.gram_style_features, self.content_feature = \
+            self.generate_features()
 
     @staticmethod
     def scale_image(image):
@@ -157,9 +158,9 @@ class NST:
 
         # compute Gram matrices for style features
         self.gram_style_features = [self.gram_matrix(style_layer) for
-            style_layer in style_output]
+                                    style_layer in style_output]
 
-        # excluding the last element considered more suitable for capturing 
+        # excluding the last element considered more suitable for capturing
         # the style of image
         self.gram_style_features = self.gram_style_features[:-1]
 
