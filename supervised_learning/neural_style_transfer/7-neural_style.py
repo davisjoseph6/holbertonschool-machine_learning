@@ -249,9 +249,8 @@ class NST:
 
         # preprocess generated imgage
         preprocess_generated_image = \
-            (tf.keras.applications.vgg19.preprocess_input(
-                generated_image * 255
-                ))
+            (tf.keras.applications.
+             vgg19.preprocess_input(generated_image * 255))
 
         # calculate content and style for generated image
         generated_output = self.model(preprocess_generated_image)
