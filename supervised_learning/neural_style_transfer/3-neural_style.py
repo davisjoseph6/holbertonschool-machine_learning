@@ -146,7 +146,7 @@ class NST:
         """
         # preprocess style and content image
         preprocess_style = (tf.keras.applications.vgg19.
-                preprocess_input(self.style_image * 255))
+                            preprocess_input(self.style_image * 255))
         preprocess_content = (
                 tf.keras.applications.vgg19.
                 preprocess_input(self.content_image * 255))
