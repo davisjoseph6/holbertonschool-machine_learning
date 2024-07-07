@@ -208,11 +208,11 @@ class NST:
                     .format(len_style_layer)
                     )
 
-            # uniform initialization
-            weight = 1.0 / len_style_layer
+        # uniform initialization
+        weight = 1.0 / len_style_layer
 
-            cost_total = sum([weight * self.layer_style_cost(style, target)
-                              for style, target
-                              in zip(style_outputs, self.gram_style_features)])
+        cost_total = sum([weight * self.layer_style_cost(style, target)
+                          for style, target
+                          in zip(style_outputs, self.gram_style_features)])
 
-            return cost_total
+        return cost_total
