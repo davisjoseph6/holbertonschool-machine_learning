@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
 
 import matplotlib.image as mpimg
+import matplotlib.pyplot as plt
 import os
 import random
 import numpy as np
 import tensorflow as tf
 
-NST = __import__('8-neural_style').NST
+
+NST = __import__('9-neural_style').NST
 
 
 if __name__ == '__main__':
@@ -22,16 +24,7 @@ if __name__ == '__main__':
     tf.random.set_seed(SEED)
 
     nst = NST(style_image, content_image)
-    
-    print("Scaled content image shape:", nst.content_image.shape)
-    
-    # Initialize generated_image with the same shape as content_image
-    generated_image = tf.Variable(nst.content_image, dtype=tf.float32)
-    print("Generated image shape:", generated_image.shape)
-    
-    grads, J_total, J_content, J_style = nst.compute_grads(generated_image)
-    print(J_total)
-    print(J_content)
-    print(J_style)
-    print(grads)
-
+    image, cost = nst.generate_image(iterations=2000, step=100, lr=0.002)
+    print("Best cost:", cost)
+    plt.imshow(image)
+    plt.show()
