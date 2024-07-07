@@ -152,12 +152,9 @@ class NST:
         content_output = self.model(preprocess_content)
 
         # Compute Gram matrices for style features
-        gram_style_features = [self.gram_matrix(style_layer) for style_layer in style_output]
+        gram_style_features = [self.gram_matrix(style_layer) for style_layer in style_output[:-1]]
 
-        # Exclude the last element considered more suitable for capturing the style of image
-        gram_style_features = gram_style_features[:-1]
-
-        # Select only the last network layer
+        # Select only the last network layer for content
         content_feature = content_output[-1]
 
         return gram_style_features, content_feature
