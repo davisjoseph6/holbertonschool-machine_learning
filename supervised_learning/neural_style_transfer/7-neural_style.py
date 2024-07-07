@@ -256,7 +256,7 @@ class NST:
         # calculate content and style for generated image
         generated_output = self.model(preprocess_generated_image)
 
-        # def content and style
+        # define content and style
         generated_content = generated_output[-1]
         generated_style = generated_output[:-1]
 
