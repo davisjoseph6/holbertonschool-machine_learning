@@ -141,25 +141,30 @@ class NST:
         return gram_matrix
 
     def generate_features(self):
-    """
-    Extract the features used to calculate neural style cost.
-        Sets the public instance attributes:
-            - gram_style_features - a list of gram matrices calculated from the
-                style layer outputs of the style image
-            - content_feature - the content layer output of the content image
-    """
-    # Ensure the images are preprocessed correctly
-    preprocessed_style = tf.keras.applications.vgg19.preprocess_input(
-        self.style_image * 255)
-    preprocessed_content = tf.keras.applications.vgg19.preprocess_input(
-        self.content_image * 255)
+        """
+            method extract the features used to calculate neural style cost
+        :return:
+        """
+        # preprocess style and content image
+        preprocess_style = (tf.keras.applications.vgg19.
+                            preprocess_input(self.style_image * 255))
+        preprocess_content = (
+            tf.keras.applications.vgg19.
+            preprocess_input(self.content_image * 255))
 
-    # Get the outputs from the model with preprocessed images as input
-    style_outputs = self.model(preprocessed_style)[:-1]
+        # get style and content outputs from VGG19 model
+        style_output = self.model(preprocess_style)
+        content_output = self.model(preprocess_content)
 
-    # Set content_feature, no further processing required
-    self.content_feature = self.model(preprocessed_content)[-1]
+        # compute Gram matrices for style features
+        self.gram_style_features = [self.gram_matrix(style_layer) for
+                                    style_layer in style_output]
 
-    # Compute and set Gram matrices for the style layers outputs
-    self.gram_style_features = [self.gram_matrix(
-        output) for output in style_outputs]
+        # excluding the last element considered more suitable for capturing
+        # the style of image
+        self.gram_style_features = self.gram_style_features[:-1]
+
+        # select only last network layer
+        self.content_feature = content_output[-1]
+
+        return self.gram_style_features, self.content_feature
