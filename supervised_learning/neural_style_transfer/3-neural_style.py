@@ -18,7 +18,7 @@ class NST:
 
     def __init__(self, style_image, content_image, alpha=1e4, beta=1):
         """
-        Class constructor neural style transfer
+        Class constructor for neural style transfer
         """
 
         if (not isinstance(style_image, np.ndarray)
@@ -46,15 +46,13 @@ class NST:
             self.beta = beta
 
         self.model = None
-        self.gram_style_features = None
-        self.content_feature = None
         self.load_model()
-        self.generate_features()
+        self.gram_style_features, self.content_feature = self.generate_features()
 
     @staticmethod
     def scale_image(image):
         """
-        rescales an image such that its pixel values are between 0 and 1
+        Rescales an image such that its pixel values are between 0 and 1
         and its largest side is 512 px
         """
         if not isinstance(image, np.ndarray) or image.shape[-1] != 3:
@@ -86,7 +84,7 @@ class NST:
 
     def load_model(self):
         """
-        create the model used to calculate cost
+        Create the model used to calculate cost
         """
         # Keras API
         modelVGG19 = tf.keras.applications.VGG19(
@@ -118,7 +116,7 @@ class NST:
     @staticmethod
     def gram_matrix(input_layer):
         """
-        calculates the gram matrix of an input layer
+        Calculates the gram matrix of an input layer
         """
         if not isinstance(
                 input_layer,
@@ -144,16 +142,23 @@ class NST:
 
     def generate_features(self):
         """
-        extracts the features used to calculate neural style cost
+        Extracts the features used to calculate neural style cost
         """
-        # Get the style and content feature maps
-        outputs = self.model(self.style_image)
-        style_outputs = outputs[:-1]
-        content_output = outputs[-1]
+        # Preprocess style and content images
+        preprocess_style = tf.keras.applications.vgg19.preprocess_input(self.style_image * 255)
+        preprocess_content = tf.keras.applications.vgg19.preprocess_input(self.content_image * 255)
+        # Get style and content outputs from VGG19 model
+        style_output = self.model(preprocess_style)
+        content_output = self.model(preprocess_content)
 
-        # Calculate gram matrices for style features
-        self.gram_style_features = [self.gram_matrix(style_output)
-                for style_output in style_outputs]
+        # Compute Gram matrices for style features
+        gram_style_features = [self.gram_matrix(style_layer) for style_layer in style_output]
 
-        # Set content feature
-        self.content_feature = content_output
+        # Exclude the last element considered more suitable for capturing the style of image
+        gram_style_features = gram_style_features[:-1]
+
+        # Select only the last network layer
+        content_feature = content_output[-1]
+
+        return gram_style_features, content_feature
+
