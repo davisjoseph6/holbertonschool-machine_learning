@@ -45,8 +45,8 @@ class NST:
         else:
             self.beta = beta
 
-            self.model = None
-            self.load_model()
+        self.model = None
+        self.load_model()
 
     @staticmethod
     def scale_image(image):

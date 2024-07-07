@@ -46,7 +46,10 @@ class NST:
             self.beta = beta
 
         self.model = None
+        self.gram_style_features = None
+        self.content_feature = None
         self.load_model()
+        self.generate_features()
 
     @staticmethod
     def scale_image(image):
@@ -111,3 +114,46 @@ class NST:
                 )
 
         self.model = model_avg
+
+    @staticmethod
+    def gram_matrix(input_layer):
+        """
+        calculates the gram matrix of an input layer
+        """
+        if not isinstance(
+                input_layer,
+                (tf.Tensor, tf.Variable)
+                ) or len(input_layer.shape) != 4:
+            raise TypeError("input_layer must be a tensor of rank 4")
+
+        # Get the dimensions
+        _, h, w, c = input_layer.shape
+
+        # Reshape the tensor to a 2D matrix
+        input_layer_reshaped = tf.reshape(input_layer, (h * w, c))
+
+        # Compute the gram matrix
+        gram = tf.matmul(input_layer_reshaped,
+                         input_layer_reshaped,
+                         transpose_a=True)
+
+        # Normalize the gram matrix
+        gram_matrix = tf.expand_dims(gram / tf.cast(h * w, tf.float32), axis=0)
+
+        return gram_matrix
+
+    def generate_features(self):
+        """
+        extracts the features used to calculate neural style cost
+        """
+        # Get the style and content feature maps
+        outputs = self.model(self.style_image)
+        style_outputs = outputs[:-1]
+        content_output = outputs[-1]
+
+        # Calculate gram matrices for style features
+        self.gram_style_features = [self.gram_matrix(style_output)
+                for style_output in style_outputs]
+
+        # Set content feature
+        self.content_feature = content_output
