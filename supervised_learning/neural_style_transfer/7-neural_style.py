@@ -238,7 +238,14 @@ class NST:
 
     def total_cost(self, generated_image):
         """
-        method calculate total cost for the generated image
+            method calculate total cost for the generated image
+
+        :param generated_image: tf.Tensor, shape(1,nh,nw,3) generated image
+
+        :return: (J, J_content, J_style)
+                J: total cost
+                J_content: content cost
+                J_style: style cost
         """
         shape_content_image = self.content_image.shape
 
@@ -247,7 +254,7 @@ class NST:
             raise TypeError("generated_image must be a tensor of shape {}"
                             .format(shape_content_image))
 
-        # preprocess generated imgage
+        # preprocess generated img
         preprocess_generated_image = \
             (tf.keras.applications.
              vgg19.preprocess_input(generated_image * 255))
@@ -255,7 +262,7 @@ class NST:
         # calculate content and style for generated image
         generated_output = self.model(preprocess_generated_image)
 
-        # content and style
+        # def content and style
         generated_content = generated_output[-1]
         generated_style = generated_output[:-1]
 
