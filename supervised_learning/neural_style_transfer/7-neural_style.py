@@ -247,7 +247,7 @@ class NST:
             raise TypeError("generated_image must be a tensor of shape {}"
                             .format(shape_content_image))
 
-        # preprocess generated img
+        # preprocess generated imgage
         preprocess_generated_image = \
             (tf.keras.applications.vgg19.preprocess_input(
                 generated_image * 255
@@ -256,7 +256,7 @@ class NST:
         # calculate content and style for generated image
         generated_output = self.model(preprocess_generated_image)
 
-        # define content and style
+        # content and style
         generated_content = generated_output[-1]
         generated_style = generated_output[:-1]
 
