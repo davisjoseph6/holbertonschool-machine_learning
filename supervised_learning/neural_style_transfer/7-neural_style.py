@@ -271,4 +271,3 @@ class NST:
         J = self.alpha * J_content + self.beta * J_style
 
         return J, J_content, J_style
-
