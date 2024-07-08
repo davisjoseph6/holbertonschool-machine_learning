@@ -47,7 +47,9 @@ class NST:
 
         self.model = None
         self.load_model()
-        self.gram_style_features, self.content_feature = self.generate_features()
+        self.gram_style_features, self.content_feature = (
+                self.generate_features()
+                )
 
     @staticmethod
     def scale_image(image):
@@ -56,7 +58,8 @@ class NST:
         and its largest side is 512 px
         """
         if not isinstance(image, np.ndarray) or image.shape[-1] != 3:
-            raise TypeError("image must be a numpy.ndarray with shape (h, w, 3)")
+            raise (TypeError
+                   ("image must be a numpy.ndarray with shape (h, w, 3)"))
 
         h, w, _ = image.shape
 
@@ -67,7 +70,8 @@ class NST:
             h_new = 512
             w_new = int((w * 512) / h)
 
-        resized_image = tf.image.resize(image, size=[h_new, w_new], method='bicubic')
+        resized_image = tf.image.resize(image, size=[h_new, w_new],
+                                        method='bicubic')
 
         # Normalize
         resized_image = resized_image / 255.0
@@ -84,14 +88,17 @@ class NST:
         Create the model used to calculate cost
         """
         # Keras API
-        modelVGG19 = tf.keras.applications.VGG19(include_top=False, weights='imagenet')
+        modelVGG19 = tf.keras.applications.VGG19(include_top=False,
+                                                 weights='imagenet')
 
         modelVGG19.trainable = False
 
         # selected layers
         selected_layers = self.style_layers + [self.content_layer]
 
-        outputs = [modelVGG19.get_layer(name).output for name in selected_layers]
+        outputs = [
+                modelVGG19.get_layer(name).output for name in selected_layers
+                ]
 
         # construct model
         model = tf.keras.Model([modelVGG19.input], outputs)
@@ -99,7 +106,8 @@ class NST:
         # replace MaxPooling layer with AveragePooling layer
         custom_objects = {'MaxPooling2D': tf.keras.layers.AveragePooling2D}
         tf.keras.models.save_model(model, 'vgg_base.h5')
-        model_avg = tf.keras.models.load_model('vgg_base.h5', custom_objects=custom_objects)
+        model_avg = tf.keras.models.load_model('vgg_base.h5',
+                                               custom_objects=custom_objects)
 
         self.model = model_avg
 
@@ -108,7 +116,8 @@ class NST:
         """
         Calculates the gram matrix of an input layer
         """
-        if not isinstance(input_layer, (tf.Tensor, tf.Variable)) or len(input_layer.shape) != 4:
+        if not isinstance(input_layer, (tf.Tensor, tf.Variable)) or \
+                len(input_layer.shape) != 4:
             raise TypeError("input_layer must be a tensor of rank 4")
 
         # Get the dimensions
@@ -118,7 +127,8 @@ class NST:
         input_layer_reshaped = tf.reshape(input_layer, (h * w, c))
 
         # Compute the gram matrix
-        gram = tf.matmul(input_layer_reshaped, input_layer_reshaped, transpose_a=True)
+        gram = tf.matmul(input_layer_reshaped, input_layer_reshaped,
+                         transpose_a=True)
 
         # Normalize the gram matrix
         gram_matrix = tf.expand_dims(gram / tf.cast(h * w, tf.float32), axis=0)
@@ -302,4 +312,3 @@ class NST:
         grad = tape.gradient(J_total, generated_image)
 
         return grad, J_total, J_content, J_style
-
