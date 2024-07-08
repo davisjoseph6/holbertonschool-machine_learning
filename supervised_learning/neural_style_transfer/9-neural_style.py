@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Neural style transfer
+    Neural style transfer
 """
 
 import numpy as np
@@ -9,7 +9,7 @@ import tensorflow as tf
 
 class NST:
     """
-    Class that performs tasks for neural style transfer
+        Class that performs tasks for neural style transfer
     """
 
     style_layers = ['block1_conv1', 'block2_conv1', 'block3_conv1',
@@ -18,8 +18,15 @@ class NST:
 
     def __init__(self, style_image, content_image, alpha=1e4, beta=1):
         """
-        Class constructor for neural style transfer
+            Class constructor neural style transfer
+
+            :param style_image: ndarray, image used as style reference
+            :param content_image: ndarray, image used as content reference
+            :param alpha: weight for content cost
+            :param beta: weight for style cost
         """
+
+        self.style_image = style_image
 
         if (not isinstance(style_image, np.ndarray)
                 or style_image.shape[-1] != 3):
@@ -27,19 +34,16 @@ class NST:
                             " with shape (h, w, 3)")
         else:
             self.style_image = self.scale_image(style_image)
-
         if (not isinstance(content_image, np.ndarray)
                 or content_image.shape[-1] != 3):
             raise TypeError("content_image must be a numpy.ndarray"
                             " with shape (h, w, 3)")
         else:
             self.content_image = self.scale_image(content_image)
-
         if not isinstance(alpha, (int, float)) or alpha < 0:
             raise TypeError("alpha must be a non-negative number")
         else:
             self.alpha = alpha
-
         if not isinstance(beta, (int, float)) or beta < 0:
             raise TypeError("beta must be a non-negative number")
         else:
@@ -48,14 +52,17 @@ class NST:
         self.model = None
         self.load_model()
         self.gram_style_features, self.content_feature = (
-                self.generate_features()
-                )
+            self.generate_features())
 
     @staticmethod
     def scale_image(image):
         """
-        Rescales an image such that its pixel values are between 0 and 1
-        and its largest side is 512 px
+            rescales an image such that its pixels values are between 0 and 1
+            and its largest side is 512 px
+
+            :param image: ndarray, shape(h,w,3) image to be scaled
+
+            :return:scaled image
         """
         if not isinstance(image, np.ndarray) or image.shape[-1] != 3:
             raise (TypeError
@@ -70,13 +77,14 @@ class NST:
             h_new = 512
             w_new = int((w * 512) / h)
 
-        resized_image = tf.image.resize(image, size=[h_new, w_new],
+        resized_image = tf.image.resize(image,
+                                        size=[h_new, w_new],
                                         method='bicubic')
 
         # Normalize
-        resized_image = resized_image / 255.0
+        resized_image = resized_image / 255
 
-        # Limit pixel values between 0 and 1
+        # limit pixel value between 0 and 1
         resized_image = tf.clip_by_value(resized_image, 0, 1)
 
         tf_resize_image = tf.expand_dims(resized_image, 0)
@@ -85,25 +93,28 @@ class NST:
 
     def load_model(self):
         """
-        Create the model used to calculate cost
+            create the model used to calculate cost
+            VGG19
+            :return:
         """
         # Keras API
-        modelVGG19 = tf.keras.applications.VGG19(include_top=False,
-                                                 weights='imagenet')
+        modelVGG19 = tf.keras.applications.VGG19(
+            include_top=False,
+            weights='imagenet'
+        )
 
         modelVGG19.trainable = False
 
         # selected layers
         selected_layers = self.style_layers + [self.content_layer]
 
-        outputs = [
-                modelVGG19.get_layer(name).output for name in selected_layers
-                ]
+        outputs = [modelVGG19.get_layer(name).output for name
+                   in selected_layers]
 
         # construct model
         model = tf.keras.Model([modelVGG19.input], outputs)
 
-        # replace MaxPooling layer with AveragePooling layer
+        # for replace MaxPooling layer by AveragePooling layer
         custom_objects = {'MaxPooling2D': tf.keras.layers.AveragePooling2D}
         tf.keras.models.save_model(model, 'vgg_base.h5')
         model_avg = tf.keras.models.load_model('vgg_base.h5',
@@ -114,31 +125,38 @@ class NST:
     @staticmethod
     def gram_matrix(input_layer):
         """
-        Calculates the gram matrix of an input layer
+            Calculate Gram Matrix
+
+            :param input_layer: instance of tf.Tensor or tf.Variable
+                shape(1,h,w,c), layer output whose gram matrix should
+                be calculated
+            :return: tf.tensor, shape(1,c,c) containing gram matrix
         """
-        if not isinstance(input_layer, (tf.Tensor, tf.Variable)) or \
-                len(input_layer.shape) != 4:
+
+        if (not isinstance(input_layer, (tf.Tensor, tf.Variable))
+                or len(input_layer.shape) != 4):
             raise TypeError("input_layer must be a tensor of rank 4")
 
-        # Get the dimensions
-        _, h, w, c = input_layer.shape
+        # sum of product
+        # b: num of batch, i&j spatial coordinate, c channel
+        result = tf.linalg.einsum('bijc,bijd->bcd', input_layer, input_layer)
 
-        # Reshape the tensor to a 2D matrix
-        input_layer_reshaped = tf.reshape(input_layer, (h * w, c))
+        # form of input tensor
+        input_shape = tf.shape(input_layer)
 
-        # Compute the gram matrix
-        gram = tf.matmul(input_layer_reshaped, input_layer_reshaped,
-                         transpose_a=True)
+        # nbr spatial position in each feature card : h*w
+        num_locations = tf.cast(input_shape[1] * input_shape[2], tf.float32)
 
-        # Normalize the gram matrix
-        gram_matrix = tf.expand_dims(gram / tf.cast(h * w, tf.float32), axis=0)
+        # normalisation of result
+        norm_result = result / num_locations
 
-        return gram_matrix
+        return norm_result
 
     def generate_features(self):
         """
             method extract the features used to calculate neural style cost
-        :return:
+
+            :return: public attribute gram_style_features & content_feature
         """
         # preprocess style and content image
         preprocess_style = (tf.keras.applications.vgg19.
@@ -220,8 +238,8 @@ class NST:
         weight = 1.0 / float(len_style_layer)
 
         cost_total = sum([weight * self.layer_style_cost(style, target)
-                         for style, target
-                         in zip(style_outputs, self.gram_style_features)])
+                          for style, target
+                          in zip(style_outputs, self.gram_style_features)])
 
         return cost_total
 
@@ -250,6 +268,13 @@ class NST:
     def total_cost(self, generated_image):
         """
             method calculate total cost for the generated image
+
+        :param generated_image: tf.Tensor, shape(1,nh,nw,3) generated image
+
+        :return: (J, J_content, J_style)
+                J: total cost
+                J_content: content cost
+                J_style: style cost
         """
         shape_content_image = self.content_image.shape
 
@@ -280,6 +305,10 @@ class NST:
         """
             method to calculate gradients for tf.tensor generated image
             shape(1,nh,nw,3)
+
+        :param generated_image: tf.Tensor or tf.Variable
+                    same shape as self.content_image
+        :return: gradients, J_total, J, content, J_style
         """
         # define shape
         shape_content_image = \
@@ -306,6 +335,19 @@ class NST:
         """
             method to generate the neural style transfered image
             Grad descent : adam opt
+
+        :param iterations: number of iterations to perform gradient descent
+        :param step: None or the step print information:
+                    print Cost at iteration {i}: {J_total}, content {J_content}, style {J_style}
+                    i is the iteration
+                    J_total is the total cost
+                    J_content is the content cost
+                    J_style is the style cost
+        :param lr: learning rate for gradient descent
+        :param beta1: beta1 for gradient descent
+        :param beta2: beta2 for gradient descent
+
+        :return: best generated_image, best cost
         """
 
         if not isinstance(iterations, int):
@@ -324,7 +366,7 @@ class NST:
             raise TypeError("beta1 must be a float")
         if beta1 < 0 or beta1 > 1:
             raise ValueError("beta1 must be in the range [0, 1]")
-        if not isinstance(beta1, float):
+        if not isinstance(beta2, float):
             raise TypeError("beta1 must be a float")
         if beta2 < 0 or beta2 > 1:
             raise ValueError("beta2 must be in the range [0, 1]")
@@ -352,7 +394,7 @@ class NST:
                 best_cost = float(J_total)
                 best_image = generated_image
 
-            # Print step required
+            # Print step requiered
             if step is not None and (i % step == 0 or i == iterations):
                 print("Cost at iteration {}: {}, content {}, style {}"
                       .format(i, J_total, J_content, J_style))
