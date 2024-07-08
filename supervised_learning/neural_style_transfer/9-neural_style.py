@@ -324,7 +324,7 @@ class NST:
             raise TypeError("beta1 must be a float")
         if beta1 < 0 or beta1 > 1:
             raise ValueError("beta1 must be in the range [0, 1]")
-        if not isinstance(beta2, float):
+        if not isinstance(beta1, float):
             raise TypeError("beta1 must be a float")
         if beta2 < 0 or beta2 > 1:
             raise ValueError("beta2 must be in the range [0, 1]")
