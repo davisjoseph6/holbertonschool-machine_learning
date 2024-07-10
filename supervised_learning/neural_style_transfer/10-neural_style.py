@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-    Neural style transfer
+Neural style transfer
 """
 
 import numpy as np
@@ -9,7 +9,7 @@ import tensorflow as tf
 
 class NST:
     """
-        Class that performs tasks for neural style transfer
+    Class that performs tasks for neural style transfer
     """
 
     style_layers = ['block1_conv1', 'block2_conv1', 'block3_conv1',
@@ -18,15 +18,8 @@ class NST:
 
     def __init__(self, style_image, content_image, alpha=1e4, beta=1, var=10):
         """
-            Class constructor neural style transfer
-
-            :param style_image: ndarray, image used as style reference
-            :param content_image: ndarray, image used as content reference
-            :param alpha: weight for content cost
-            :param beta: weight for style cost
-            :param var: weight for the variational cost
+        Class constructor for neural style transfer
         """
-
         self.style_image = style_image
 
         if (not isinstance(style_image, np.ndarray)
@@ -35,16 +28,19 @@ class NST:
                             " with shape (h, w, 3)")
         else:
             self.style_image = self.scale_image(style_image)
+
         if (not isinstance(content_image, np.ndarray)
                 or content_image.shape[-1] != 3):
             raise TypeError("content_image must be a numpy.ndarray"
                             " with shape (h, w, 3)")
         else:
             self.content_image = self.scale_image(content_image)
+
         if not isinstance(alpha, (int, float)) or alpha < 0:
             raise TypeError("alpha must be a non-negative number")
         else:
             self.alpha = alpha
+
         if not isinstance(beta, (int, float)) or beta < 0:
             raise TypeError("beta must be a non-negative number")
         else:
@@ -55,22 +51,18 @@ class NST:
         self.model = None
         self.load_model()
         self.gram_style_features, self.content_feature = (
-            self.generate_features())
+                self.generate_features())
         self.var = var
 
     @staticmethod
     def scale_image(image):
         """
-            rescales an image such that its pixels values are between 0 and 1
-            and its largest side is 512 px
-
-            :param image: ndarray, shape(h,w,3) image to be scaled
-
-            :return:scaled image
+        Rescales an image such that its pixel values are between 0 and 1
+        and its largest side is 512 px
         """
         if not isinstance(image, np.ndarray) or image.shape[-1] != 3:
             raise (TypeError
-                   ("image must be a numpy.ndarray with shape (h, w, 3)"))
+                    ("image must be a numpy.ndarray with shape (h, w, 3)"))
 
         h, w, _ = image.shape
 
@@ -88,7 +80,7 @@ class NST:
         # Normalize
         resized_image = resized_image / 255
 
-        # limit pixel value between 0 and 1
+        # Limit pixel value between 0 and 1
         resized_image = tf.clip_by_value(resized_image, 0, 1)
 
         tf_resize_image = tf.expand_dims(resized_image, 0)
@@ -97,52 +89,44 @@ class NST:
 
     def load_model(self):
         """
-            create the model used to calculate cost
-            VGG19
-            :return:
+        Create the model used to calculate cost
         """
         # Keras API
         modelVGG19 = tf.keras.applications.VGG19(
             include_top=False,
             weights='imagenet'
-        )
+            )
 
         modelVGG19.trainable = False
 
         # selected layers
         selected_layers = self.style_layers + [self.content_layer]
 
-        outputs = [modelVGG19.get_layer(name).output for name
-                   in selected_layers]
+        outputs = [
+            modelVGG19.get_layer(name).output for name in selected_layers
+            ]
 
         # construct model
         model = tf.keras.Model([modelVGG19.input], outputs)
 
-        # for replace MaxPooling layer by AveragePooling layer
+        # replace MaxPooling layer by AveragePooling layer
         custom_objects = {'MaxPooling2D': tf.keras.layers.AveragePooling2D}
         tf.keras.models.save_model(model, 'vgg_base.h5')
-        model_avg = tf.keras.models.load_model('vgg_base.h5',
-                                               custom_objects=custom_objects)
+        model_avg = tf.keras.models.load_model('vgg_base.h5', custom_objects=custom_objects)
 
         self.model = model_avg
 
     @staticmethod
     def gram_matrix(input_layer):
         """
-            Calculate Gram Matrix
-
-            :param input_layer: instance of tf.Tensor or tf.Variable
-                shape(1,h,w,c), layer output whose gram matrix should
-                be calculated
-            :return: tf.tensor, shape(1,c,c) containing gram matrix
+        Calculates the gram matrix of an input layer
         """
-
         if (not isinstance(input_layer, (tf.Tensor, tf.Variable))
                 or len(input_layer.shape) != 4):
             raise TypeError("input_layer must be a tensor of rank 4")
 
-        # sum of product
-        # b: num of batch, i&j spatial coordinate, c channel
+        # su of product
+        # b: num of batch, i&j spatial coordiante, c channel
         result = tf.linalg.einsum('bijc,bijd->bcd', input_layer, input_layer)
 
         # form of input tensor
@@ -151,7 +135,7 @@ class NST:
         # nbr spatial position in each feature card : h*w
         num_locations = tf.cast(input_shape[1] * input_shape[2], tf.float32)
 
-        # normalisation of result
+        # Normalize of result
         norm_result = result / num_locations
 
         return norm_result
@@ -159,8 +143,7 @@ class NST:
     def generate_features(self):
         """
             method extract the features used to calculate neural style cost
-
-            :return: public attribute gram_style_features & content_feature
+        :return:
         """
         # preprocess style and content image
         preprocess_style = (tf.keras.applications.vgg19.
@@ -344,8 +327,7 @@ class NST:
 
         :param iterations: number of iterations to perform gradient descent
         :param step: None or the step print information:
-                    print Cost at iteration {i}: {J_total},
-                    content {J_content}, style {J_style}
+                    print Cost at iteration {i}: {J_total}, content {J_content}, style {J_style}
                     i is the iteration
                     J_total is the total cost
                     J_content is the content cost
@@ -374,7 +356,7 @@ class NST:
         if beta1 < 0 or beta1 > 1:
             raise ValueError("beta1 must be in the range [0, 1]")
         if not isinstance(beta2, float):
-            raise TypeError("beta1 must be a float")
+            raise TypeError("beta2 must be a float")
         if beta2 < 0 or beta2 > 1:
             raise ValueError("beta2 must be in the range [0, 1]")
 
@@ -392,7 +374,7 @@ class NST:
         for i in range(iterations + 1):
             # compute gradients and costs
             grads, J_total, J_content, J_style, J_var = (
-                self.compute_grads(generated_image))
+                    self.compute_grads(generated_image))
 
             # use opt
             optimizer.apply_gradients([(grads, generated_image)])
@@ -402,7 +384,7 @@ class NST:
                 best_cost = float(J_total)
                 best_image = generated_image
 
-            # Print step requiered
+            # Print step required
             if step is not None and (i % step == 0 or i == iterations):
                 print("Cost at iteration {}: {}, content {}, style {}, var {}"
                       .format(i, J_total, J_content, J_style, J_var))
@@ -417,12 +399,7 @@ class NST:
     @staticmethod
     def variational_cost(generated_image):
         """
-            calculate total coast for the generated image
-
-        :param generated_image: tf.Tensor, shape(2,nh,nw,3)
-                containing generated image
-
-        :return: variational cost
+        calculate total cost for the generated image
         """
         if (not isinstance(generated_image, (tf.Tensor, tf.Variable))
                 or (len(generated_image.shape) != 4
