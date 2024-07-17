@@ -46,5 +46,9 @@ def determinant(matrix):
     # Recursive case: Calculate the determinant using cofactor expansion
     det = 0
     for i in range(len(matrix[0])):
-        det += (((-1) ** i) * matrix[0][i] * determinant(sub_matrix(matrix, i)))
+        det += (
+                ((-1) ** i) * matrix[0][i] * determinant(
+                    sub_matrix(matrix, i)
+                    )
+                )
     return det
