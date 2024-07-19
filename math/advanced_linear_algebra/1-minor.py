@@ -3,11 +3,13 @@
     Minor
 """
 
+
 def sub_matrix(matrix, i):
     """
     Creates a submatrix by removing the first row and the i-th column
     """
     return [row[:i] + row[i + 1:] for row in matrix[1:]]
+
 
 def determinant(matrix):
     """
@@ -40,6 +42,7 @@ def determinant(matrix):
         det += ((-1) ** i) * matrix[0][i] * determinant(sub_matrix(matrix, i))
     return det
 
+
 def minor(matrix):
     """
     Calculates the minor matrix of a matrix.
@@ -63,7 +66,11 @@ def minor(matrix):
         minor_row = []
         for j in range(len(matrix[i])):
             # Create submatrix removing i-th row and j-th column
-            sub_matrix_value = [row[:j] + row[j+1:] for row_idx, row in enumerate(matrix) if row_idx != i]
+            sub_matrix_value = [
+                    row[:j] + row[j+1:]
+                    for row_idx, row in enumerate(matrix)
+                    if row_idx != i
+                    ]
             det_sub_matrix = determinant(sub_matrix_value)
             minor_row.append(det_sub_matrix)
         minor_matrix.append(minor_row)
