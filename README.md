@@ -1,6 +1,7 @@
 # ML Mastery Projects Repository
 
-![ML Mastery Projects](screenshot.png)
+![ML Mastery Projects](screenshot.png)![Screenshot 2024-06-25 062054](https://github.com/user-attachments/assets/479556b7-3be8-454e-afda-a5a4444512c8)
+
 
 Welcome to the **ML Mastery Projects Repository**. This repository encapsulates a comprehensive suite of projects developed to master the essentials and advanced topics in Machine Learning (ML). Each folder represents a distinct project, offering hands-on experience in various facets of ML, from foundational mathematics to complex neural network architectures and reinforcement learning algorithms.
 
