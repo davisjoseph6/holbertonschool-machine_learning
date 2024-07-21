@@ -6,7 +6,7 @@ Welcome to the **ML Mastery Projects Repository**. This repository encapsulates 
 
 ## About the Developer
 
-Hello! I'm [Your Name](https://www.linkedin.com/in/davisjoseph767/), a passionate machine learning enthusiast and developer. I thrive on solving complex problems and building innovative solutions. Connect with me on [Twitter](https://x.com/davisjoseph76) to stay updated with my latest projects and insights. For more of my work, visit my [Portfolio Project repository](https://github.com/).
+Hello! I'm [Davis Joseph](https://www.linkedin.com/in/davisjoseph767/), a passionate machine learning enthusiast and developer. I thrive on solving complex problems and building innovative solutions. Connect with me on [Twitter](https://x.com/davisjoseph76) to stay updated with my latest projects and insights. For more of my work, visit my [Portfolio Project repository](https://github.com/).
 
 ## Project Description
 
