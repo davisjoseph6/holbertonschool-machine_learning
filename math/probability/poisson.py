@@ -37,3 +37,16 @@ class Poisson:
         return (
                 self.lambtha ** k * 2.7182818285 ** (-self.lambtha)
                 ) / factorial
+
+    def cdf(self, k):
+        """
+        Calculates the value of the CDF for a given umber of successes.
+        """
+        k = int(k)
+        if k < 0:
+            return 0
+        # CDF is the sum of PMFs from 0 to k
+        cdf_value = 0
+        for i in range(k + 1):
+            cdf_value += self.pmf(i)
+        return cdf_value
