@@ -31,15 +31,25 @@ class Binomial:
             self.n = round(mean / self.p)
             self.p = mean / self.n
 
+    def factorial(self, k):
+        """
+        Calculates the factorial of a given number.
+        """
+        if k == 0 or k == 1:
+            return 1
+        result = 1
+        for i in range(2, k + 1):
+            result *= i
+        return result
+
     def pmf(self, k):
         """
         Calculates the value of the PMF for a given number of successes.
         """
-        from math import factorial
 
         k = int(k)
         if k < 0 or k > self.n:
             return 0
 
-        nCk = factorial(self.n) / (factorial(k) * factorial(self.n - k))
+        nCk = self.factorial(self.n) / (self.factorial(k) * self.factorial(self.n - k))
         return nCk * (self.p ** k) * ((1 - self.p) ** (self.n - k))
