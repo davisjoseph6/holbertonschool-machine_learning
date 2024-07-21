@@ -51,5 +51,6 @@ class Binomial:
         if k < 0 or k > self.n:
             return 0
 
-        nCk = self.factorial(self.n) / (self.factorial(k) * self.factorial(self.n - k))
+        nCk = (self.factorial(self.n) /
+               (self.factorial(k) * self.factorial(self.n - k)))
         return nCk * (self.p ** k) * ((1 - self.p) ** (self.n - k))
