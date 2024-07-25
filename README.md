@@ -1,12 +1,12 @@
 # ML Mastery Projects Repository
 
-![ML Mastery Projects](screenshot.png)
+![Screenshot 2024-07-22 031426](https://github.com/user-attachments/assets/ed6d2666-63eb-4fd5-91dd-249d6bcc262e)!
 
 Welcome to the **ML Mastery Projects Repository**. This repository encapsulates a comprehensive suite of projects developed to master the essentials and advanced topics in Machine Learning (ML). Each folder represents a distinct project, offering hands-on experience in various facets of ML, from foundational mathematics to complex neural network architectures and reinforcement learning algorithms.
 
 ## About the Developer
 
-Hello! I'm [Your Name](https://www.linkedin.com/in/davisjoseph767/), a passionate machine learning enthusiast and developer. I thrive on solving complex problems and building innovative solutions. Connect with me on [Twitter](https://x.com/davisjoseph76) to stay updated with my latest projects and insights. For more of my work, visit my [Portfolio Project repository](https://github.com/).
+Hello! I'm [Davis Joseph](https://www.linkedin.com/in/davisjoseph767/), a passionate machine learning enthusiast and developer. I thrive on solving complex problems and building innovative solutions. Connect with me on [Twitter](https://x.com/davisjoseph76) to stay updated with my latest projects and insights. For more of my work, visit my [Portfolio Project repository](https://github.com/).
 
 ## Project Description
 
