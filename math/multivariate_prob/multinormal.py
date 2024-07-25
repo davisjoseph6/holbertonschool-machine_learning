@@ -7,7 +7,13 @@ import numpy as np
 
 
 class MultiNormal:
+    """
+    A class that represents a multivariate normal distribution.
+    """
     def __init__(self, data):
+        """
+        multivariate normal distribution.
+        """
         # check if data is a 2D numpy array
         if not isinstance(data, np.ndarray) or data.ndim != 2:
             raise TypeError("data must be a 2D numpy.ndarray")
