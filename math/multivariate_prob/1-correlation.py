@@ -7,6 +7,9 @@ import numpy as np
 
 
 def correlation(C):
+    """
+    a function that calculates a correlation matrix
+    """
     # Check if C is a numpy array
     if not isinstance(C, np.ndarray):
         raise TypeError("C must be a numpy.ndarray")
