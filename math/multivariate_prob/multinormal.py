@@ -50,6 +50,7 @@ class MultiNormal:
         det_cov = np.linalg.det(self.cov)
 
         norm_factor = 1 / np.sqrt((2 * np.pi) ** d * det_cov)
-        exp_factor = np.exp(-0.5 * np.dot(np.dot(x_centered.T, inv_cov), x_centered))
+        exp_factor = np.exp(
+                -0.5 * np.dot(np.dot(x_centered.T, inv_cov), x_centered))
 
         return float(norm_factor * exp_factor)
