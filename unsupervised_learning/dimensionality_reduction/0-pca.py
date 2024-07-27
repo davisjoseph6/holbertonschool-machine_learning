@@ -1,33 +1,35 @@
 #!/usr/bin/env python3
 """
-Performs PCA on a dataset.
+    PCA on a dataset
 """
-
 import numpy as np
 
 
 def pca(X, var=0.95):
     """
-    Performs PCA on a dataset.
+    Function that performs PCA on a dataset
+
+    :param X: numpy.ndarray of shape (n, d) where:
+        - n is the number of data points
+        - d is the number of dimensions in each point
+        - all dimensions have a mean of 0 across all data points
+    :param var: the  fraction of the variance that the PCA transformation
+        should maintain
+
+    :return: the weights matrix, W,
+        that maintains var fraction of X‘s original variance
     """
-    # Compute the covariance matrix
-    cov_matrix = np.cov(X, rowvar=False)
 
-    # Compute the eigenvalues and eigenvectors of the covariance matrix
-    eigenvalues, eigenvectors = np.linalg.eigh(cov_matrix)
+    # Calculate the SVD of input data
+    U, S, V = np.linalg.svd(X, full_matrices=False)
 
-    # Sort the eigenvalues and corresponding eigenvectors in descending order
-    sorted_idx = np.argsort(eigenvalues)[::-1]
-    eigenvalues = eigenvalues[sorted_idx]
-    eigenvectors = eigenvectors[:, sorted_idx]
+    # Calculate the cumulative sum of the variance ratio
+    var_ratio = np.cumsum(S**2) / np.sum(S**2)
 
-    # Calculate the cumulative variance
-    cumulative_variance = np.cumsum(eigenvalues) / np.sum(eigenvalues)
+    # Determine the number of components to keep
+    nb_comp = np.argmax(var_ratio >= var) + 1
 
-    # Find the number of components to retain the given variance
-    num_components = np.searchsorted(cumulative_variance, var) + 1
-
-    # Get the weight matrix
-    W = eigenvectors[:, :num_components]
+    # select first nb_comp
+    W = V[:nb_comp + 1].T
 
     return W
