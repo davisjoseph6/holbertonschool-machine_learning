@@ -19,6 +19,6 @@ def pca(X, var=0.95):
     nb_comp = np.argmax(var_ratio >= var) + 1
 
     # Select first nb_comp components
-    W = V[:nb_comp].T
+    W = V[:nb_comp + 1].T
 
     return W
