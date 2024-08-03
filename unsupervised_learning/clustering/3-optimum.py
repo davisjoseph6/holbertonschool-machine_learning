@@ -30,7 +30,7 @@ def optimum_k(X, kmin=1, kmax=None, iterations=1000):
 
     results = []
     d_vars = []
-    
+
     # Calculation with kmin (smallest cluster size)
     C, clss = kmeans(X, kmin, iterations)
     base_variance = variance(X, C)
