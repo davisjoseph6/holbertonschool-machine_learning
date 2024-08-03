@@ -8,7 +8,7 @@ kmeans = __import__('1-kmeans').kmeans
 variance = __import__('2-variance').variance
 
 
-def optimum_k(X, kmin=1, lmax=None, iterations=1000):
+def optimum_k(X, kmin=1, kmax=None, iterations=1000):
     """
     Determines the optimum number of clusters by variance for a dataset
     """
