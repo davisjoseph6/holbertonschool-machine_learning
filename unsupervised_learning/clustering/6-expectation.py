@@ -19,14 +19,17 @@ def expectation(X, pi, m, S):
         return None, None
     if not isinstance(S, np.ndarray) or S.ndim != 3:
         return None, None
-    if X.shape[1] != m.shape[1] or S.shape[1] != S.shape[2] or m.shape[1] != S.shape[1] or pi.shape[0] != m.shape[0]:
+    if (X.shape[1] != m.shape[1] or S.shape[1] != S.shape[2] or
+            m.shape[1] != S.shape[1] or pi.shape[0] != m.shape[0]):
         return None, None
 
     n, d = X.shape
     k = pi.shape[0]
 
     # Calculate the PDF for each cluster
-    likelihoods = np.array([pdf(X, m[i], S[i]) for i in range(k)])
+    likelihoods = np.zeros((k, n))
+    for i in range(k):
+        likelihoods[i] = pdf(X, m[i], S[i])
 
     # Calculate the posterior probabilities (responsibilities)
     weighted_likelihoods = pi[:, np.newaxis] * likelihoods
