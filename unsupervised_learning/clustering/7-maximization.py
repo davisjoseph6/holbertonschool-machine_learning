@@ -10,15 +10,14 @@ def maximization(X, g):
     """
     Calculates the maximization step in the EM algorithm for a GMM.
     """
-    if not isinstance(X, np.ndarray) or X.ndim != 2:
-        return None, None, None
-    if not isinstance(g, np.ndarray) or g.ndim != 2:
-        return None, None, None
-    if X.shape[0] != g.shape[1]:
+    if (not isinstance(X, np.ndarray) or X.ndim != 2 or
+        not isinstance(g, np.ndarray) or g.ndim != 2 or
+        X.shape[0] != g.shape[1] or
+            not np.allclose(g.sum(axis=0), 1.0)):
         return None, None, None
 
     n, d = X.shape
-    k = g.shape[0]
+    k, _ = g.shape
 
     # Calculate the update priors
     pi = np.sum(g, axis=1) / n
