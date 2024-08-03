@@ -26,9 +26,7 @@ def expectation(X, pi, m, S):
     k = pi.shape[0]
 
     # Calculate the PDF for each cluster
-    likelihoods = np.zeros((k, n))
-    for i in range(k):
-        likelihoods[i] = pdf(X, m[i], S[i])
+    likelihoods = np.array([pdf(X, m[i], S[i]) for i in range(k)])
 
     # Calculate the posterior probabilities (responsibilities)
     weighted_likelihoods = pi[:, np.newaxis] * likelihoods
