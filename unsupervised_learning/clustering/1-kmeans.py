@@ -32,28 +32,38 @@ def kmeans(X, k, iterations=1000):
     """
     Performs K-means on a dataset.
     """
-    if not isinstance(X, np.ndarray) or len(X.shape) != 2:
+    if not isinstance(X, np.ndarray) or X.ndim != 2:
         return None, None
     if not isinstance(k, int) or k <= 0:
         return None, None
     if not isinstance(iterations, int) or iterations <= 0:
         return None, None
 
-    n, d = X.shape
-    C = initialize(X, k)
-    if C is None:
+    ctds = initialize(X, k)
+    if ctds is None:
         return None, None
 
-    for i in range(iterations):
+    for _ in range(iterations):
+        prev_ctds = np.copy(ctds)
+
         # Calculate distances and assign clusters
-        distances = np.linalg.norm(X[:, np.newaxis] - C, axis=2)
-        clss = np.argmin(distances, axis=1)
+        dists = np.sqrt(np.sum((X - ctds[:, np.newaxis]) ** 2, axis=2))
+        clss = np.argmin(dists, axis=0)
 
-        # Update centroids
-        new_C = np.array([X[clss == j].mean(axis=0) if np.any(clss == j) else np.random.uniform(np.min(X, axis=0), np.max(X, axis=0), (1, d)).flatten() for j in range(k)])
+        for i in range(k):
+            # Mask: points present in cluster
+            cluster_mask = X[clss == i]
+            if len(cluster_mask) == 0:
+                ctds[i] = initialize(X, 1)
+            else:
+                ctds[i] = np.mean(cluster_mask, axis=0)
 
-        if np.all(C == new_C):
+        # Recalculate distances and reassign clusters
+        dists = np.sqrt(np.sum((X - ctds[:, np.newaxis]) ** 2, axis=2))
+        clss = np.argmin(dists, axis=0)
+
+        # Convergence check (if points haven't changed clusters)
+        if np.allclose(ctds, prev_ctds):
             break
-        C = new_C
 
-    return C, clss
+    return ctds, clss
