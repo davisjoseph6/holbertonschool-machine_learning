@@ -23,20 +23,22 @@ def expectation(X, pi, m, S):
             m.shape[1] != S.shape[1] or pi.shape[0] != m.shape[0]):
         return None, None
 
-    n, d = X.shape
+    if not np.isclose([np.sum(pi)], [1])[0]:
+        return None, None
+
     k = pi.shape[0]
 
-    # Calculate the PDF for each cluster
-    likelihoods = np.zeros((k, n))
-    for i in range(k):
-        likelihoods[i] = pdf(X, m[i], S[i])
+    # Build array of PDF values w/ each cluster
+    pdfs = np.array([pdf(X, m[i], S[i]) for i in range(k)])
 
-    # Calculate the posterior probabilities (responsibilities)
-    weighted_likelihoods = pi[:, np.newaxis] * likelihoods
-    total_likelihood = np.sum(weighted_likelihoods, axis=0)
-    g = weighted_likelihoods / total_likelihood
+    # Calculate the weighted PDFs
+    weighted_pdfs = pi[:, np.newaxis] * pdfs
 
-    # Calculate the log likelihood
-    log_likelihood = np.sum(np.log(total_likelihood))
+    # Normalize posterior probabilities by marginal probabilities
+    marginal_prob = np.sum(weighted_pdfs, axis=0)
+    post_probs = weighted_pdfs / marginal_prob
 
-    return g, log_likelihood
+    # Calc. the log likelihood(sum of logs of all marginal probs)
+    log_likelihood = np.sum(np.log(marginal_prob))
+
+    return post_probs, log_likelihood
