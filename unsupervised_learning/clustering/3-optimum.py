@@ -16,27 +16,37 @@ def optimum_k(X, kmin=1, kmax=None, iterations=1000):
         return None, None
     if not isinstance(kmin, int) or kmin <= 0:
         return None, None
-    if kmax is None:
-        kmax = X.shape[0]
-    if not isinstance(kmax, int) or kmax <= 0 or kmax < kmin:
+    if kmax is not None and (not isinstance(kmax, int) or kmax < kmin):
         return None, None
     if not isinstance(iterations, int) or iterations <= 0:
         return None, None
+    if isinstance(kmax, int) and kmax <= kmin:
+        return None, None
+
+    if kmax is None:
+        max_clusters = X.shape[0]
+    else:
+        max_clusters = kmax
 
     results = []
     d_vars = []
-    initial_var = None
+    
+    # Calculation with kmin (smallest cluster size)
+    C, clss = kmeans(X, kmin, iterations)
+    base_variance = variance(X, C)
+    results.append((C, clss))
+    # Base difference with first variance (with itself) is zero
+    d_vars = [0.0]
 
-    for k in range(kmin, kmax + 1):
+    # With each following cluster size k:
+    k = kmin + 1
+    while k < max_clusters + 1:
+        # Run kmeans algorithm and calc. variance of distance to centroids
         C, clss = kmeans(X, k, iterations)
-        if C is None or clss is None:
-            return None, None
+        current_variance = variance(X, C)
+        # Add results and variances differences to the lists
         results.append((C, clss))
-        var = variance(X, C)
-        if var is None:
-            return None, None
-        if initial_var is None:
-            initial_var = var
-        d_vars.append(initial_var - var)
+        d_vars.append(base_variance - current_variance)
+        k += 1
 
     return results, d_vars
