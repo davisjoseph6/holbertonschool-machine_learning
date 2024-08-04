@@ -31,12 +31,14 @@ def expectation_maximization(X, k, iterations=1000, tol=1e-5, verbose=False):
 
     for i in range(iterations):
         try:
-            # Evaluate the probabilities and likelihoods with current parameters
+            # Evaluate the probabilities and likelihoods
             g, prev_li = expectation(X, pi, m, S)
 
             # In verbose mode, print the likelihood every 10 iterations after 0
             if verbose and i % 10 == 0:
-                print(f"Log Likelihood after {i} iterations: {round(prev_li, 5)}")
+                print(f"Log Likelihood after {i} iterations: {
+                        round(prev_li, 5)
+                        }")
 
             # Re-estimate the parameters with the new values
             pi, m, S = maximization(X, g)
@@ -44,7 +46,7 @@ def expectation_maximization(X, k, iterations=1000, tol=1e-5, verbose=False):
             # Evaluate new log likelihood
             g, li = expectation(X, pi, m, S)
 
-            # If the likelihood varied by less than the tolerance value, we stop
+            # If the likelihood varied by less than the tolerance value we stop
             if np.abs(li - prev_li) <= tol:
                 break
         except Exception:
