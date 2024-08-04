@@ -15,8 +15,10 @@ def BIC(X, kmin=1, kmax=None, iterations=1000, tol=1e-5, verbose=False):
             not isinstance(kmin, int) or kmin <= 0 or
             (kmax is not None and (not isinstance(kmax, int) or kmax < kmin)) or
             not isinstance(iterations, int) or iterations <= 0 or
+            not isinstance(kmax, int) and kmax <= kmin or
             not isinstance(tol, float) or tol < 0 or
             not isinstance(verbose, bool)):
+
         return None, None, None, None
 
     n, d = X.shape
@@ -24,24 +26,28 @@ def BIC(X, kmin=1, kmax=None, iterations=1000, tol=1e-5, verbose=False):
     if kmax is None:
         kmax = n
 
-    log_likelihoods = []
-    bics = []
+    if not isinstance(kmax, int) or kmax < 1 or kmax < kmin or kmax > n:
+        return None, None, None, None
+
+    b = []
+    likelihoods = []
 
     for k in range(kmin, kmax + 1):
-        pi, m, S, g, log_likelihood = expectation_maximization(X, k, iterations, tol, verbose)
-        if pi is None or m is None or S is None or g is None or log_likelihood is None:
+        pi, m, S, g, li = expectation_maximization(X, k, iterations, tol, verbose)
+        if pi is None or m is None or S is None or g is None:
             return None, None, None, None
 
-        p = k * d + k * d * (d + 1) // 2 + k - 1  # Number of parameters
-        bic = p * np.log(n) - 2 * log_likelihood
+        p = (k * d) + (k * d * (d + 1) // 2) + (k - 1)  # Number of parameters
+        bic = p * np.log(n) - 2 * li
 
-        log_likelihoods.append(log_likelihood)
-        bics.append(bic)
+        likelihoods.append(li)
+        b.append(bic)
 
-    log_likelihoods =  np.array(log_likelihoods)
-    bics = np.array(bics)
+        if k == kmin or bic < best_bic:
+            best_bic = bic
+            best_results = (pi, m, S)
+            best_k = k
 
-    best_k = kmin + np.argmin(bics)
-    best_result = expectation_maximization(X, best_k, iterations, tol, verbose)
-
-    return best_k, best_result[:3], log_likelihoods, bics
+    likelihoods = np.array(likelihoods)
+    b = np.array(b)
+    return best_k, best_results, likelihoods, b
