@@ -3,15 +3,14 @@
 K-means clustering
 """
 
-import numpy as np
-from sklearn.cluster import KMeans
+import sklearn.cluster
 
 
 def kmeans(X, k):
     """
     Performs K-means on a dataset
     """
-    kmeans = KMeans(n_clusters=k)
+    kmeans = sklearn.cluster.KMeans(n_clusters=k)
     kmeans.fit(X)
     C = kmeans.cluster_centers_
     clss = kmeans.labels_
