@@ -23,26 +23,32 @@ def expectation_maximization(X, k, iterations=1000, tol=1e-5, verbose=False):
 
         return None, None, None, None, None
 
-    # Initialize priors, centroid means, and covariance matrices
-    pi, m, S = initialize(X, k)
+    try:
+        # Initialize priors, centroid means, and covariance matrices
+        pi, m, S = initialize(X, k)
+    except Exception:
+        return None, None, None, None, None
 
     for i in range(iterations):
-        # Evaluate the probabilities and likelihoods with current parameters
-        g, prev_li = expectation(X, pi, m, S)
+        try:
+            # Evaluate the probabilities and likelihoods with current parameters
+            g, prev_li = expectation(X, pi, m, S)
 
-        # In verbose mode, print the likelihood every 10 iterations after 0
-        if verbose and i % 10 == 0:
-            print(f"Log Likelihood after {i} iterations: {round(prev_li, 5)}")
+            # In verbose mode, print the likelihood every 10 iterations after 0
+            if verbose and i % 10 == 0:
+                print(f"Log Likelihood after {i} iterations: {round(prev_li, 5)}")
 
-        # Re-estimate the parameters with the new values
-        pi, m, S = maximization(X, g)
+            # Re-estimate the parameters with the new values
+            pi, m, S = maximization(X, g)
 
-        # Evaluate new log likelihood
-        g, li = expectation(X, pi, m, S)
+            # Evaluate new log likelihood
+            g, li = expectation(X, pi, m, S)
 
-        # If the likelihood varied by less than the tolerance value, we stop
-        if np.abs(li - prev_li) <= tol:
-            break
+            # If the likelihood varied by less than the tolerance value, we stop
+            if np.abs(li - prev_li) <= tol:
+                break
+        except Exception:
+            return None, None, None, None, None
 
     # Last verbose message with current likelihood
     if verbose:
