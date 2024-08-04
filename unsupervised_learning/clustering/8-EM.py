@@ -36,9 +36,8 @@ def expectation_maximization(X, k, iterations=1000, tol=1e-5, verbose=False):
 
             # In verbose mode, print the likelihood every 10 iterations after 0
             if verbose and i % 10 == 0:
-                print(f"Log Likelihood after {i} iterations: {
-                        round(prev_li, 5)
-                        }")
+                print(f"Log Likelihood after {i} iterations: "
+                      f"{round(prev_li, 5)}")
 
             # Re-estimate the parameters with the new values
             pi, m, S = maximization(X, g)
