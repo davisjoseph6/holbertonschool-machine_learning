@@ -10,7 +10,8 @@ def regular(P):
     """
     Determines the steady state probabilities of a regular Markov chain.
     """
-    if not isinstance(P, np.ndarray) or P.ndim != 2 or P.shape[0] != P.shape[1]:
+    if (not isinstance(P, np.ndarray) or P.ndim != 2 or
+            P.shape[0] != P.shape[1]):
         return None
 
     n = P.shape[0]
