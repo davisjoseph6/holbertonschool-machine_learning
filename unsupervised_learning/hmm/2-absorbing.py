@@ -8,9 +8,10 @@ import numpy as np
 
 def absorbing(P):
     """
-    Determines if a markov chain is absorbing
+    Determines if a markov chain is absorbing.
     """
-    if not isinstance(P, np.ndarray) or P.ndim != 2 or P.shape[0] != P.shape[1]:
+    if (not isinstance(P, np.ndarray) or P.ndim != 2 or
+            P.shape[0] != P.shape[1]):
         return False
 
     n = P.shape[0]
@@ -32,10 +33,10 @@ def absorbing(P):
     Q = P[non_absorbing_states[:, None], non_absorbing_states]
     R = P[non_absorbing_states[:, None], absorbing_states]
 
-    # COmpute (I - Q)^(-1) * R
-    I = np.eye(len(non_absorbing_states))
+    # Compute (I - Q)^(-1) * R
+    identity_matrix = np.eye(len(non_absorbing_states))
     try:
-        N = np.linalg.inv(I - Q)
+        N = np.linalg.inv(identity_matrix - Q)
         B = np.matmul(N, R)
     except np.linalg.LinAlgError:
         return False
