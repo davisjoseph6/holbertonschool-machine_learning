@@ -23,7 +23,9 @@ def forward(Observation, Emission, Transition, Initial):
         # Recursion step
         for t in range(1, T):
             for j in range(N):
-                F[j, t] = np.sum(F[:, t-1] * Transition[:, j] * Emission[j, Observation[t]])
+                F[j, t] = np.sum(
+                    F[:, t-1] * Transition[:, j] * Emission[j, Observation[t]]
+                )
 
         # Termination step
         P = np.sum(F[:, T-1])
