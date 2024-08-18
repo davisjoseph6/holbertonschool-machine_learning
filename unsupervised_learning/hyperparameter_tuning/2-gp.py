@@ -70,7 +70,4 @@ class GaussianProcess:
         K_new_row = K_s[:-1, :]
         K_new_entry = K_s[-1, :].reshape(1, -1)
 
-        self.K = np.block(
-                [[self.K, K_new_row],
-                 [K_new_row.T, K_new_entry]]
-                         )
+        self.K = np.block([[self.K, K_new_row], [K_new_row.T, K_new_entry]])
