@@ -39,6 +39,10 @@ class BayesianOptimization:
         # Ensure sigma is a 1D array
         sigma = sigma.flatten()
 
+        # Small value to avoid division by zero
+        epsilon = 1e-9
+        sigma = np.maximum(sigma, epsilon)
+
         if self.minimize:
             mu_sample_opt = np.min(self.gp.Y)
             improvement = mu_sample_opt - mu - self.xsi
@@ -47,7 +51,7 @@ class BayesianOptimization:
             improvement = mu - mu_sample_opt - self.xsi
 
         # Calculate the expected improvement
-        with np.errstate(divide='warn'):
+        with np.errstate(divide='ignore'):
             Z = improvement / sigma
             EI = improvement * norm.cdf(Z) + sigma * norm.pdf(Z)
             EI[sigma == 0.0] = 0.0
