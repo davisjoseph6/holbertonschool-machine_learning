@@ -5,21 +5,22 @@ TensorFlow.
 """
 
 import tensorflow.keras as keras
-from tensorflow.keras import regularizers
 
 
 def autoencoder(input_dims, hidden_layers, latent_dims, lambtha):
     """
-    Create a sparse autoencoder with the specified dimensions and
-    L1 regularization.
+    Creates a sparse autoencoder with the specified dimensions and L1
+    regularization.
     """
     # Encoder
     inputs = keras.Input(shape=(input_dims,))
     encoded = inputs
     for nodes in hidden_layers:
         encoded = keras.layers.Dense(nodes, activation='relu')(encoded)
+    # Apply L1 regularization to the latent space
     latent = keras.layers.Dense(latent_dims, activation='relu',
-                                activity_regularizer=regularizers.L1(lambtha))(encoded)
+                                activity_regularizer=keras.regularizers.l1(
+                                    lambtha))(encoded)
 
     # Decoder
     decoded_input = keras.Input(shape=(latent_dims,))
