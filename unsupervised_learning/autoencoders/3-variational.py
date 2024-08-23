@@ -19,6 +19,7 @@ def sampling(args):
     epsilon = K.random_normal(shape=(batch, dim))
     return mu + K.exp(0.5 * log_var) * epsilon
 
+
 def build_encoder(input_dims, hidden_layers, latent_dims):
     """
     Builds the encoder part of the autoencoder.
@@ -33,9 +34,12 @@ def build_encoder(input_dims, hidden_layers, latent_dims):
     log_var = keras.layers.Dense(latent_dims, activation=None)(x)
 
     # Sampling layer using the reparameterization trick
-    z = keras.layers.Lambda(sampling, output_shape=(latent_dims,))([mu, log_var])
+    z = keras.layers.Lambda(sampling, output_shape=(
+        latent_dims,
+        ))([mu, log_var])
 
     return keras.Model(inputs, [z, mu, log_var], name='encoder')
+
 
 def build_decoder(latent_dims, hidden_layers, output_dims):
     """
@@ -48,6 +52,7 @@ def build_decoder(latent_dims, hidden_layers, output_dims):
     outputs = keras.layers.Dense(output_dims, activation='sigmoid')(x)
     return keras.Model(latent_inputs, outputs, name='decoder')
 
+
 def vae_loss(inputs, outputs, mu, log_var, input_dims):
     """
     Custom loss function for Variational Autoencoder, combining reconstruction
@@ -58,6 +63,7 @@ def vae_loss(inputs, outputs, mu, log_var, input_dims):
     kl_loss = 1 + log_var - K.square(mu) - K.exp(log_var)
     kl_loss = -0.5 * K.sum(kl_loss, axis=-1)
     return K.mean(reconstruction_loss + kl_loss)
+
 
 def autoencoder(input_dims, hidden_layers, latent_dims):
     """
