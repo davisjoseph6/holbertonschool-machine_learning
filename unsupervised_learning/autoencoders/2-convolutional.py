@@ -45,11 +45,12 @@ def autoencoder(input_dims, filters, latent_dims):
         x = keras.layers.Conv2D(f, (3, 3), activation='relu', padding='same')(x)
         x = keras.layers.UpSampling2D((2, 2))(x)
 
-    # Adjust Conv2D layers to match the expected number of filters
+    # Conv2D and UpSampling layers to adjust the dimensions correctly
     x = keras.layers.Conv2D(16, (3, 3), activation='relu', padding='same')(x)
+    x = keras.layers.Conv2D(16, (3, 3), activation='relu', padding='valid')(x)
     x = keras.layers.UpSampling2D((2, 2))(x)
 
-    # Final output layer to reduce to the desired shape
+    # Final output layer to match the expected output shape
     outputs = keras.layers.Conv2D(input_dims[-1], (3, 3), activation='sigmoid', padding='same')(x)
 
     # Models
