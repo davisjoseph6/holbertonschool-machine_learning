@@ -41,17 +41,18 @@ def autoencoder(input_dims, filters, latent_dims):
     # Decoder
     decoded_input = keras.Input(shape=latent_dims)
     x = decoded_input
-    for f in reversed(filters):
+    for f in reversed(filters[:-1]):
         x = keras.layers.Conv2D(f, (3, 3), activation='relu', padding='same')(x)
         x = keras.layers.UpSampling2D((2, 2))(x)
 
-    # Final adjustment to ensure correct output size
-    x = keras.layers.Conv2D(filters[-1], (3, 3), activation='relu', padding='same')(x)
-    x = keras.layers.Conv2D(input_dims[-1], (3, 3), activation='sigmoid', padding='same')(x)
+    # Final Conv2D layer to reduce the dimensions to (28, 28, 1)
+    x = keras.layers.Conv2D(filters[-1], (3, 3), activation='relu', padding='valid')(x)
+    x = keras.layers.UpSampling2D((2, 2))(x)
+    outputs = keras.layers.Conv2D(input_dims[-1], (3, 3), activation='sigmoid', padding='same')(x)
 
     # Models
     encoder = keras.Model(inputs, latent, name='encoder')
-    decoder = keras.Model(decoded_input, x, name='decoder')
+    decoder = keras.Model(decoded_input, outputs, name='decoder')
     auto = keras.Model(inputs, decoder(encoder(inputs)), name='autoencoder')
 
     # Compile the autoencoder model
