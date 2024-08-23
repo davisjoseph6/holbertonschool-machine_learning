@@ -51,24 +51,7 @@ def build_decoder(latent_dims, filters, input_dims):
 
 def autoencoder(input_dims, filters, latent_dims):
     """
-    Creates a convolutional autoencoder. The autoencoder will be compiled using
-    Adam optimization and binary cross-entropy loss. All layers use ReLU
-    activation and upsampling, except the last layer in the decoder, which uses
-    sigmoid activation instead.
-
-    :Parameters:
-    - `input_dims` is an integer containing the dimensions of the model input.
-    - `filters` is a list containing the number of filters for each
-    convolutional layer in the encoder, respectively. The filters will be
-    reversed for the decoder.
-    - `latent_dims` is an integer containing the dimensions of the latent space
-    representation.
-
-    :Returns:
-    - A tuple of `(encoder, decoder, auto)`:
-        - `encoder` is the encoder model
-        - `decoder` is the decoder model
-        - `auto` is the full autoencoder model
+    Creates a convolutional autoencoder.
     """
     encoder = build_encoder(input_dims, filters)
     decoder = build_decoder(latent_dims, filters, input_dims)
@@ -82,4 +65,3 @@ def autoencoder(input_dims, filters, latent_dims):
     auto.compile(optimizer='adam', loss='binary_crossentropy')
 
     return encoder, decoder, auto
-
