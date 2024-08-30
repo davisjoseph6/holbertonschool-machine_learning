@@ -1,15 +1,23 @@
 #!/usr/bin/env python3
-
+"""
+Simple GAN module
+"""
 import tensorflow as tf
 from tensorflow import keras
 import numpy as np
 
 
 class Simple_GAN(keras.Model):
+    """
+    Simple GAN class
+    """
 
     def __init__(self, generator, discriminator, latent_generator,
                  real_examples, batch_size=200, disc_iter=2,
                  learning_rate=.005):
+        """
+        Initializes the Simple_GAN model.
+        """
         super().__init__()  # Initialize Keras.Model
         self.latent_generator = latent_generator
         self.real_examples = real_examples
@@ -45,6 +53,9 @@ class Simple_GAN(keras.Model):
 
     # Generate real samples
     def get_real_sample(self, size=None):
+        """
+        Generates a batch of real samples.
+        """
         if not size:
             size = self.batch_size
         sorted_indices = tf.range(tf.shape(self.real_examples)[0])
@@ -53,12 +64,18 @@ class Simple_GAN(keras.Model):
 
     # Generate fake samples
     def get_fake_sample(self, size=None, training=False):
+        """
+        Generates a batch of fake samples using the generator.
+        """
         if not size:
             size = self.batch_size
         return self.generator(self.latent_generator(size), training=training)
 
     # Perform one training step
     def train_step(self, useless_argument):
+        """
+        Performs one training step for the GAN.
+        """
         for _ in range(self.disc_iter):
             with tf.GradientTape() as tape:
                 real_samples = self.get_real_sample()
