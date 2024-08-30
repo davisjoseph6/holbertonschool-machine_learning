@@ -108,4 +108,3 @@ class WGAN_clip(keras.Model):
                 )
 
         return {"discr_loss": discr_loss, "gen_loss": gen_loss}
-
