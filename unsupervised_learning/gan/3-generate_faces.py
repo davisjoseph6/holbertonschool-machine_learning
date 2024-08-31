@@ -3,6 +3,7 @@
 import tensorflow as tf
 from tensorflow import keras
 
+
 def convolutional_GenDiscr():
     def generator():
         model = keras.Sequential([
