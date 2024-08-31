@@ -82,7 +82,8 @@ class WGAN_GP(keras.Model):
 
     def get_interpolated_sample(self, real_sample, fake_sample):
         """
-        Generates a batch of interpolated samples between real and fake samples.
+        Generates a batch of interpolated samples between real and
+        fake samples.
         """
         u = tf.random.uniform(self.scal_shape)
         v = tf.ones(self.scal_shape) - u
@@ -98,6 +99,7 @@ class WGAN_GP(keras.Model):
         grads = gp_tape.gradient(pred, [interpolated_sample])[0]
         norm = tf.sqrt(tf.reduce_sum(tf.square(grads), axis=self.axis))
         return tf.reduce_mean((norm - 1.0) ** 2)
+
     def train_step(self, useless_argument):
         """
         Performs one training step for the WGAN with gradient penalty.
@@ -106,7 +108,8 @@ class WGAN_GP(keras.Model):
             with tf.GradientTape() as tape:
                 real_samples = self.get_real_sample()
                 fake_samples = self.get_fake_sample(training=True)
-                interpolated_samples = self.get_interpolated_sample(real_samples, fake_samples)
+                interpolated_samples = self.get_interpolated_sample(
+                        real_samples, fake_samples)
 
                 real_output = self.discriminator(real_samples, training=True)
                 fake_output = self.discriminator(fake_samples, training=True)
@@ -134,4 +137,3 @@ class WGAN_GP(keras.Model):
                 )
 
         return {"discr_loss": discr_loss, "gen_loss": gen_loss, "gp": gp}
-
