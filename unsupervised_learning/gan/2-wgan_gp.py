@@ -122,10 +122,6 @@ class WGAN_GP(keras.Model):
                         self.discriminator.trainable_variables)
                     )
 
-            # Clip the weights of the discriminator between -1 and 1
-            for var in self.discriminator.trainable_variables:
-                var.assign(tf.clip_by_value(var, -1.0, 1.0))
-
         with tf.GradientTape() as tape:
             fake_samples = self.get_fake_sample(training=True)
             gen_output = self.discriminator(fake_samples, training=False)
