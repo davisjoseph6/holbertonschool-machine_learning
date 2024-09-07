@@ -1,4 +1,8 @@
 #!/usr/bin/env python3
+"""
+This module implements the RNNCell class for a simple Recurrent Neural Network.
+The class performs forward propagation through a single RNN cell.
+"""
 
 import numpy as np
 
