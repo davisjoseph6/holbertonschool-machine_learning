@@ -29,7 +29,8 @@ class BidirectionalCell:
 
     def backward(self, h_next, x_t):
         """
-        Calculates the hidden state in the backward direction for one time step.
+        Calculates the hidden state in the backward direction for
+        one time step.
         """
         concatenated = np.concatenate((h_next, x_t), axis=1)
         h_prev = np.tanh(np.dot(concatenated, self.Whb) + self.bhb)
