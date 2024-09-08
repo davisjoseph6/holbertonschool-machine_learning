@@ -7,6 +7,7 @@ class.
 
 import numpy as np
 
+
 def rnn(rnn_cell, X, h_0):
     """
     Performs forward propagation for a simple RNN.
