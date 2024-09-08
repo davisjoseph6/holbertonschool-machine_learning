@@ -23,7 +23,7 @@ class BidirectionalCell:
         """
         Calculates the hidden state in the forward direction for one time step.
         """
-        # Concatenate the previous hidden state and input data for forward direction
+        # Concatenate the previous hidden state and input data
         concatenated = np.concatenate((h_prev, x_t), axis=1)
 
         # Compute the next hidden state using the forward weights and biases
