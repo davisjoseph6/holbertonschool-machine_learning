@@ -11,28 +11,31 @@ def load_and_preprocess(file_path):
     # Load data
     data = pd.read_csv(file_path)
 
+    # Print the columns to inspect
+    print("Columns in the dataset:", data.columns)
+
     # Drop rows with missing values
     data.dropna(inplace=True)
 
     # Select relevant features
-    features = ['timestamp', 'close']
+    features = ['Timestamp', 'Close']
     data = data[features]
 
-    # Convert timestamp to datetime for resampling
-    data['timestamp'] = pd.to_datetime(data['timestamp'], unit='s')
+    # Convert 'Timestamp' to datetime for resampling
+    data['Timestamp'] = pd.to_datetime(data['Timestamp'], unit='s')
 
     # Resample to hourly intervals
-    data = data.set_index('timestamp').resample('H').agg({'close': 'last'}).dropna()
+    data = data.set_index('Timestamp').resample('h').agg({'Close': 'last'}).dropna()
 
-    # Normalize the 'close' column
-    data['close'] = (data['close'] - data['close'].min()) / (data['close'].max() - data['close'].min())
+    # Normalize the 'Close' column
+    data['Close'] = (data['Close'] - data['Close'].min()) / (data['Close'].max() - data['Close'].min())
 
     # Create rolling windows
     sequence_length = 24  # 24 hours of data
     X, y = [], []
     for i in range(len(data) - sequence_length):
-        X.append(data['close'].iloc[i:i + sequence_length].values)
-        y.append(data['close'].iloc[i + sequence_length])
+        X.append(data['Close'].iloc[i:i + sequence_length].values)
+        y.append(data['Close'].iloc[i + sequence_length])
 
     # Save processed data
     np.save('X.npy', np.array(X))
