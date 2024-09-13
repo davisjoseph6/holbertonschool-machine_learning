@@ -4,6 +4,7 @@
 import numpy as np
 import tensorflow as tf
 from tensorflow.keras import layers
+import matplotlib.pyplot as plt
 
 def create_rnn_model(input_shape):
     """
@@ -17,6 +18,19 @@ def create_rnn_model(input_shape):
 
     model.compile(optimizer='adam', loss='mse')
     return model
+
+def plot_training_history(history):
+    """
+    Plots and saves training and validation loss over epochs.
+    """
+    plt.plot(history.history['loss'], label='Training Loss')
+    plt.plot(history.history['val_loss'], label='Validation Loss')
+    plt.title('Training and Validation Loss')
+    plt.xlabel('Epochs')
+    plt.ylabel('Loss')
+    plt.legend()
+    plt.savefig('training_validation_loss.png')  # Save the plot as a PNG file
+    plt.show()
 
 def main():
     # Load preprocessed data
@@ -35,7 +49,12 @@ def main():
     # Create and train model
     input_shape = (X_train.shape[1], 1)
     model = create_rnn_model(input_shape)
-    model.fit(train_dataset, validation_data=val_dataset, epochs=10)
+
+    # Train the model and capture the training history
+    history = model.fit(train_dataset, validation_data=val_dataset, epochs=10)
+
+    # Plot training history
+    plot_training_history(history)
 
     # Save the trained model
     model.save('btc_rnn_model.h5')
