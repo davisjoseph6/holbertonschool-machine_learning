@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-This module provides a funtion to create a bag-of-words embeding matrix
+This module provides a function to create a bag-of-words embedding matrix
 from a list of sentences.
 """
 
@@ -12,12 +12,13 @@ def bag_of_words(sentences, vocab=None):
     """
     Creates a bag of words embedding matrix.
     """
+    # Tokenize and clean sentences
     word_set = set()
     processed_sentences = []
 
     for sentence in sentences:
         # Remove non-alphabetic characters and convert to lowercase
-        words = re.findall(r'\b\w+\b', sentence.lower())
+        words = re.findall(r'\b[a-zA-Z]{2,}\b', sentence.lower())
         processed_sentences.append(words)
         if vocab is None:
             word_set.update(words)
