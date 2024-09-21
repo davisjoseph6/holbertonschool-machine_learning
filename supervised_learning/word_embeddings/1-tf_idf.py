@@ -56,4 +56,8 @@ def tf_idf(sentences, vocab=None):
         tf = compute_tf(sentence, vocab)
         embeddings[i] = tf * idf
 
+    # Normalize rows of the embedding matrix (optional, if required)
+    row_sums = np.linalg.norm(embeddings, axis=1, keepdims=True)
+    embeddings = embeddings / row_sums
+
     return embeddings, vocab
