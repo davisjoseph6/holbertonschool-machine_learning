@@ -56,4 +56,4 @@ def tf_idf(sentences, vocab=None):
         tf = compute_tf(sentence, vocab)
         embeddings[i] = tf * idf
 
-    return embeddings, vocab
+    return embeddings, np.array(vocab)
