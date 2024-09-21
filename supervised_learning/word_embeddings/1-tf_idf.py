@@ -1,69 +1,39 @@
 #!/usr/bin/env python3
 """
-This module provides a function to create a TF-IDF embedding matrix
-from a list of sentences.
+    TF-IDF
 """
 
-import numpy as np
 import re
-from math import log
+from sklearn.feature_extraction.text import TfidfVectorizer
 
 
 def tf_idf(sentences, vocab=None):
     """
-    Creates a TF-IDF embedding matrix from the given sentences.
+    Creates a TF-IDF embedding.
     """
-    # Tokenize and clean sentences
-    word_set = set()
-    processed_sentences = []
+    if not isinstance(sentences, list):
+        raise TypeError("sentences should be a list.")
 
-    for sentence in sentences:
-        # Remove non-alphabetic characters and convert to lowercase
-        words = re.findall(r'\b[a-zA-Z]{2,}\b', sentence.lower())
-        processed_sentences.append(words)
-        if vocab is None:
-            word_set.update(words)
+    # Preprocess sentences by making them lowercase and removing "'s" suffix
+    preprocessed_sentences = [
+            re.sub(r"\b(\w+)'s\b", r"\1", sentence.lower()) for sentence in sentences
+            ]
 
-    # Use vocab if provided, otherwise use all unique words
+    # If vocab is None, generate vocabulary from the sentences
     if vocab is None:
-        vocab = sorted(word_set)
+        list_words = []
+        for sentence in preprocessed_sentences:
+            words = re.findall(r'\w+', sentence)
+            list_words.extend(words)
+        vocab = sorted(set(list_words))
 
-    # Initialize the embedding matrix
-    s = len(sentences)
-    f = len(vocab)
-    embeddings = np.zeros((s, f))
+    # Create a TF-IDF vectorizer with the given vocabulary
+    tfidf_vect = TfidfVectorizer(vocabulary=vocab)
 
-    # Compute term frequency (TF)
-    def compute_tf(words, vocab):
-        tf = np.zeros(len(vocab))
-        word_count = len(words)
-        if word_count == 0:
-            return tf
-        for word in words:
-            if word in vocab:
-                tf[vocab.index(word)] += 1
-        return tf / word_count  # Normalize by total word count
+    # Fit and transform the sentences to produce the TF-IDF matrix
+    tfidf_matrix = tfidf_vect.fit_transform(sentences)
 
-    # Compute inverse document frequency (IDF)
-    def compute_idf(sentences, vocab):
-        idf = np.zeros(len(vocab))
-        total_docs = len(sentences)
-        for i, word in enumerate(vocab):
-            count = sum(1 for sentence in sentences if word in sentence)
-            if count > 0:
-                idf[i] = log(total_docs / count)  # No smoothing factor here
-            else:
-                idf[i] = 0  # If a word is not in any sentence, IDF is 0
-        return idf
+    # Extract the features (vocabulary used)
+    features = tfidf_vect.get_feature_names_out()
 
-    # Compute TF-IDF for each sentence
-    idf = compute_idf(processed_sentences, vocab)
-    for i, sentence in enumerate(processed_sentences):
-        tf = compute_tf(sentence, vocab)
-        embeddings[i] = tf * idf
-
-    # Normalize rows of the embedding matrix
-    row_sums = np.linalg.norm(embeddings, axis=1, keepdims=True)
-    embeddings = np.divide(embeddings, row_sums, where=row_sums != 0)
-
-    return embeddings, vocab
+    return tfidf_matrix.toarray(), features
