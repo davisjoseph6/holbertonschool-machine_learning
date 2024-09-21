@@ -16,7 +16,8 @@ def tf_idf(sentences, vocab=None):
 
     # Preprocess sentences by making them lowercase and removing "'s" suffix
     preprocessed_sentences = [
-            re.sub(r"\b(\w+)'s\b", r"\1", sentence.lower()) for sentence in sentences
+            re.sub(r"\b(\w+)'s\b", r"\1",
+                   sentence.lower()) for sentence in sentences
             ]
 
     # If vocab is None, generate vocabulary from the sentences
