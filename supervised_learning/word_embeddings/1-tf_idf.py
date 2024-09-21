@@ -36,10 +36,13 @@ def tf_idf(sentences, vocab=None):
     # Compute term frequency (TF)
     def compute_tf(words, vocab):
         tf = np.zeros(len(vocab))
+        word_count = len(words)
+        if word_count == 0:
+            return tf
         for word in words:
             if word in vocab:
                 tf[vocab.index(word)] += 1
-        return tf / len(words) if words else tf
+        return tf / word_count  # Normalize by total word count
 
     # Compute inverse document frequency (IDF)
     def compute_idf(sentences, vocab):
@@ -47,7 +50,10 @@ def tf_idf(sentences, vocab=None):
         total_docs = len(sentences)
         for i, word in enumerate(vocab):
             count = sum(1 for sentence in sentences if word in sentence)
-            idf[i] = log((total_docs / (1 + count)))  # Smoothing
+            if count > 0:
+                idf[i] = log(total_docs / count)  # No smoothing factor here
+            else:
+                idf[i] = 0  # If a word is not in any sentence, IDF is 0
         return idf
 
     # Compute TF-IDF for each sentence
@@ -56,8 +62,8 @@ def tf_idf(sentences, vocab=None):
         tf = compute_tf(sentence, vocab)
         embeddings[i] = tf * idf
 
-    # Normalize rows of the embedding matrix (optional, if required)
+    # Normalize rows of the embedding matrix
     row_sums = np.linalg.norm(embeddings, axis=1, keepdims=True)
-    embeddings = embeddings / row_sums
+    embeddings = np.divide(embeddings, row_sums, where=row_sums != 0)
 
     return embeddings, vocab
