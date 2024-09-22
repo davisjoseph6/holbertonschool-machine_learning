@@ -2,7 +2,7 @@
 """
 Word2Vec Model Creation and Training
 """
-from gensim.models import Word2Vec
+import gensim
 
 
 def word2vec_model(sentences, vector_size=100, min_count=5, window=5,
@@ -10,18 +10,12 @@ def word2vec_model(sentences, vector_size=100, min_count=5, window=5,
     """
     Creates, builds, and trains a Word2Vec model.
     """
-    # Determine training method: CBOW (if True) or Skip-gram (if False)
-    sg = 0 if cbow else 1
 
     # Build and train the Word2Vec model
-    model = Word2Vec(sentences=sentences,
-                     vector_size=vector_size,
-                     window=window,
-                     min_count=min_count,
-                     workers=workers,
-                     sg=sg,
-                     negative=negative,
-                     seed=seed)
+    model = gensim.models.Word2Vec(sentences, vector_size=vector_size,
+                     min_count=min_count, window=window,
+                     negative=negative, sg=0 if cbow else 1,
+                     seed=seed, workers=workers)
 
     # Train the model for the specified number of epochs
     model.train(sentences, total_examples=model.corpus_count, epochs=epochs)
