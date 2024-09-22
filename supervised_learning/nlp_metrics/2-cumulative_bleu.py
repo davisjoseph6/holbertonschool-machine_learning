@@ -13,7 +13,9 @@ def cumulative_bleu(references, sentence, n):
     """
     def get_ngrams(sequence, n):
         """Helper function to generate n-grams from a given sequence."""
-        return [' '.join(sequence[i:i + n]) for i in range(len(sequence) - n + 1)]
+        return [
+            ' '.join(sequence[i:i + n]) for i in range(len(sequence) - n + 1)
+            ]
 
     precisions = []
 
@@ -40,7 +42,9 @@ def cumulative_bleu(references, sentence, n):
                     ref_counts[ngram] = 1
             for ngram in ref_counts:
                 if ngram in max_counts:
-                    max_counts[ngram] = max(max_counts[ngram], ref_counts[ngram])
+                    max_counts[ngram] = max(
+                            max_counts[ngram], ref_counts[ngram]
+                            )
                 else:
                     max_counts[ngram] = ref_counts[ngram]
 
@@ -52,7 +56,9 @@ def cumulative_bleu(references, sentence, n):
         precisions.append(precision)
 
     # Calculate the geometric mean of the precisions
-    geometric_mean = np.exp(np.mean(np.log(precisions))) if all(p > 0 for p in precisions) else 0
+    geometric_mean = (
+            np.exp(np.mean(np.log(precisions))) if all(p > 0 for p in precisions) else 0
+            )
 
     # Brevity penalty
     ref_lengths = [len(ref) for ref in references]
