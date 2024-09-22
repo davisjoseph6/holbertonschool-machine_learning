@@ -3,6 +3,7 @@
 Word2Vec Model Creation and Training
 """
 import gensim
+import numpy as np
 
 
 def word2vec_model(sentences, vector_size=100, min_count=5, window=5,
@@ -10,6 +11,7 @@ def word2vec_model(sentences, vector_size=100, min_count=5, window=5,
     """
     Creates, builds, and trains a Word2Vec model.
     """
+    np.random.seed(seed)  # Set the random seed for reproducibility
 
     # Build and train the Word2Vec model
     model = gensim.models.Word2Vec(sentences, vector_size=vector_size,
