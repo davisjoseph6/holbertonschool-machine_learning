@@ -59,8 +59,8 @@ def cumulative_bleu(references, sentence, n):
 
     # Calculate the geometric mean of the precisions
     geometric_mean = (
-            np.exp(np.mean(np.log(precisions))) if all(p > 0 for p in precisions)
-            else 0
+            np.exp(np.mean(np.log(precisions)))
+            if all(p > 0 for p in precisions) else 0
             )
 
     # Brevity penalty
