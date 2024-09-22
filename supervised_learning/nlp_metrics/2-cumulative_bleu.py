@@ -50,14 +50,17 @@ def cumulative_bleu(references, sentence, n):
 
         clipped_count = 0
         for ngram in sentence_counts:
-            clipped_count += min(sentence_counts[ngram], max_counts.get(ngram, 0))
+            clipped_count += min(
+                    sentence_counts[ngram], max_counts.get(ngram, 0)
+                    )
 
         precision = clipped_count / sentence_len if sentence_len > 0 else 0
         precisions.append(precision)
 
     # Calculate the geometric mean of the precisions
     geometric_mean = (
-            np.exp(np.mean(np.log(precisions))) if all(p > 0 for p in precisions) else 0
+            np.exp(np.mean(np.log(precisions))) if all(p > 0 for p in precisions)
+            else 0
             )
 
     # Brevity penalty
