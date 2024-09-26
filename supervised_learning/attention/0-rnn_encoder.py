@@ -9,7 +9,8 @@ import tensorflow as tf
 class RNNEncoder(tf.keras.layers.Layer):
     """
     RNNEncoder class that inherits from TensorFlow's Keras Layer.
-    Encodes input sequences for machine translation using GRU and embedding layers.
+    Encodes input sequences for machine translation using GRU and
+    embedding layers.
     """
 
     def __init__(self, vocab, embedding, units, batch):
@@ -19,7 +20,8 @@ class RNNEncoder(tf.keras.layers.Layer):
         super(RNNEncoder, self).__init__()
         self.batch = batch
         self.units = units
-        self.embedding = tf.keras.layers.Embedding(input_dim=vocab, output_dim=embedding)
+        self.embedding = tf.keras.layers.Embedding(input_dim=vocab,
+                                                   output_dim=embedding)
         self.gru = tf.keras.layers.GRU(
                 units,
                 return_sequences=True,
