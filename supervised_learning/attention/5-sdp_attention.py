@@ -17,7 +17,8 @@ def sdp_attention(Q, K, V, mask=None):
     dk = tf.cast(tf.shape(K)[-1], tf.float32)
     scaled_attention_logits = matmul_qk / tf.math.sqrt(dk)
 
-    # Apply the mask (if provided) by adding a large negative value to masked positions
+    # Apply the mask (if provided) by adding a large negative value
+    # to masked positions
     if mask is not None:
         scaled_attention_logits += (mask * -1e9)
 
