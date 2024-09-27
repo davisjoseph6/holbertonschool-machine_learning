@@ -1,17 +1,16 @@
 #!/usr/bin/env python3
 """
-Encoder module for creating the encoder of a transformer using TensorFlow.
+Encoder module for the transformer.
 """
 
 import tensorflow as tf
-import numpy as np
 positional_encoding = __import__('4-positional_encoding').positional_encoding
 EncoderBlock = __import__('7-transformer_encoder_block').EncoderBlock
 
 
 class Encoder(tf.keras.layers.Layer):
     """
-    Encoder class that creates the encoder for a transformer.
+    Encoder class that inherits from TensorFlow's Keras Layer.
     """
 
     def __init__(self, N, dm, h, hidden, input_vocab, max_seq_len, drop_rate=0.1):
@@ -19,9 +18,8 @@ class Encoder(tf.keras.layers.Layer):
         Initializes the Encoder.
         """
         super(Encoder, self).__init__()
-
-        self.dm = dm
         self.N = N
+        self.dm = dm
 
         # Embedding layer
         self.embedding = tf.keras.layers.Embedding(input_dim=input_vocab, output_dim=dm)
@@ -33,26 +31,20 @@ class Encoder(tf.keras.layers.Layer):
         self.blocks = [EncoderBlock(dm, h, hidden, drop_rate) for _ in range(N)]
 
         # Dropout layer
-        self.dropout = tf.keras.layers.Dropout(drop_rate)
+        self.dropout = tf.keras.layers.Dropout(rate=drop_rate)
 
     def call(self, x, training, mask):
         """
         Forward pass for the Encoder.
         """
-        input_seq_len = x.shape[1]
+        seq_len = tf.shape(x)[1]
+        x = self.embedding(x)  # Apply embedding
+        x *= tf.math.sqrt(tf.cast(self.dm, tf.float32))  # Scale embeddings
+        x += self.positional_encoding[:seq_len]
 
-        # Apply embedding and scale by sqrt(dm)
-        x = self.embedding(x)
-        x *= tf.math.sqrt(tf.cast(self.dm, tf.float32))
+        x = self.dropout(x, training=training)  # Apply dropout to positional encoding
 
-        # Add positional encoding
-        x += self.positional_encoding[:input_seq_len]
-
-        # Apply dropout
-        x = self.dropout(x, training=training)
-
-        # Pass through each encoder block
         for block in self.blocks:
-            x = block(x, training, mask)
+            x = block(x, training, mask)  # Pass through each EncoderBlock
 
         return x
