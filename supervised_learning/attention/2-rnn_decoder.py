@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-RNNDecoder module for machine translation decoding using TensorFlow.
+RNN Decoder
 """
 
 import tensorflow as tf
@@ -9,8 +9,7 @@ SelfAttention = __import__('1-self_attention').SelfAttention
 
 class RNNDecoder(tf.keras.layers.Layer):
     """
-    RNNDecoder class that inherits from TensorFlow's Keras Layer.
-    Decodes for machine translation using GRU and attention mechanism.
+    This class represents the decoder for machine translation
     """
 
     def __init__(self, vocab, embedding, units, batch):
@@ -18,36 +17,45 @@ class RNNDecoder(tf.keras.layers.Layer):
         Initializes the RNNDecoder.
         """
         super(RNNDecoder, self).__init__()
-        self.embedding = tf.keras.layers.Embedding(input_dim=vocab, output_dim=embedding)
-        self.gru = tf.keras.layers.GRU(
-                units,
-                return_sequences=True,
-                return_state=True,
-                recurrent_initializer='glorot_uniform'
-                )
-        self.F = tf.keras.layers.Dense(units=vocab)
+        self.embedding = tf.keras.layers.Embedding(input_dim=vocab,
+                                                   output_dim=embedding)
+        self.gru = tf.keras.layers.GRU(units=units,
+                                       return_sequences=True,
+                                       return_state=True,
+                                       recurrent_initializer='glorot_uniform')
+        self.F = tf.keras.layers.Dense(vocab)
         self.attention = SelfAttention(units)
 
     def call(self, x, s_prev, hidden_states):
         """
-        Forward pass through the decoder.
+        Forward pass for the RNN decoder with attention mechanism.
+
+        :param x: tensor, shape `(batch, 1)`, previous word in the target
+        :param s_prev: tensor, shape `(batch, units)` previous decoder
+            hidden state
+        :param hidden_states: tensor, shape `(batch, input_seq_len, units)`
+             outputs of the encoder
+
+        :return:
+        - y: tensor, shape `(batch, vocab)` output word as a one hot vector
+        in the target vocabulary
+        - s: tensor, shape `(batch, units)` new decoder hidden state
         """
-        # Calculate the attention context vector and weights
         context, _ = self.attention(s_prev, hidden_states)
 
-        # Embed the input x
+        # Pass the previous word index through the embedding layer
         x = self.embedding(x)
 
-        # Concatenate the context vector with the embedded input
+        # Concatenate the context vector with x
         x = tf.concat([tf.expand_dims(context, 1), x], axis=-1)
 
-        # Pass the concatenated input through the GRU layer
-        outputs, s = self.gru(x, initial_state=s_prev)
+        # Pass the concatenated vector through the GRU layer
+        output, s = self.gru(x)
 
-        # Reshape the outputs to pass through the dense layer
-        outputs = tf.reshape(outputs, (-1, outputs.shape[2]))
+        # Remove the extra axis
+        output = tf.squeeze(output, axis=1)
 
-        # Pass through the Dense layer to get predictions
-        y = self.F(outputs)
+        # Pass the GRU output through the Dense layer to predict the next word
+        y = self.F(output)
 
         return y, s
