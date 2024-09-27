@@ -45,12 +45,19 @@ class DecoderBlock(tf.keras.layers.Layer):
         # First multi-head attention layer
         attn1, _ = self.mha1(x, x, x, look_ahead_mask)
         attn1 = self.dropout1(attn1, training=training)
-        out1 = self.layernorm1(x + attn1)  # Residual connection + normalization
+
+        # Residual connection + normalization
+        out1 = self.layernorm1(x + attn1)
 
         # Second multi-head attention layer
-        attn2, _ = self.mha2(out1, encoder_output, encoder_output, padding_mask)
+        attn2, _ = self.mha2(out1,
+                             encoder_output,
+                             encoder_output,
+                             padding_mask)
         attn2 = self.dropout2(attn2, training=training)
-        out2 = self.layernorm2(out1 + attn2)  # Residual connection + normalization
+
+        # Residual connection + normalization
+        out2 = self.layernorm2(out1 + attn2)
 
         # Feed forward network
         ffn_output = self.dense_hidden(out2)
