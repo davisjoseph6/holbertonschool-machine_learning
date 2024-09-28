@@ -13,16 +13,20 @@ class Decoder(tf.keras.layers.Layer):
     Decoder class that inherits from TensorFlow's Keras Layer.
     """
 
-    def __init__(self, N, dm, h, hidden, target_vocab, max_seq_len, drop_rate=0.1):
+    def __init__(self, N, dm, h, hidden, target_vocab, max_seq_len,
+                 drop_rate=0.1):
         """
         Initializes the Decoder.
         """
         super(Decoder, self).__init__()
         self.N = N
         self.dm = dm
-        self.embedding = tf.keras.layers.Embedding(input_dim=target_vocab, output_dim=dm)
+        self.embedding = tf.keras.layers.Embedding(input_dim=target_vocab,
+                                                   output_dim=dm)
         self.positional_encoding = positional_encoding(max_seq_len, dm)
-        self.blocks = [DecoderBlock(dm, h, hidden, drop_rate) for _ in range(N)]
+        self.blocks = [
+                DecoderBlock(dm, h, hidden, drop_rate) for _ in range(N)
+                ]
         self.dropout = tf.keras.layers.Dropout(rate=drop_rate)
 
     def call(self, x, encoder_output, training, look_ahead_mask, padding_mask):
@@ -34,9 +38,13 @@ class Decoder(tf.keras.layers.Layer):
         x *= tf.math.sqrt(tf.cast(self.dm, tf.float32))  # Scale embeddings
         x += self.positional_encoding[:seq_len]
 
-        x = self.dropout(x, training=training)  # Apply dropout to positional encoding
+        # Apply dropout to positional encoding
+        x = self.dropout(x, training=training)
 
         for block in self.blocks:
-            x = block(x, encoder_output, training, look_ahead_mask, padding_mask)
+            x = block(x,
+                      encoder_output,
+                      training, look_ahead_mask,
+                      padding_mask)
 
         return x
