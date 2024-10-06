@@ -4,6 +4,7 @@ Module for preparing and encoding TED HRLR translation dataset
 from Portuguese to English using pre-trained tokenizers.
 """
 
+import tensorflow as tf
 import tensorflow_datasets as tfds
 import transformers
 import numpy as np
@@ -30,6 +31,10 @@ class Dataset:
         self.tokenizer_pt, self.tokenizer_en = self.tokenize_dataset(
                 self.data_train
                 )
+
+        # Update data_train and data_valid to tokenized versions
+        self.data_train = self.data_train.map(self.tf_encode)
+        self.data_valid = self.data_valid.map(self.tf_encode)
 
     def tokenize_dataset(self, data):
         """
@@ -81,7 +86,21 @@ class Dataset:
         # to the tokenized sentences
         pt_tokens = [vocab_size_pt] + pt_tokens + [vocab_size_pt + 1]
         en_tokens = [vocab_size_en] + en_tokens + [vocab_size_en + 1]
-        
+
         # Return the tokens as numpy arrays
         return np.array(pt_tokens), np.array(en_tokens)
 
+    def tf_encode(self, pt, en):
+        """
+        A TensorFlow wrapper for the encode method.
+        """
+        # Use tf.py_function to apply the encode method in TensorFlow
+        pt_tokens, en_tokens = tf.py_function(func=self.encode,
+                                              inp=[pt, en],
+                                              Tout=[tf.int64, tf.int64])
+
+        # Set the shapes of the tokenized tensors
+        pt_tokens.set_shape([None])
+        en_tokens.set_shape([None])
+
+        return pt_tokens, en_tokens
