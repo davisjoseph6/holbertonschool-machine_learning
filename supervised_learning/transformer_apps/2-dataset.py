@@ -1,19 +1,18 @@
 #!/usr/bin/env python3
 """
 Module for preparing and encoding TED HRLR translation dataset
-from Portuguese to English using pre-trained tokenizers.
+from Portuguese to English using pre-trained tokenizers and TensorFlow.
 """
 
 import tensorflow as tf
 import tensorflow_datasets as tfds
 import transformers
-import numpy as np
 
 
 class Dataset:
     """
-    A class to load and prepare the TED HRLR translation dataset for machine
-    translation from Portuguese to English.
+    A class to load, prepare, and encode the TED HRLR translation
+    dataset for machine translation from Portuguese to English.
     """
 
     def __init__(self):
@@ -29,16 +28,18 @@ class Dataset:
 
         # Initialize tokenizers for both languages by training on the dataset
         self.tokenizer_pt, self.tokenizer_en = self.tokenize_dataset(
-                self.data_train
-                )
+                self.data_train)
 
-        # Update data_train and data_valid to tokenized versions
-        self.data_train = self.data_train.map(self.tf_encode)
-        self.data_valid = self.data_valid.map(self.tf_encode)
+        # Tokenize the dataset splits using the tf_encode method
+        self.data_train = self.data_train.map(
+                self.tf_encode, num_parallel_calls=tf.data.AUTOTUNE)
+        self.data_valid = self.data_valid.map(
+                self.tf_encode, num_parallel_calls=tf.data.AUTOTUNE)
 
     def tokenize_dataset(self, data):
         """
-        Creates sub-word tokenizers for the dataset using pre-trained models
+        Tokenizes the dataset using pre-trained tokenizers and adapts them to
+        the specific datatset.
         """
         # Extract and decode sentences from the dataset to prepare them for
         # tokenizer training
@@ -56,7 +57,7 @@ class Dataset:
                 'bert-base-uncased', use_fast=True,
                 clean_up_tokenization_spaces=True)
 
-        # Train both tokenizers on the extracted sentences
+        # Train both tokenizers on the dataset sentence iterators
         tokenizer_pt = tokenizer_pt.train_new_from_iterator(pt_sentences,
                                                             vocab_size=2**13)
         tokenizer_en = tokenizer_en.train_new_from_iterator(en_sentences,
@@ -66,17 +67,17 @@ class Dataset:
 
     def encode(self, pt, en):
         """
-        Encodes Portuguese and English sentences into tokens
+        Encodes a translation pair into tokenized sentences.
         """
-        # Decode the tf.Tensor into strings
+        # Decode TensorFlow Tensors to strings
         pt_sentence = pt.numpy().decode('utf-8')
         en_sentence = en.numpy().decode('utf-8')
 
-        # Get the vocabulary size of both tokenizers
+        # Get the vocab_size for both tokenizers
         vocab_size_pt = self.tokenizer_pt.vocab_size
         vocab_size_en = self.tokenizer_en.vocab_size
 
-        # Tokenize both sentences without adding special tokens
+        # Tokenize the sentences without adding special tokens
         pt_tokens = self.tokenizer_pt.encode(pt_sentence,
                                              add_special_tokens=False)
         en_tokens = self.tokenizer_en.encode(en_sentence,
@@ -88,7 +89,7 @@ class Dataset:
         en_tokens = [vocab_size_en] + en_tokens + [vocab_size_en + 1]
 
         # Return the tokens as numpy arrays
-        return np.array(pt_tokens), np.array(en_tokens)
+        return pt_tokens, en_tokens
 
     def tf_encode(self, pt, en):
         """

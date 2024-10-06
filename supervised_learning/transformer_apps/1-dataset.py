@@ -28,8 +28,7 @@ class Dataset:
 
         # Initialize tokenizers for both languages by training on the dataset
         self.tokenizer_pt, self.tokenizer_en = self.tokenize_dataset(
-                self.data_train
-                )
+                self.data_train)
 
     def tokenize_dataset(self, data):
         """
@@ -57,7 +56,11 @@ class Dataset:
         tokenizer_en = tokenizer_en.train_new_from_iterator(en_sentences,
                                                             vocab_size=2**13)
 
-        return tokenizer_pt, tokenizer_en
+        # Update the Dataset tokenizers with the newly trainsed ones
+        self.tokenizer_pt = tokenizer_pt
+        self.tokenizer_en = tokenizer_en
+
+        return self.tokenizer_pt, self.tokenizer_en
 
     def encode(self, pt, en):
         """
