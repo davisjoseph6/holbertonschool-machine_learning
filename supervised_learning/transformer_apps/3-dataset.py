@@ -41,7 +41,7 @@ class Dataset:
         self.data_train = self.data_train.cache()
         self.data_train = self.data_train.shuffle(buffer_size=20000)
         self.data_train = self.data_train.padded_batch(
-                batch_size, padded_shapes=([max_len], [max_len]))
+                batch_size, padded_shapes=([None], [None]))
         self.data_train = self.data_train.prefetch(
                 buffer_size=tf.data.AUTOTUNE)
 
@@ -53,7 +53,7 @@ class Dataset:
                 en: tf.logical_and(
                     tf.size(pt) <= max_len, tf.size(en) <= max_len))
         self.data_valid = self.data_valid.padded_batch(
-                batch_size, padded_shapes=([max_len], [max_len])
+                batch_size, padded_shapes=([None], [None])
                 )
 
     def tokenize_dataset(self, data):
