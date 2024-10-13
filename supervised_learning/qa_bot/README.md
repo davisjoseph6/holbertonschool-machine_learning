@@ -54,5 +54,5 @@ Install Tensorflow Hub
 pip install --user tensorflow-hub==0.15.0
 Install Transformers
 pip install --user transformers==4.44.2
-Zendesk Articles
+Zendesk Articles.
 For this project, we will be using a collection of Holberton USA Zendesk Articles, ZendeskArticles.zip.
