@@ -4,7 +4,6 @@ Module to load a FrozenLake environment with customization options.
 """
 
 import gymnasium as gym
-from gymnasium.envs.toy_text.frozen_lake import FrozenLakeEnv
 
 
 def load_frozen_lake(desc=None, map_name=None, is_slippery=False):
