@@ -5,6 +5,7 @@ Module to initialize the Q-table for a FrozenLake environment.
 
 import numpy as np
 
+
 def q_init(env):
     """
     Initializes the Q-table as a numpy array of zeros.
