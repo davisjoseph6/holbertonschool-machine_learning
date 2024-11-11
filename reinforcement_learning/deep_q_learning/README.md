@@ -1,3 +1,12 @@
+Steps to use:
+
+1) pip install -r requirements.txt
+2) source ~/Desktop/holbertonschool-machine_learning/reinforcement_learning/deep_q_learning/myenv/bin/activate
+3) source myenv/bin/activate
+4) train.py (attention: it has already been trained, so you can skip this)
+5) play.py
+
+Other information:
 Deep Q-learning
  Master
  By: Alexa Orrico, Software Engineer at Holberton School
