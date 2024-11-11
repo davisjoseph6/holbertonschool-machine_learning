@@ -113,7 +113,7 @@ pip install -r requirements.txt
 
 ## Step 4: Modify callbacks.py for Compatibility
 
-In this project, callbacks.py may need modifications to work correctly with the installed dependencies. A reference copy of the original callbacks.py file is kept in this repository for reference. Follow these steps to update the active callbacks.py file:
+In this project, callbacks.py may need modifications to work correctly with the installed dependencies. A reference copy of the original `callbacks.py` file is kept in this repository for reference. Follow these steps to update the active callbacks.py file:
 
 1. Locate callbacks.py:
 
