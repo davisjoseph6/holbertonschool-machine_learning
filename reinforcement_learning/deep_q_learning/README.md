@@ -1,5 +1,81 @@
 # Project Setup Instructions
 
+# Project Setup Guide
+
+## Requirements
+This setup requires Python version 3.10.12. If you have a newer version of Python installed, you can create a virtual environment to ensure compatibility.
+
+## Steps
+
+### 1. Create a Virtual Environment
+It is recommended to use a virtual environment if you have a newer version of Python installed. Use the following commands to set up a virtual environment with Python 3.10.12:
+
+```bash
+sudo apt install python3.10-venv
+python3.10 -m venv myvenv
+source myvenv/bin/activate
+```
+
+### 2. Install CMake
+CMake is needed for some dependencies. If it's not already installed, run:
+
+```bash
+sudo apt install cmake -y
+```
+
+### 3. Install Project Dependencies
+Install all required packages listed in `requirements.txt`:
+
+```bash
+pip install -r requirements.txt
+```
+
+## Modifying the `rl/callbacks.py` File
+In some cases, you may need to modify the `callbacks.py` file in the `rl` package to ensure compatibility with your TensorFlow setup.
+
+If you are not using a virtual environment: Locate the `callbacks.py` file in the `rl` package using the `find` command:
+
+```bash
+find /usr/local/lib/ -name "callbacks.py" 2>/dev/null
+```
+
+If you are using a virtual environment: The `callbacks.py` file can be found here:
+
+```bash
+myvenv/lib/python3.10/site-packages/rl/callbacks.py
+```
+
+If you are using Google Colab: Locate `callbacks.py` with the following command:
+
+```bash
+!find / -name "callbacks.py" 2>/dev/null
+```
+
+## Editing `callbacks.py`
+Locate the following line in `callbacks.py`:
+
+```python
+from tensorflow.keras import __version__ as KERAS_VERSION
+```
+
+Replace it with the following code to use an alternative import method:
+
+```python
+try:
+    from tensorflow import __version__ as KERAS_VERSION
+except ImportError:
+    KERAS_VERSION = '2.x'  # Replace '2.x' with your TensorFlow version if needed
+```
+
+## Running the Training Script
+Once setup is complete, run the training script with:
+
+```bash
+./train.py
+```
+
+-------------------------------------------------------------------------------------------------------------------
+
 This guide provides instructions to set up a Python 3.10 environment using `pyenv`, create a virtual environment for the project (if necessary), and make required modifications to the `callbacks.py` file for compatibility.
 
 ## Prerequisites
