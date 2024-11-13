@@ -99,7 +99,10 @@ source myvenv/bin/activate
 CMake is needed for some dependencies. If it's not already installed, run:
 
 ```bash
+sudo apt-get update
+sudo apt-get upgrade
 sudo apt install cmake -y
+sudo apt-get install python3-tk
 ```
 
 ### 3. Install Project Dependencies
