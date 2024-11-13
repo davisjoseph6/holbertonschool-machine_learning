@@ -1,5 +1,3 @@
-# Project Setup Instructions
-
 # Project Setup Guide
 
 ## Requirements
