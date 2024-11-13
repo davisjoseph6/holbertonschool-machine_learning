@@ -96,4 +96,3 @@ def sarsa_lambtha(env, Q, lambtha, episodes=5000, max_steps=100, alpha=0.1,
                    np.exp(-epsilon_decay * episode))
 
     return Q
-
