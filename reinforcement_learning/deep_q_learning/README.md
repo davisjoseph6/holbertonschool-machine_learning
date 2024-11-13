@@ -1,6 +1,6 @@
 # Deep Q-Learning on Atari's Breakout
 
-Note: _an_ ***advanced project setup guide*** _(virtual enviromentments/Google colab, etc.) is given below_
+**Note**: _an_ ***advanced project setup guide*** _(virtual enviromentments/Google colab, etc.) is given below_
 
 This project implements a Deep Q-Learning (DQN) agent trained on Atari's Breakout environment using `keras-rl2` and `Gymnasium`. The project consists of two main scripts:
 
