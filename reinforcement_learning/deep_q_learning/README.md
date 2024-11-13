@@ -1,4 +1,76 @@
-# Project Setup Guide
+# Deep Q-Learning on Atari's Breakout
+
+Note: _an_ ***advanced project setup guide*** _(virtual enviromentments/Google colab, etc.) is given below_
+
+This project implements a Deep Q-Learning (DQN) agent trained on Atari's Breakout environment using `keras-rl2` and `Gymnasium`. The project consists of two main scripts:
+
+1. **`train.py`**: Trains a DQN agent and saves the trained model.
+2. **`play.py`**: Loads the trained model and demonstrates the agent's gameplay in a simulated environment.
+
+## Project Structure
+
+. ├── train.py # Script to train the DQN agent ├── play.py # Script to visualize the trained agent playing Breakout ├── policy.h5 # Saved model weights after training ├── training_history.pkl # Pickle file containing training history (optional) ├── training_performance.png # Visualization of training performance (optional) ├── requirements.txt # List of required packages └── README.md # Project documentation
+
+## Requirements
+
+Install the required Python packages using:
+```bash
+pip install -r requirements.txt
+```
+
+## Key Dependencies
+- gymnasium==0.29.1
+- tensorflow==2.15
+- keras-rl2
+- pygame (for visualizing gameplay)
+
+## Usage
+1. Training the DQN Agent
+To train the agent from scratch, run:
+
+```bash
+python3 train.py
+```
+
+This script will:
+
+- Create a preprocessed Atari Breakout environment.
+- Build and compile a Convolutional Neural Network (CNN) for Deep Q-Learning.
+- Train the agent using the DQN algorithm and save the trained model weights in policy.h5.
+
+2. Visualizing Gameplay
+To see the trained agent play Breakout, run:
+
+```bash
+python3 play.py
+```
+This script will:
+
+- Load the trained model weights from policy.h5.
+- Display the agent playing the game using pygame.
+
+## Code Overview
+`train.py`
+- Environment Setup: The Atari environment is created using gymnasium with preprocessing for frame resizing, grayscale conversion, and frame skipping.
+- Model Architecture: A Convolutional Neural Network (CNN) is built to handle the visual input from the Atari environment.
+- Agent Configuration: A DQN agent is created with an epsilon-greedy policy for exploration.
+- Training: The agent is trained using one million steps and the model weights are saved in policy.h5.
+
+`play.py`
+- Model Loading: Loads the saved weights from policy.h5.
+- Gameplay Visualization: Uses a custom callback (PygameCallback) to render each frame and visualize the agent's actions in real-time.
+
+## Results
+After training, the DQN agent should be able to achieve a reasonable score in Atari's Breakout. training_performance.png and training_history.pkl (optional) can be used to analyze training performance and evaluate model improvements.
+
+# References
+Keras-RL2 Documentation
+Gymnasium Documentation
+Deep Q-Learning Algorithm
+
+This project demonstrates how to train and deploy a DQN-based reinforcement learning agent in a classic Atari environment. Feel free to tweak hyperparameters, model architecture, and policies to experiment with improved performance.
+
+# Advanced Project Setup Guide
 
 ## Requirements
 This setup requires Python version 3.10.12. If you have a newer version of Python installed, you can create a virtual environment to ensure compatibility.
@@ -71,166 +143,3 @@ Once setup is complete, run the training script with:
 ```bash
 ./train.py
 ```
-
--------------------------------------------------------------------------------------------------------------------
-
-This guide provides instructions to set up a Python 3.10 environment using `pyenv`, create a virtual environment for the project (if necessary), and make required modifications to the `callbacks.py` file for compatibility.
-
-## Prerequisites
-
-Before starting, make sure you have the following:
-
-- **Ubuntu/Debian** OS (or a similar Linux distribution)
-- Access to a terminal with `sudo` privileges
-
-## Step 1: Install `pyenv`
-
-`pyenv` allows you to install and manage multiple Python versions on your system.
-
-### 1.1 Install Required Dependencies
-
-Run the following commands to install the necessary dependencies for building Python:
-
-```bash
-sudo apt update
-sudo apt install -y make build-essential libssl-dev zlib1g-dev \
-libbz2-dev libreadline-dev libsqlite3-dev wget curl llvm \
-libncursesw5-dev xz-utils tk-dev libxml2-dev libxmlsec1-dev \
-libffi-dev liblzma-dev
-```
-
-### 1.2 Install `pyenv`
-
-Use the following command to install `pyenv`:
-
-```bash
-curl https://pyenv.run | bash
-```
-
-### 1.3 Configure Your Shell for `pyenv`
-
-Add the following lines to your shell configuration file (`~/.bashrc` for Bash or `~/.zshrc` for Zsh) to make `pyenv` available in your terminal:
-
-```bash
-export PATH="$HOME/.pyenv/bin:$PATH"
-eval "$(pyenv init --path)"
-eval "$(pyenv init -)"
-```
-
-After adding these lines, reload your shell configuration:
-
-```bash
-source ~/.bashrc  # or source ~/.zshrc for Zsh
-```
-
-### 1.4 Verify `pyenv` Installation
-
-Run the following command to confirm that `pyenv` is installed:
-
-```bash
-pyenv --version
-```
-
-## Step 2: Install Python 3.10 (If Needed)
-
-Now, use `pyenv` to install Python 3.10.12, which is required for this project.
-
-Note: If your current Python version is already 3.10.12 or lower, you can skip creating a virtual environment by directly upgrading to Python 3.10.12 with `pyenv`. Only continue with the virtual environment creation if you have a Python version higher than 3.10.12 (e.g., Python 3.12).
-
-### 2.1 Install Python 3.10.12
-
-```bash
-pyenv install 3.10.12
-```
-
-If you encounter any errors, ensure all required libraries are installed and try again.
-
-### 2.2 Set Python 3.10.12 as the Local Version
-
-Navigate to your project directory, then set Python 3.10.12 as the local version:
-
-```bash
-pyenv local 3.10.12
-```
-
-This creates a `.python-version` file in the project directory, ensuring Python 3.10.12 is used within this folder.
-
-## Step 3: Create and Activate the Virtual Environment
-
-Note: You only need to create this virtual environment if your current Python version is greater than 3.10.12. If you are on Python 3.10.12 or lower, you may skip this step and continue with Step 4 directly.
-
-### 3.1 Create the Virtual Environment
-
-With Python 3.10 set as the local version, create a virtual environment named myenv:
-
-```bash
-python3.10 -m venv myenv
-```
-
-### 3.2 Activate the Virtual Environment
-
-Activate the virtual environment with the following command:
-
-```bash
-source myenv/bin/activate
-```
-
-You should see (myenv) at the beginning of your terminal prompt, indicating that the environment is active.
-
-### 3.3 Install Required Packages
-
-With the virtual environment active, install the required packages from `requirements.txt`:
-
-```bash
-pip install -r requirements.txt
-```
-
-## Step 4: Modify `callbacks.py` for Compatibility
-
-In this project, `callbacks.py` may need modifications to work correctly with the installed dependencies. A reference copy of the original `callbacks.py` file is kept in this repository for reference. Follow these steps to update the active `callbacks.py` file:
-
-1. Locate `callbacks.py`:
-
-The `callbacks.py` file should be in the `site-packages` directory of your virtual environment. If your virtual environment is named `myenv`, locate `callbacks.py` with:
-
-```bash
-find myenv/lib -name "callbacks.py"
-```
-
-2. Edit `callbacks.py` :
-
-Open the `callbacks.py` file in a text editor. Replace any lines referencing `KERAS_VERSION` with the following to avoid compatibility issues:
-
-```python
-import tensorflow as tf
-```
-
-Then, remove all lines that check or use `KERAS_VERSION`.
-
-3. Save and Exit:
-
-After making the changes, save the file and exit the editor.
-
-## Step 5: Verify the Setup
-
-To confirm that the setup is correct, check the Python version within the virtual environment:
-
-```bash
-python --version
-```
-
-This should display `Python 3.10.12`, confirming that the correct Python version is being used.
-
-## Deactivating the Virtual Environment
-
-When you're done working in the environment, you can deactivate it by running:
-
-```bash
-deactivate
-```
-
-## Additional Notes
-
-If you need to use this environment on a different machine with Python 3.12, follow the same instructions but skip Step 2 (installing Python 3.10 with `pyenv`). The environment should still work with Python 3.12 for most dependencies.
-
-This setup should help ensure your project is running in a controlled environment with strict version matching for Python 3.10.12 and the necessary modifications to `callbacks.py`.
