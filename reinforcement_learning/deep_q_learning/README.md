@@ -28,10 +28,10 @@ pip install -r requirements.txt
 ```
 
 ## Key Dependencies
-- gymnasium==0.29.1
-- tensorflow==2.15
-- keras-rl2
-- pygame (for visualizing gameplay)
+- `gymnasium==0.29.1`
+- `tensorflow==2.15`
+- `keras-rl2`
+- `pygame` (for visualizing gameplay)
 
 ## Usage
 1. Training the DQN Agent
@@ -45,7 +45,7 @@ This script will:
 
 - Create a preprocessed Atari Breakout environment.
 - Build and compile a Convolutional Neural Network (CNN) for Deep Q-Learning.
-- Train the agent using the DQN algorithm and save the trained model weights in policy.h5.
+- Train the agent using the DQN algorithm and save the trained model weights in `policy.h5`.
 
 2. Visualizing Gameplay
 To see the trained agent play Breakout, run:
@@ -55,24 +55,24 @@ python3 play.py
 ```
 This script will:
 
-- Load the trained model weights from policy.h5.
-- Display the agent playing the game using pygame.
+- Load the trained model weights from `policy.h5`.
+- Display the agent playing the game using `pygame`.
 
 ## Code Overview
 `train.py`
-- Environment Setup: The Atari environment is created using gymnasium with preprocessing for frame resizing, grayscale conversion, and frame skipping.
+- Environment Setup: The Atari environment is created using `gymnasium` with preprocessing for frame resizing, grayscale conversion, and frame skipping.
 - Model Architecture: A Convolutional Neural Network (CNN) is built to handle the visual input from the Atari environment.
 - Agent Configuration: A DQN agent is created with an epsilon-greedy policy for exploration.
-- Training: The agent is trained using one million steps and the model weights are saved in policy.h5.
+- Training: The agent is trained using one million steps and the model weights are saved in `policy.h5`.
 
 `play.py`
-- Model Loading: Loads the saved weights from policy.h5.
-- Gameplay Visualization: Uses a custom callback (PygameCallback) to render each frame and visualize the agent's actions in real-time.
+- Model Loading: Loads the saved weights from `policy.h5`.
+- Gameplay Visualization: Uses a custom callback (`PygameCallback`) to render each frame and visualize the agent's actions in real-time.
 
 ## Results
-After training, the DQN agent should be able to achieve a reasonable score in Atari's Breakout. training_performance.png and training_history.pkl (optional) can be used to analyze training performance and evaluate model improvements.
+After training, the DQN agent should be able to achieve a reasonable score in Atari's Breakout. `training_performance.png` and `training_history.pkl` (optional) can be used to analyze training performance and evaluate model improvements.
 
-# References
+## References
 Keras-RL2 Documentation
 Gymnasium Documentation
 Deep Q-Learning Algorithm
