@@ -9,19 +9,6 @@ def monte_carlo(env, V, policy, episodes=5000, max_steps=100, alpha=0.1,
                 gamma=0.99):
     """
     Performs the Monte Carlo algorithm for estimating the value function.
-
-    Parameters:
-        env: Environment instance.
-        V: numpy.ndarray of shape (s,) containing the value estimates.
-        policy: Function that takes a state and returns the next action
-            to take.
-        episodes: Total number of episodes to train over.
-        max_steps: Maximum number of steps per episode.
-        alpha: Learning rate.
-        gamma: Discount rate.
-
-    Returns:
-        Updated value estimates V.
     """
     for episode in range(episodes):
         # reset the environment and get initial state
@@ -34,7 +21,7 @@ def monte_carlo(env, V, policy, episodes=5000, max_steps=100, alpha=0.1,
 
             # take action
             next_state, reward, terminated, truncated, _ = env.step(
-                action)
+                    action)
 
             # Append state and reward to the episode history
             episode_data.append((state, reward))
@@ -59,4 +46,3 @@ def monte_carlo(env, V, policy, episodes=5000, max_steps=100, alpha=0.1,
                 V[state] = V[state] + alpha * (G - V[state])
 
     return V
-
