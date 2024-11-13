@@ -9,7 +9,13 @@ This project implements a Deep Q-Learning (DQN) agent trained on Atari's Breakou
 
 ## Project Structure
 
-. ├── train.py # Script to train the DQN agent ├── play.py # Script to visualize the trained agent playing Breakout ├── policy.h5 # Saved model weights after training ├── training_history.pkl # Pickle file containing training history (optional) ├── training_performance.png # Visualization of training performance (optional) ├── requirements.txt # List of required packages └── README.md # Project documentation
+. ├── train.py # Script to train the DQN agent 
+  ├── play.py # Script to visualize the trained agent playing Breakout 
+  ├── policy.h5 # Saved model weights after training 
+  ├── training_history.pkl # Pickle file containing training history (optional) 
+  ├── training_performance.png # Visualization of training performance (optional) 
+  ├── requirements.txt # List of required packages 
+  └── README.md # Project documentation
 
 ## Requirements
 
