@@ -9,19 +9,6 @@ def td_lambtha(env, V, policy, lambtha=0.9, episodes=5000, max_steps=100,
                alpha=0.1, gamma=0.99):
     """
     Performs the TD(λ) algorithm for estimating the value function.
-
-    Parameters:
-        env: Environment instance.
-        V: numpy.ndarray of shape (s,) containing the value estimates.
-        policy: Function that takes a state and returns the next action to take
-        lambtha: The eligibility trace decay parameter.
-        episodes: Total number of episodes to train over.
-        max_steps: Maximum number of steps per episode.
-        alpha: Learning rate.
-        gamma: Discount rate.
-
-    Returns:
-        Updated value estimates V.
     """
     for episode in range(episodes):
         # reset the environment and get initial state
