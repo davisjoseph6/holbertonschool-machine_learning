@@ -27,6 +27,6 @@ def monte_carlo(env, V, policy, episodes=5000, max_steps=100, alpha=0.1, gamma=0
             if state not in visited_states:
                 visited_states.add(state)
                 # Update the value function using incremental update
-                V[state] +- alpha * (G - V[state])
+                V[state] += alpha * (G - V[state])
 
         return V
