@@ -8,9 +8,9 @@ import numpy as np
 
 def epsilon_greedy(Q, state, epsilon):
     """
-    Determine the next action using the epsilon-greedy policy.
+    Determines the next action using the epsilon-greedy policy.
     """
-    if np.random.uniform(0, 1) > epsilon
+    if np.random.uniform(0, 1) > epsilon:
         # Exploit: choose the action with the highest Q-value
         return np.argmax(Q[state, :])
     else:
@@ -21,7 +21,8 @@ def epsilon_greedy(Q, state, epsilon):
 def sarsa_lambtha(env, Q, lambtha, episodes=5000, max_steps=100, alpha=0.1,
                   gamma=0.99, epsilon=1, min_epsilon=0.1, epsilon_decay=0.05):
     """
-    Performs the SARSA(λ) algorithm (with eligibility traces) to estimate a Q-tabel
+    Performs the SARSA(λ) algorithm (with eligibility traces) to estimate
+    a Q-table.
     """
     initial_epsilon = epsilon
 
@@ -41,7 +42,7 @@ def sarsa_lambtha(env, Q, lambtha, episodes=5000, max_steps=100, alpha=0.1,
             new_action = epsilon_greedy(Q, new_state, epsilon)
 
             # TD Error (δ): reward + gamma * V(next_state) - V(state)
-            delta = (reward +(gamma * Q[next_state, new_action]) -
+            delta = (reward + (gamma * Q[new_state, new_action]) -
                      Q[state, action])
 
             # Update eligibility traces, apply lambtha decay
@@ -53,7 +54,7 @@ def sarsa_lambtha(env, Q, lambtha, episodes=5000, max_steps=100, alpha=0.1,
 
             # Update to the next state & action
             state = new_state
-            action = new action
+            action = new_action
 
             if terminated or truncated:
                 break
