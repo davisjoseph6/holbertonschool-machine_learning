@@ -7,18 +7,10 @@ policy gradient method for reinforcement learning.
 import numpy as np
 policy_gradient = __import__('policy_gradient').policy_gradient
 
-def train(env, nb_episodes, alpha=0.000045, gamma=0.98):
+
+def train(env, nb_episodes, alpha=0.000045, gamma=0.98, show_result=False):
     """
     Implements full training over a specified number of episodes.
-
-    Args:
-        env: The environment to train on.
-        nb_episodes: The number of episodes for training.
-        alpha: The learning rate.
-        gamma: The discount factor.
-
-    Returns:
-        list: All values of the scores (sum of rewards for each episode).
     """
     scores = []
     weight = np.random.rand(4, 2)  # Initialize weights for the policy gradient
@@ -30,6 +22,10 @@ def train(env, nb_episodes, alpha=0.000045, gamma=0.98):
         gradients = []
 
         while not done:
+            # Render environment every 1000 episodes if show_result is True
+            if show_result and episode % 1000 == 0:
+                env.render()
+
             # Compute action and gradient using policy gradient
             action, grad = policy_gradient(state, weight)  # Use correct policy_gradient function
             action = int(action)  # Ensure action is an integer
@@ -58,4 +54,3 @@ def train(env, nb_episodes, alpha=0.000045, gamma=0.98):
             weight += weight_update
 
     return scores
-
