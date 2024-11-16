@@ -1,7 +1,10 @@
 #!/usr/bin/env python3
 """
-    Display a game played by the agent trained on Atari's Breakout
+    Visualize a Deep Q-Learning (DQN) agent playing Atari's Breakout
+    using a trained policy. The game environment is displayed using Pygame,
+    and the agent's performance is assessed over several episodes.
 """
+
 from __future__ import division
 
 import gymnasium as gym
@@ -17,39 +20,42 @@ from rl.core import Processor
 from rl.callbacks import Callback
 
 
-#####################################
-#            Setup ENV              #
-#####################################
 class CompatibilityWrapper(gym.Wrapper):
     """
-        Compatibility wrapper for gym env to ensure
-        compatibility with older versions of gym
+    Wrapper for ensuring compatibility with older versions of Gymnasium.
+    Modifies the step and reset methods to provide consistent outputs.
+
+    Attributes:
+        env (gym.Env): The wrapped Gym environment.
     """
 
     def step(self, action):
         """
-            take a step in the env using the given action
+        Executes a given action in the environment.
 
-        :param action: action to be taken in env
+        Args:
+            action (int): The action to be performed.
 
-        :return: tuple containing
-            - observation: obs from env after action taken
-            - reward: reward obtain after taking the action
-            - done: bool indicating whether episode has ended
-            - info: additional information from the env
+        Returns:
+            tuple: Contains the following:
+                - observation (object): The next observation from the environment.
+                - reward (float): The reward received after performing the action.
+                - done (bool): True if the episode has ended, otherwise False.
+                - info (dict): Additional environment-specific information.
         """
-        observation, reward, terminated, truncated, info = (
-            self.env.step(action))
+        observation, reward, terminated, truncated, info = self.env.step(action)
         done = terminated or truncated
         return observation, reward, done, info
 
     def reset(self, **kwargs):
         """
-            reset env and return the initial obs
+        Resets the environment to its initial state.
 
-        :param kwargs: additional args
+        Args:
+            **kwargs: Additional arguments for the environment's reset method.
 
-        :return: observation: initial obs of the env
+        Returns:
+            observation (object): The initial observation of the environment.
         """
         observation, info = self.env.reset(**kwargs)
         return observation
@@ -57,42 +63,45 @@ class CompatibilityWrapper(gym.Wrapper):
 
 def create_atari_environment(env_name):
     """
-        Create and configure an Atari env for reinforcement learning
+    Sets up and preprocesses an Atari environment for reinforcement learning.
 
-    :param env_name: name of the Atari env
+    Args:
+        env_name (str): The name of the Atari environment.
 
-    :return: gym.Env: configured Atari env
+    Returns:
+        gym.Env: The configured environment.
     """
-    # Create specified Atari env with RDB rendering mode
+    # Instantiate the specified Atari environment with RGB rendering mode.
     env = gym.make(env_name, render_mode='rgb_array')
-    # Apply preprocessing to the env
-    # - Resize the screen to 84x84
-    # - Convert observations to grayscale
-    # - Apply frame skipping
-    # - Apply a random number of no-ops at the start of each episode
-    env = AtariPreprocessing(env,
-                             screen_size=84,
-                             grayscale_obs=True,
-                             frame_skip=1,
-                             noop_max=30)
-    # Wrap the environment to ensure compatibility with older versions of gym
+
+    # Apply preprocessing:
+    #   Resize frames to 84x84 pixels, convert observations to grayscale,
+    #   implement frame skipping, add random no-op actions at the start of each episode.
+    env = AtariPreprocessing(
+        env,
+        screen_size=84,
+        grayscale_obs=True,
+        frame_skip=1,
+        noop_max=30
+    )
+
+    # Ensure compatibility with older versions of Gymnasium using the wrapper.
     env = CompatibilityWrapper(env)
     return env
 
 
-#####################################
-#            CNN model              #
-#####################################
-
 def build_model(window_length, shape, actions):
     """
-        Build a CNN model for reinforcement learning
+    Constructs a Convolutional Neural Network (CNN) model for processing
+    stacked frames in the Atari environment.
 
-    :param window_length: int, number of frames to stack as input
-    :param shape: tuple, shape of the input img (height, width, channels)
-    :param actions: int, number possible actions in env
+    Args:
+        window_length (int): The number of frames to stack as input.
+        shape (tuple): The shape of a single input frame (height, width, channels).
+        actions (int): The total number of possible actions in the environment.
 
-    :return: keras.models.Sequential: compiled keras model
+    Returns:
+        keras.models.Sequential: The constructed CNN model.
     """
     model = Sequential()
     model.add(Permute((2, 3, 1), input_shape=(window_length,) + shape))
@@ -105,159 +114,148 @@ def build_model(window_length, shape, actions):
     return model
 
 
-#####################################
-#              AGENT                #
-#####################################
-
 class AtariProcessor(Processor):
     """
-        Custom processor class for Atari env
-        to handle obs and rewards before passing to DQN agent
+    Custom processor for preprocessing observations, rewards, and state batches
+    in the Atari environment before passing them to the DQN agent.
     """
 
     def process_observation(self, observation):
         """
-            Process the obs by convert in numpy array
+        Converts observations into a consistent format (NumPy array).
 
-        :param observation: (object) obs from env
+        Args:
+            observation (object): The raw observation from the environment.
 
-        :return: processed obs
+        Returns:
+            np.ndarray: Processed observation.
         """
         if isinstance(observation, tuple):
             observation = observation[0]
-
-        img = np.array(observation)
-        img = img.astype('uint8')
+        img = np.array(observation, dtype='uint8')
         return img
 
     def process_state_batch(self, batch):
         """
-            Process a batch of states by normalizing the pixel values
+        Normalizes pixel values in a batch of states to the range [0, 1].
 
-        :param batch: ndarray, batch of states
+        Args:
+            batch (np.ndarray): Batch of states.
 
-        :return: ndarray, processed batch of states
+        Returns:
+            np.ndarray: Normalized batch of states.
         """
-        processed_batch = batch.astype('float32') / 255.
-        return processed_batch
+        return batch.astype('float32') / 255.0
 
     def process_reward(self, reward):
         """
-            Clip the reward to be within the range [-1,1]
+        Clips rewards to be within the range [-1, 1].
 
-        :param reward: float, reward from the env
+        Args:
+            reward (float): The raw reward from the environment.
 
-        :return: clipped reward
+        Returns:
+            float: Clipped reward.
         """
         return np.clip(reward, -1., 1.)
 
 
+# PYGAME DISPLAY CALLBACK
+
 class PygameCallback(Callback):
     """
-        Callback class to display the game played by the agent
-        using Pygame
+    Callback for visualizing the agent's gameplay using Pygame.
     """
 
     def __init__(self, env, delay=0.02):
         """
-            Initializes the PygameCallback instance.
-            Initializes Pygame and sets up the display window.
+        Initializes the PygameCallback.
 
-        :param env: gym env instance
-        :param delay: in second, between rendering frames
+        Args:
+            env (gym.Env): The environment being visualized.
+            delay (float): Time (in seconds) to pause between rendering frames.
         """
         self.env = env
         self.delay = delay
-        # Initialize Pygame and set up the display window
         pygame.init()
         self.screen = pygame.display.set_mode((420, 320))
         pygame.display.set_caption("Atari Breakout - DQN Agent")
 
     def on_action_end(self, action, logs={}):
         """
-            Callback function triggered after an action is taken by the agent.
+        Executes after an agent action and renders the frame using Pygame.
 
-        :param action: action taken by the agent
-        :param logs: dict, logs from training process
-
-        :return:Renders the current frame,
-                updates the display,
-                and handles pygame events.
+        Args:
+            action (int): The action performed by the agent.
+            logs (dict): Training-related logs (optional).
         """
-        # Render the current frame from the environment
+        # Render the current environment frame
         frame = self.env.render()
-        # Convert the frame to a Pygame surface
         surf = pygame.surfarray.make_surface(frame.swapaxes(0, 1))
-        # Scale the surface to fit the display window
         surf = pygame.transform.scale(surf, (420, 320))
-        # Blit (draw) the surface onto the screen
         self.screen.blit(surf, (0, 0))
-        # Update the display
         pygame.display.flip()
 
-        # Check for Pygame events (like closing the window)
+        # Handle Pygame events (e.g., closing the window)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.env.close()
                 pygame.quit()
 
-        # Introduce a delay to control frame rate
         time.sleep(self.delay)
 
     def on_episode_end(self, episode, logs={}):
         """
-            Callback function triggered after an episode ends.
+        Executes after an episode ends, providing a short pause.
 
-        :param episode: episode number that just ended
-        :param logs: dict containing logs from training process
-
-        :return: waits for 1 second between episodes
+        Args:
+            episode (int): The episode number that just finished.
+            logs (dict): Training-related logs (optional).
         """
         pygame.time.wait(1000)
 
 
+# MAIN SCRIPT
+
 if __name__ == "__main__":
-    # 1. CREATE ENV
+    # Create the Atari Breakout environment
     env = create_atari_environment('ALE/Breakout-v5')
     nb_actions = env.action_space.n
 
-    # 2. BUILD MODEL
+    # Build the CNN model for the agent
     window_length = 4
     input_shape = (84, 84)
     model = build_model(window_length, input_shape, nb_actions)
 
-    # 3. LOAD TRAINED WEIGHTS
+    # Load the pre-trained model weights
     model.load_weights('policy.h5')
 
-    # 4. CONFIGURE AGENT
-    memory = SequentialMemory(limit=1000000,
-                              window_length=window_length)
+    # Configure the DQN agent
+    memory = SequentialMemory(limit=1000000, window_length=window_length)
     processor = AtariProcessor()
     policy = GreedyQPolicy()
+    dqn = DQNAgent(
+        model=model,
+        nb_actions=nb_actions,
+        policy=policy,
+        memory=memory,
+        processor=processor,
+        nb_steps_warmup=50000,
+        gamma=0.99,
+        target_model_update=10000,
+        train_interval=4,
+        delta_clip=1.0
+    )
+    dqn.compile(optimizer='adam', metrics=['mae'])
 
-    dqn = DQNAgent(model=model,
-                   nb_actions=nb_actions,
-                   policy=policy,
-                   memory=memory,
-                   processor=processor,
-                   nb_steps_warmup=50000,
-                   gamma=.99,
-                   target_model_update=10000,
-                   train_interval=4,
-                   delta_clip=1.)
-    dqn.compile(optimizer='adam',
-                metrics=['mae'])
-
-    # 5. TEST AGENT
+    # Test the agent's performance and visualize gameplay
     pygame_callback = PygameCallback(env, delay=0.02)
-    scores = dqn.test(env, nb_episodes=5,
-                      visualize=False,
-                      callbacks=[pygame_callback])
+    scores = dqn.test(env, nb_episodes=5, visualize=False, callbacks=[pygame_callback])
 
-    # 6. DISPLAY RESULT
-    print('Average score over 5 test episodes:',
-          np.mean(scores.history['episode_reward']))
+    # Print the average score
+    print('Average score over 5 test episodes:', np.mean(scores.history['episode_reward']))
 
-    # 7. CLOSE ENV AND PYGAME
+    # Close the environment and Pygame
     env.close()
     pygame.quit()
+
