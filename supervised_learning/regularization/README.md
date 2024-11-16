@@ -1,56 +1,75 @@
-Resources
-Read or watch:
+# Regularization Techniques in Neural Networks
 
-Regularization (mathematics)
-An Overview of Regularization Techniques in Deep Learning (up to A case study on MNIST data with keras excluded)
-L2 Regularization and Back-Propagation
-Intuitions on L1 and L2 Regularisation
-Analysis of Dropout
-Early stopping
-How to use early stopping properly for training deep neural network?
-Data Augmentation | How to use Deep Learning when you have Limited Data 
-deeplearning.ai videos (Note: I suggest watching these video at 1.5x - 2x speed):
-Regularization
-Why Regularization Reduces Overfitting
-Dropout Regularization
-Understanding Dropout
-Other Regularization Methods
-References:
+This project focuses on implementing various regularization techniques to improve the performance and generalization of neural networks. Techniques like L2 regularization, dropout, and early stopping are explored and implemented both in pure NumPy and TensorFlow.
 
-numpy.linalg.norm
-numpy.random.binomial
-tf.keras.regularizers.L2
-tf.keras.layers.Dense
-Regularization loss
-tf.keras.layers.Dropout
-Dropout: A Simple Way to Prevent Neural Networks from Overfitting
-Early Stopping - but when?
-L2 Regularization versus Batch and Weight Normalization
-Learning Objectives
-At the end of this project, you are expected to be able to explain to anyone, without the help of Google:
+---
 
-General
-What is regularization? What is its purpose?
-What is are L1 and L2 regularization? What is the difference between the two methods?
-What is dropout?
-What is early stopping?
-What is data augmentation?
-How do you implement the above regularization methods in Numpy? Tensorflow?
-What are the pros and cons of the above regularization methods?
-Requirements
-General
-Allowed editors: vi, vim, emacs
-All your files will be interpreted/compiled on Ubuntu 20.04 LTS using python3 (version 3.9)
-Your files will be executed with numpy (version 1.25.2) and tensorflow (version 2.15)
-All your files should end with a new line
-The first line of all your files should be exactly #!/usr/bin/env python3
-A README.md file, at the root of the folder of the project, is mandatory
-Your code should use the pycodestyle style (version 2.11.1)
-All your modules should have documentation (python3 -c 'print(__import__("my_module").__doc__)')
-All your classes should have documentation (python3 -c 'print(__import__("my_module").MyClass.__doc__)')
-All your functions (inside and outside a class) should have documentation (python3 -c 'print(__import__("my_module").my_function.__doc__)' and python3 -c 'print(__import__("my_module").MyClass.my_function.__doc__)')
-Unless otherwise noted, you are not allowed to import any module except import numpy as np and import tensorflow as tf
-You should not import any module unless it is being used
-All your files must be executable
-The length of your files will be tested using wc
-When initializing layer weights, use tf.keras.initializers.VarianceScaling(scale=2.0, mode=("fan_avg")).
+## Directory Overview
+
+### L2 Regularization
+1. **`0-l2_reg_cost.py`**
+   - Calculates the cost of a neural network with L2 regularization using NumPy.
+
+2. **`1-l2_reg_gradient_descent.py`**
+   - Updates the weights and biases of a neural network using gradient descent with L2 regularization.
+
+3. **`2-l2_reg_cost.py`**
+   - Computes the L2 regularization cost for a neural network using TensorFlow.
+
+4. **`3-l2_reg_create_layer.py`**
+   - Creates a neural network layer with L2 regularization in TensorFlow.
+
+---
+
+### Dropout Regularization
+5. **`4-dropout_forward_prop.py`**
+   - Implements forward propagation with dropout regularization using NumPy.
+
+6. **`5-dropout_gradient_descent.py`**
+   - Updates the weights of a neural network with dropout regularization using gradient descent in NumPy.
+
+7. **`6-dropout_create_layer.py`**
+   - Creates a dense layer with dropout using TensorFlow.
+
+---
+
+### Early Stopping
+8. **`7-early_stopping.py`**
+   - Implements early stopping to determine if training should halt based on performance.
+
+---
+
+## How to Use
+
+### L2 Regularization
+- Use **`0-l2_reg_cost.py`** and **`2-l2_reg_cost.py`** to compute the L2 regularization cost during training.
+- Apply gradient descent with L2 regularization using **`1-l2_reg_gradient_descent.py`**.
+- Use **`3-l2_reg_create_layer.py`** to create TensorFlow layers with L2 regularization.
+
+### Dropout Regularization
+- Perform forward propagation with dropout using **`4-dropout_forward_prop.py`**.
+- Update weights with dropout regularization using **`5-dropout_gradient_descent.py`**.
+- Create dropout-enabled layers in TensorFlow using **`6-dropout_create_layer.py`**.
+
+### Early Stopping
+- Use **`7-early_stopping.py`** to halt training when improvements in the cost function fall below a specified threshold.
+
+---
+
+## Additional Resources
+
+For an in-depth explanation of these regularization techniques and their importance, refer to the article:  
+[Enhancing Neural Networks: Exploring Regularization](https://www.linkedin.com/pulse/enhancing-neural-networks-exploring-regularization-davis-joseph-oekme/)
+
+---
+
+## Requirements
+- Python 3.x
+- NumPy
+- TensorFlow 2.x
+
+---
+
+## Author
+- Davis Joseph ([LinkedIn](https://www.linkedin.com/in/davis-joseph/))
+
