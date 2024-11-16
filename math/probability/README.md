@@ -1,71 +1,110 @@
-Probability
- Amateur
- By: Alexa Orrico, Software Engineer at Holberton School
- Weight: 3
- Migrated to checker v2: 
- Your score will be updated as you progress.
+# Probability Distributions
 
+This project implements several probability distributions: **Poisson**, **Exponential**, **Normal**, and **Binomial**. These are essential for understanding statistical models, machine learning, and data analysis.
 
-Resources
-Read or watch:
+---
 
-Probability
-Basic Concepts
-Intro to probability 1: Basic notation
-Intro to probability 2: Independent and disjoint
-Intro to Probability 3: General Addition Rule; Union; OR
-Intro to Probability 4: General multiplication rule; Intersection; AND
-Permutations and Combinations
-Probability distribution
-Probability Theory
-Cumulative Distribution Functions
-Common Probability Distributions: The Data Scientist’s Crib Sheet
-NORMAL MODEL PART 1 — EMPIRICAL RULE
-Normal Distribution
-Variance
-Variance (Concept)
-Binomial Distribution
-Poisson Distribution
-Hypergeometric Distribution
-As references:
+## Directory Overview
 
-numpy.random.poisson
-numpy.random.exponential
-numpy.random.normal
-numpy.random.binomial
-erf
-Learning Objectives
-At the end of this project, you are expected to be able to explain to anyone, without the help of Google:
+### Files and Implementations
 
-General
-What is probability?
-Basic probability notation
-What is independence? What is disjoint?
-What is a union? intersection?
-What are the general addition and multiplication rules?
-What is a probability distribution?
-What is a probability distribution function? probability mass function?
-What is a cumulative distribution function?
-What is a percentile?
-What is mean, standard deviation, and variance?
-Common probability distributions
-Requirements
-General
-Allowed editors: vi, vim, emacs
-All your files will be interpreted/compiled on Ubuntu 20.04 LTS using python3 (version 3.9)
-All your files should end with a new line
-The first line of all your files should be exactly #!/usr/bin/env python3
-A README.md file, at the root of the folder of the project, is mandatory
-Your code should use the pycodestyle style (version 2.11.1)
-All your modules should have documentation (python3 -c 'print(__import__("my_module").__doc__)')
-All your classes should have documentation (python3 -c 'print(__import__("my_module").MyClass.__doc__)')
-All your functions (inside and outside a class) should have documentation (python3 -c 'print(__import__("my_module").my_function.__doc__)' and python3 -c 'print(__import__("my_module").MyClass.my_function.__doc__)')
-Unless otherwise noted, you are not allowed to import any module
-All your files must be executable
-The length of your files will be tested using wc
-Mathematical Approximations
-For the following tasks, you will have to use various irrational numbers and functions. Since you are not able to import any libraries, please use the following approximations:
+1. **`poisson.py`**  
+   - Implements the **Poisson distribution**.
+   - **Parameters**:
+     - `lambtha`: The rate parameter (λ) for the distribution.
+   - **Methods**:
+     - `pmf(k)`: Calculates the Probability Mass Function (PMF) for k successes.
+     - `cdf(k)`: Calculates the Cumulative Distribution Function (CDF) for k successes.
 
-π = 3.1415926536
-e = 2.7182818285
+2. **`exponential.py`**  
+   - Implements the **Exponential distribution**.
+   - **Parameters**:
+     - `lambtha`: The rate parameter (λ) for the distribution.
+   - **Methods**:
+     - `pdf(x)`: Calculates the Probability Density Function (PDF) for a given x.
+     - `cdf(x)`: Calculates the Cumulative Distribution Function (CDF) for a given x.
 
+3. **`normal.py`**  
+   - Implements the **Normal (Gaussian) distribution**.
+   - **Parameters**:
+     - `mean`: The mean (μ) of the distribution.
+     - `stddev`: The standard deviation (σ) of the distribution.
+   - **Methods**:
+     - `z_score(x)`: Calculates the z-score of a given x.
+     - `x_value(z)`: Calculates the x-value for a given z-score.
+     - `pdf(x)`: Calculates the PDF for a given x.
+     - `cdf(x)`: Calculates the CDF for a given x.
+
+4. **`binomial.py`**  
+   - Implements the **Binomial distribution**.
+   - **Parameters**:
+     - `n`: The number of trials.
+     - `p`: The probability of success in each trial.
+   - **Methods**:
+     - `pmf(k)`: Calculates the PMF for k successes.
+     - `cdf(k)`: Calculates the CDF for k successes.
+
+---
+
+## Features and Applications
+
+### Features
+- **Robust Validation**: Ensures valid parameters and input data for each distribution.
+- **Statistical Metrics**: Computes PMF, PDF, CDF, and other related functions.
+- **Flexible Initialization**: Distributions can be initialized with data or parameters.
+
+### Applications
+1. **Poisson Distribution**:
+   - Modeling events that occur at a constant rate, e.g., call arrivals at a call center.
+2. **Exponential Distribution**:
+   - Modeling time between events in a Poisson process, e.g., time between customer arrivals.
+3. **Normal Distribution**:
+   - Describing natural phenomena, e.g., heights, weights, or test scores.
+4. **Binomial Distribution**:
+   - Modeling the number of successes in a fixed number of trials, e.g., flipping a coin.
+
+---
+
+## Usage
+
+### Example: Poisson Distribution
+```python
+from poisson import Poisson
+
+poisson = Poisson(lambtha=5)
+print("PMF for k=3:", poisson.pmf(3))
+print("CDF for k=3:", poisson.cdf(3))
+```
+
+### Example: Exponential Distribution
+```python
+from exponential import Exponential
+
+exponential = Exponential(lambtha=2)
+print("PDF for x=1:", exponential.pdf(1))
+print("CDF for x=1:", exponential.cdf(1))
+```
+
+### Example: Normal Distribution
+```python
+from normal import Normal
+
+normal = Normal(mean=0, stddev=1)
+print("PDF for x=0:", normal.pdf(0))
+print("CDF for x=1:", normal.cdf(1))
+```
+
+### Example: Binomial Distribution
+```python
+from binomial import Binomial
+
+binomial = Binomial(n=10, p=0.5)
+print("PMF for k=5:", binomial.pmf(5))
+print("CDF for k=5:", binomial.cdf(5))
+```
+
+## Requirements
+- Python 3.x
+
+## Author
+- Davis Joseph
