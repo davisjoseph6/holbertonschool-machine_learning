@@ -1,68 +1,96 @@
-Q-learning
- Master
- By: Alexa Orrico, Software Engineer at Holberton School
- Weight: 2
- Your score will be updated as you progress.
- Manual QA review must be done (request it when you are done with the project)
-Description
-Quiz
+# Q-Learning for FrozenLake Environment
 
+This project demonstrates the implementation of Q-learning for training an agent to navigate the **FrozenLake** environment from **Gymnasium**. The agent learns to navigate the environment by exploring and exploiting actions based on the Q-values stored in a Q-table.
 
-Resources
-Read or watch:
+---
 
-MIT 6.S191: Reinforcement Learning
-An introduction to Reinforcement Learning
-An Introduction to Q-Learning: A Tutorial For Beginners
-Q-Learning
-Markov Decision Processes (MDPs) - Structuring a Reinforcement Learning Problem
-Expected Return - What Drives a Reinforcement Learning Agent in an MDP
-Policies and Value Functions - Good Actions for a Reinforcement Learning Agent
-What do Reinforcement Learning Algorithms Learn - Optimal Policies
-Q-Learning Explained - A Reinforcement Learning Technique
-Exploration vs. Exploitation - Learning the Optimal Reinforcement Learning Policy
-Q-Learning Tutorial 1: Train Gymnasium FrozenLake-v1 with Python Reinforcement Learning
-Q-Learning: Implementation
-Markov Decision Processes
-Definitions to skim:
+## Table of Contents
 
-Reinforcement Learning
-Markov Decision Process
-Q-learning
-References:
+- [Project Overview](#project-overview)
+- [Modules](#modules)
+  - [0-load_env.py](#0-load-envpy)
+  - [1-q_init.py](#1-q_initpy)
+  - [2-epsilon_greedy.py](#2-epsilon_greedypy)
+  - [3-q_learning.py](#3-q_learningpy)
+  - [4-play.py](#4-playpy)
+- [How to Run](#how-to-run)
+- [Requirements](#requirements)
+- [Author](#author)
 
-Gymnasium
-Gymnasium: Frozen Lake env
-Gymnasium: Frozenlake benchmark
-Gymnasium: Env
-Learning Objectives
-What is a Markov Decision Process?
-What is an environment?
-What is an agent?
-What is a state?
-What is a policy function?
-What is a value function? a state-value function? an action-value function?
-What is a discount factor?
-What is the Bellman equation?
-What is epsilon greedy?
-What is Q-learning?
-Requirements
-General
-Allowed editors: vi, vim, emacs
-All your files will be interpreted/compiled on Ubuntu 20.04 LTS using python3 (version 3.9)
-Your files will be executed with numpy (version 1.25.2), and gymnasium (version 0.29.1)
-All your files should end with a new line
-The first line of all your files should be exactly #!/usr/bin/env python3
-A README.md file, at the root of the folder of the project, is mandatory
-Your code should use the pycodestyle style (version 2.11.1)
-All your modules should have documentation (python3 -c 'print(__import__("my_module").__doc__)')
-All your classes should have documentation (python3 -c 'print(__import__("my_module").MyClass.__doc__)')
-All your functions (inside and outside a class) should have documentation (python3 -c 'print(__import__("my_module").my_function.__doc__)' and python3 -c 'print(__import__("my_module").MyClass.my_function.__doc__)')
-All your files must be executable
-Your code should use the minimum number of operations
-More Info
-Installing Gymnasium 0.29.1
-pip install --user gymnasium==0.29.1
-Dependencies (that should already be installed)
-pip install --user Pillow==10.3.0
-pip install --user h5py==3.11.0
+---
+
+## Project Overview
+
+This project implements Q-learning to train an agent to solve the **FrozenLake-v1** environment. The agent explores the environment with an epsilon-greedy policy, adjusts its Q-values based on rewards, and uses the Q-table to select the optimal actions during gameplay.
+
+---
+
+## Modules
+
+### `0-load_env.py`
+This module is responsible for loading the **FrozenLake** environment. It provides a function to load the environment with customizable parameters like the lake map, slipperiness, and rendering mode.
+
+- **Function**: `load_frozen_lake(desc=None, map_name=None, is_slippery=False)`
+
+### `1-q_init.py`
+This module initializes the Q-table, a matrix where the agent's action values are stored. The Q-table is initialized as a numpy array of zeros.
+
+- **Function**: `q_init(env)`
+
+### `2-epsilon_greedy.py`
+This module implements the **epsilon-greedy** policy. It provides a function to choose an action based on the current state and epsilon value, balancing exploration and exploitation.
+
+- **Function**: `epsilon_greedy(Q, state, epsilon)`
+
+### `3-q_learning.py`
+This module contains the core Q-learning algorithm. It trains the agent using the Q-learning formula, updating the Q-table over multiple episodes and adjusting epsilon for exploration decay.
+
+- **Function**: `train(env, Q, episodes=5000, max_steps=100, alpha=0.1, gamma=0.99, epsilon=1, min_epsilon=0.1, epsilon_decay=0.05)`
+
+### `4-play.py`
+Once the agent is trained, this module allows the agent to play an episode by selecting actions based on the trained Q-table. The agent's actions are based purely on the exploitation of the Q-table (greedy policy).
+
+- **Function**: `play(env, Q, max_steps=100)`
+
+---
+
+## How to Run
+
+1. Clone the repository.
+2. Install the required dependencies by running:
+   ```bash
+   pip install gymnasium numpy
+   ```
+3. Start by loading the FrozenLake environment:
+   ```python
+   from load_env import load_frozen_lake
+   env = load_frozen_lake()
+   ```
+4. Initialize the Q-table using:
+   ```python
+   from q_init import q_init
+   Q = q_init(env)
+   ```
+5. Train the agent using Q-learning:
+   ```python
+   from q_learning import train
+   Q, total_rewards = train(env, Q)
+   ```
+6. Let the trained agent play and evaluate:
+   ```python
+   from play import play
+   total_rewards, rendered_outputs = play(env, Q)
+   ```
+
+## Requirements
+- Python 3.x
+- gymnasium library for environment simulation
+- numpy library for numerical computations
+
+You can install the dependencies by running the following command:
+```bash
+pip install gymnasium numpy
+```
+
+## Author
+Davis Joseph
