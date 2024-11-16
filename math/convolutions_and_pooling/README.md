@@ -1,60 +1,73 @@
-Convolutions and Pooling
- Master
- By: Alexa Orrico, Software Engineer at Holberton School
- Weight: 1
- Migrated to checker v2: 
- Your score will be updated as you progress.
+# Convolutions and Pooling in Machine Learning
 
+This project focuses on implementing convolutional and pooling operations from scratch using NumPy. These operations are fundamental building blocks in convolutional neural networks (CNNs), commonly used for image processing tasks.
 
-Resources
-Read or watch:
+---
 
-Image Kernels
-Undrestanding Convolutional Layers
-A Comprehensive Guide to Convolutional Neural Networks — the ELI5 way
-What is max pooling in convolutional neural networks?
-Edge Detection Examples
-Padding
-Strided Convolutions
-Convolutions over Volumes
-Pooling Layers
-Definitions to skim:
+## Directory Overview
 
-Convolution
-Kernel (image processing)
-References:
+### Convolutions
+1. **`0-convolve_grayscale_valid.py`**
+   - Performs a valid convolution on grayscale images.
 
-numpy.pad
-A guide to convolution arithmetic for deep learning
-Learning Objectives
-At the end of this project, you are expected to be able to explain to anyone, without the help of Google:
+2. **`1-convolve_grayscale_same.py`**
+   - Performs a same convolution on grayscale images, maintaining the original dimensions.
 
-General
-What is a convolution?
-What is max pooling? average pooling?
-What is a kernel/filter?
-What is padding?
-What is “same” padding? “valid” padding?
-What is a stride?
-What are channels?
-How to perform a convolution over an image
-How to perform max/average pooling over an image
-Requirements
-General
-Allowed editors: vi, vim, emacs
-All your files will be interpreted/compiled on Ubuntu 20.04 LTS using python3 (version 3.9)
-Your files will be executed with numpy (version 1.25.2)
-All your files should end with a new line
-The first line of all your files should be exactly #!/usr/bin/env python3
-A README.md file, at the root of the folder of the project, is mandatory
-Your code should use the pycodestyle style (version 2.11.1)
-All your modules should have documentation (python3 -c 'print(__import__("my_module").__doc__)')
-All your classes should have documentation (python3 -c 'print(__import__("my_module").MyClass.__doc__)')
-All your functions (inside and outside a class) should have documentation (python3 -c 'print(__import__("my_module").my_function.__doc__)' and python3 -c 'print(__import__("my_module").MyClass.my_function.__doc__)')
-Unless otherwise noted, you are not allowed to import any module except import numpy as np
-You are not allowed to use np.convolve
-All your files must be executable
-The length of your files will be tested using wc
-More Info
-Testing
-Please download this dataset for use in some of the following main files.
+3. **`2-convolve_grayscale_padding.py`**
+   - Conducts a convolution on grayscale images with custom padding.
+
+4. **`3-convolve_grayscale.py`**
+   - Implements convolution with adjustable padding (`same`, `valid`, or custom) and stride.
+
+5. **`4-convolve_channels.py`**
+   - Performs a convolution on multi-channel images (e.g., RGB).
+
+6. **`5-convolve.py`**
+   - Extends convolution to support multiple kernels for feature extraction.
+
+---
+
+### Pooling
+7. **`6-pool.py`**
+   - Implements pooling operations (`max` and `average`) for dimensionality reduction and feature selection.
+
+---
+
+## How to Use
+
+### Convolution
+- **Basic Convolution**: Use `0-convolve_grayscale_valid.py` for valid convolution.
+- **Same Convolution**: Utilize `1-convolve_grayscale_same.py` for maintaining the original image dimensions.
+- **Custom Padding**: Apply `2-convolve_grayscale_padding.py` for convolution with user-defined padding.
+- **Multi-channel Input**: Leverage `4-convolve_channels.py` for images with multiple color channels.
+- **Multiple Kernels**: Use `5-convolve.py` to apply multiple filters simultaneously.
+
+### Pooling
+- Apply `6-pool.py` for max or average pooling with custom kernel size and stride.
+
+---
+
+## Features
+
+- **Custom Padding and Stride**: Control the behavior of convolution operations using adjustable padding and stride.
+- **Multi-channel and Multi-kernel Support**: Perform convolutions on RGB images with multiple filters.
+- **Pooling**: Reduce dimensionality using max or average pooling.
+
+---
+
+## Applications
+- Image feature extraction
+- Dimensionality reduction
+- Preparing data for convolutional neural networks (CNNs)
+
+---
+
+## Requirements
+- Python 3.x
+- NumPy
+
+---
+
+## Author
+- Davis Joseph ([LinkedIn](https://www.linkedin.com/in/davis-joseph/))
+
