@@ -1,56 +1,71 @@
-Error Analysis
- Master
- By: Alexa Orrico, Software Engineer at Holberton School
- Weight: 1
- Migrated to checker v2: 
- Your score will be updated as you progress.
+# Error Analysis in Machine Learning
 
+This project focuses on understanding and analyzing the performance of machine learning models using error analysis techniques. It involves constructing confusion matrices and deriving important performance metrics such as sensitivity, precision, specificity, and F1 score for evaluating classification models.
 
-Resources
-Read or watch:
+---
 
-Confusion matrix
-Type I and type II errors
-Sensitivity and specificity
-Precision and recall
-F1 score
-What is a Confusion Matrix in Machine Learning?
-Simple guide to confusion matrix terminology
-Bias-variance tradeoff
-What is bias and variance
-Bayes error rate
-What is Bayes Error in machine learning?
-Bias/Variance (Note: I suggest watching this video at 1.5x - 2x speed)
-Basic Recipe for Machine Learning (Note: I suggest watching this video at 1.5x - 2x speed)
-Why Human Level Performance (Note: I suggest watching this video at 1.5x - 2x speed)
-Avoidable Bias (Note: I suggest watching this video at 1.5x - 2x speed)
-Understanding Human-Level Performance (Note: I suggest watching this video at 1.5x - 2x speed)
-Learning Objectives
-At the end of this project, you are expected to be able to explain to anyone, without the help of Google:
+## Directory Overview
 
-General
-What is the confusion matrix?
-What is type I error? type II?
-What is sensitivity? specificity? precision? recall?
-What is an F1 score?
-What is bias? variance?
-What is irreducible error?
-What is Bayes error?
-How can you approximate Bayes error?
-How to calculate bias and variance
-How to create a confusion matrix
-Requirements
-General
-Allowed editors: vi, vim, emacs
-All your files will be interpreted/compiled on Ubuntu 20.04 LTS using python3 (version 3.9)
-Your files will be executed with numpy (version 1.25.2)
-All your files should end with a new line
-The first line of all your files should be exactly #!/usr/bin/env python3
-A README.md file, at the root of the folder of the project, is mandatory
-Your code should use the pycodestyle style (version 2.11.1)
-All your modules should have documentation (python3 -c 'print(__import__("my_module").__doc__)')
-All your classes should have documentation (python3 -c 'print(__import__("my_module").MyClass.__doc__)')
-All your functions (inside and outside a class) should have documentation (python3 -c 'print(__import__("my_module").my_function.__doc__)' and python3 -c 'print(__import__("my_module").MyClass.my_function.__doc__)')
-Unless otherwise noted, you are not allowed to import any module except import numpy as np
-All your files must be executable
-The length of your files will be tested using wc
+### Confusion Matrix
+1. **`0-create_confusion.py`**
+   - Creates a confusion matrix to summarize the performance of a classification model.
+
+### Performance Metrics
+2. **`1-sensitivity.py`**
+   - Calculates the sensitivity (recall) for each class in a confusion matrix.  
+     \[
+     \text{Sensitivity} = \frac{\text{True Positives}}{\text{True Positives} + \text{False Negatives}}
+     \]
+
+3. **`2-precision.py`**
+   - Calculates the precision for each class in a confusion matrix.  
+     \[
+     \text{Precision} = \frac{\text{True Positives}}{\text{True Positives} + \text{False Positives}}
+     \]
+
+4. **`3-specificity.py`**
+   - Calculates the specificity for each class in a confusion matrix.  
+     \[
+     \text{Specificity} = \frac{\text{True Negatives}}{\text{True Negatives} + \text{False Positives}}
+     \]
+
+5. **`4-f1_score.py`**
+   - Computes the F1 score for each class in a confusion matrix.  
+     \[
+     \text{F1 Score} = 2 \times \frac{\text{Precision} \times \text{Recall}}{\text{Precision} + \text{Recall}}
+     \]
+
+---
+
+## Additional Files
+- **`confusion.npz`**: A saved NumPy file containing an example confusion matrix for testing.
+- **`5-error_handling`**: Example test data for error-handling scenarios.
+
+---
+
+## How to Use
+
+1. **Generate a Confusion Matrix**
+   - Use `0-create_confusion.py` to create a confusion matrix from one-hot encoded labels and predictions.
+
+2. **Evaluate Performance Metrics**
+   - Use the following scripts to compute various metrics:
+     - `1-sensitivity.py` for recall values.
+     - `2-precision.py` for precision values.
+     - `3-specificity.py` for specificity values.
+     - `4-f1_score.py` for F1 scores.
+
+3. **Integrate Metrics**
+   - Combine these metrics to gain insights into model performance for each class and overall.
+
+---
+
+## Requirements
+- Python 3.x
+- NumPy
+
+---
+
+## Author
+- Davis Joseph
+
