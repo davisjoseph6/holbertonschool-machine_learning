@@ -79,7 +79,7 @@ This project is part of the Holberton School Machine Learning curriculum and foc
   predictions = rf.predict(test_features)
   print("Accuracy:", rf.accuracy(test_features, test_labels))
   ```
-- Example usage for Isolation_Random_Forest:
+- Example usage for `Isolation_Random_Forest`:
   ```python
   from 11-isolation_forest import Isolation_Random_Forest
   irf = Isolation_Random_Forest(n_trees=50, max_depth=8)
