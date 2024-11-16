@@ -1,60 +1,89 @@
-Deep Convolutional Architectures
- Master
- By: Alexa Orrico, Software Engineer at Holberton School
- Weight: 6
- Migrated to checker v2: 
- Your score will be updated as you progress.
+# Deep Convolutional Neural Networks (Deep CNNs)
 
+This project focuses on implementing and understanding various deep convolutional neural network (CNN) architectures, including Inception, ResNet, and DenseNet. It demonstrates building blocks, such as inception modules, identity blocks, and dense blocks, to create complex and powerful models.
 
-Resources
-Read or watch:
+---
 
-Vanishing Gradient Problem
-1x1 Convolutions
-What does 1x1 convolution mean in a neural network?
-GoogLeNet Tutorial
-Review: GoogLeNet (Inception v1)— Winner of ILSVRC 2014 (Image Classification)
-Residual Neural Network
-An Overview of ResNet and its Variants
-Review: ResNet — Winner of ILSVRC 2015 (Image Classification, Localization, Detection)
-Deep Residual Learning for Image Recognition
-Review: ResNeXt — 1st Runner Up in ILSVRC 2016 (Image Classification)
-Review: DenseNet — Dense Convolutional Network (Image Classification)
-Densely Connected Convolutional Networks
-Network In Network (Note: I suggest watching this video at 1.5x - 2x speed)
-Inception Network Motivation (Note: I suggest watching this video at 1.5x - 2x speed)
-Inception Network (Note: I suggest watching this video at 1.5x - 2x speed)
-Resnets (Note: I suggest watching this video at 1.5x - 2x speed)
-Why ResNets Work (Note: I suggest watching this video at 1.5x - 2x speed)
-Network in Network (2014)
-Going Deeper with Convolutions (2014)
-Highway Networks (2015)
-Deep Residual Learning for Image Recognition (2015)
-Aggregated Residual Transformations for Deep Neural Networks (2017)
-Densely Connected Convolutional Networks (2018)
-Multi-Scale Dense Networks for Resource Efficient Image Classification (2018)
-Learning Objectives
-At the end of this project, you are expected to be able to explain to anyone, without the help of Google:
+## Directory Overview
 
-General
-What is a skip connection?
-What is a bottleneck layer?
-What is the Inception Network?
-What is ResNet? ResNeXt? DenseNet?
-How to replicate a network architecture by reading a journal article
-Requirements
-General
-Allowed editors: vi, vim, emacs
-All your files will be interpreted/compiled on Ubuntu 20.04 LTS using python3 (version 3.9)
-Your files will be executed with numpy (version 1.25.2) and tensorflow (version 2.15)
-All your files should end with a new line
-The first line of all your files should be exactly #!/usr/bin/env python3
-A README.md file, at the root of the folder of the project, is mandatory.
-Your code should use the pycodestyle style (version 2.11.1)
-All your modules should have documentation (python3 -c 'print(__import__("my_module").__doc__)')
-All your classes should have documentation (python3 -c 'print(__import__("my_module").MyClass.__doc__)')
-All your functions (inside and outside a class) should have documentation (python3 -c 'print(__import__("my_module").my_function.__doc__)' and python3 -c 'print(__import__("my_module").MyClass.my_function.__doc__)')
-Unless otherwise noted, you are not allowed to import any module except from tensorflow import keras as K
-All your files must be executable.
-The length of your files will be tested using wc
+### Inception Networks
+1. **`0-inception_block.py`**
+   - Implements an inception block as described in *"Going Deeper with Convolutions"* (2014).
+
+2. **`1-inception_network.py`**
+   - Constructs the Inception network using inception blocks for image classification.
+
+---
+
+### Residual Networks (ResNet)
+3. **`2-identity_block.py`**
+   - Implements an identity block for ResNet, which skips connections to preserve gradient flow.
+
+4. **`3-projection_block.py`**
+   - Implements a projection block for ResNet, used for downsampling and increasing the number of filters.
+
+5. **`4-resnet50.py`**
+   - Builds the ResNet-50 architecture using identity and projection blocks as described in *"Deep Residual Learning for Image Recognition"* (2015).
+
+---
+
+### Dense Networks (DenseNet)
+6. **`5-dense_block.py`**
+   - Implements a dense block, where each layer is connected to every other layer as described in *"Densely Connected Convolutional Networks"* (2016).
+
+7. **`6-transition_layer.py`**
+   - Implements a transition layer to reduce feature map dimensions using compression in DenseNet.
+
+8. **`7-densenet121.py`**
+   - Builds the DenseNet-121 architecture using dense blocks and transition layers.
+
+---
+
+## Key Features
+
+### Architectures
+- **Inception**: Employs multi-scale processing with inception blocks for better feature extraction.
+- **ResNet**: Introduces residual connections to mitigate vanishing gradients and enable deeper networks.
+- **DenseNet**: Improves feature reuse and efficiency through dense connectivity between layers.
+
+### Modular Implementation
+- Each building block (e.g., inception block, identity block, dense block) is implemented as a reusable function, enabling flexibility and easy integration.
+
+---
+
+## How to Use
+
+1. **Inception**
+   - Use `1-inception_network.py` to create the full Inception network for image classification.
+
+2. **ResNet**
+   - Use `4-resnet50.py` to build the ResNet-50 model with pre-defined identity and projection blocks.
+
+3. **DenseNet**
+   - Use `7-densenet121.py` to construct the DenseNet-121 model for efficient and high-accuracy classification tasks.
+
+---
+
+## Applications
+- Image classification tasks
+- Transfer learning with deep CNN architectures
+- Exploring advanced deep learning techniques
+
+---
+
+## Requirements
+- Python 3.x
+- TensorFlow 2.x
+
+---
+
+## References
+- *"Going Deeper with Convolutions"* (2014)
+- *"Deep Residual Learning for Image Recognition"* (2015)
+- *"Densely Connected Convolutional Networks"* (2016)
+
+---
+
+## Author
+- Davis Joseph ([LinkedIn](https://www.linkedin.com/in/davis-joseph/))
 
