@@ -1,60 +1,103 @@
-Advanced Linear Algebra
- Master
- By: Alexa Orrico, Software Engineer at Holberton School
- Weight: 4
- Migrated to checker v2: 
- Your score will be updated as you progress.
+# Advanced Linear Algebra
 
+This project focuses on implementing various advanced linear algebra operations, including determinants, minors, cofactors, adjugates, inverses, and definiteness of matrices. These mathematical tools are fundamental in many areas of computational science and engineering, including machine learning, optimization, and computer graphics.
 
-Resources
-Read or watch:
+---
 
-The determinant | Essence of linear algebra
-Determinant of a Matrix
-Determinant
-Determinant of an empty matrix
-Inverse matrices, column space and null space
-Inverse of a Matrix using Minors, Cofactors and Adjugate
-Minor
-Cofactor
-Adjugate matrix
-Singular Matrix
-Elementary Matrix Operations
-Gaussian Elimination
-Gauss-Jordan Elimination
-Matrix Inverse
-Eigenvectors and eigenvalues | Essence of linear algebra
-Eigenvalues and eigenvectors
-Eigenvalues and Eigenvectors
-Definiteness of a matrix Up to Eigenvalues
-Definite, Semi-Definite and Indefinite Matrices Ignore Hessian Matrices
-Tests for Positive Definiteness of a Matrix
-Positive Definite Matrices and Minima
-Positive Definite Matrices
-As references:
+## Directory Overview
 
-numpy.linalg.eig
-Learning Objectives
-At the end of this project, you are expected to be able to explain to anyone, without the help of Google:
+### Matrix Operations
+1. **`0-determinant.py`**  
+   - Calculates the determinant of a matrix.
+   - Includes validation for square matrices and handles edge cases such as empty or 1x1 matrices.
 
-General
-What is a determinant? How would you calculate it?
-What is a minor, cofactor, adjugate? How would calculate them?
-What is an inverse? How would you calculate it?
-What are eigenvalues and eigenvectors? How would you calculate them?
-What is definiteness of a matrix? How would you determine a matrix’s definiteness?
-Requirements
-General
-Allowed editors: vi, vim, emacs
-All your files will be interpreted/compiled on Ubuntu 20.04 LTS using python3 (version 3.9)
-Your files will be executed with numpy (version 1.25.2)
-All your files should end with a new line
-The first line of all your files should be exactly #!/usr/bin/env python3
-A README.md file, at the root of the folder of the project, is mandatory
-Your code should use the pycodestyle style (version 2.11.1)
-All your modules should have documentation (python3 -c 'print(__import__("my_module").__doc__)')
-All your classes should have documentation (python3 -c 'print(__import__("my_module").MyClass.__doc__)')
-All your functions (inside and outside a class) should have documentation (python3 -c 'print(__import__("my_module").my_function.__doc__)' and python3 -c 'print(__import__("my_module").MyClass.my_function.__doc__)')
-Unless otherwise noted, you are not allowed to import any module
-All your files must be executable
-The length of your files will be tested using wc
+2. **`1-minor.py`**  
+   - Computes the minor matrix, where each element is the determinant of a submatrix formed by removing one row and one column.
+
+3. **`2-cofactor.py`**  
+   - Computes the cofactor matrix by applying a sign factor to the minor matrix.
+
+4. **`3-adjugate.py`**  
+   - Calculates the adjugate (adjoint) of a matrix, which is the transpose of the cofactor matrix.
+
+5. **`4-inverse.py`**  
+   - Computes the inverse of a matrix if it exists. Utilizes the adjugate and determinant of the matrix for calculation.
+
+6. **`5-definiteness.py`**  
+   - Determines the definiteness of a square, symmetric matrix based on its eigenvalues.  
+   - Outputs:
+     - **Positive definite**
+     - **Positive semi-definite**
+     - **Negative definite**
+     - **Negative semi-definite**
+     - **Indefinite**
+
+---
+
+## Features
+
+### Validation
+- Ensures all inputs are valid matrices, handling exceptions for non-square, non-numeric, or empty matrices.
+
+### Recursive Determinant Calculation
+- The determinant function uses a recursive approach with cofactor expansion, allowing it to handle matrices of arbitrary size.
+
+### Eigenvalue Analysis
+- Eigenvalues are computed for definiteness classification, leveraging NumPy's linear algebra capabilities.
+
+---
+
+## Applications
+- **Machine Learning**: Matrix inversions and determinants are used in algorithms like linear regression and Gaussian processes.
+- **Optimization**: Definiteness checks ensure a matrix is suitable for optimization problems.
+- **Computer Graphics**: Transformation matrices require determinant and inverse operations.
+
+---
+
+## How to Use
+
+### Example: Determinant
+```python
+from 0-determinant import determinant
+
+matrix = [[1, 2], [3, 4]]
+det = determinant(matrix)
+print("Determinant:", det)
+```
+
+### Example: Minor Matrix
+```python
+from 1-minor import minor
+
+matrix = [[1, 2], [3, 4]]
+minors = minor(matrix)
+print("Minor Matrix:", minors)
+```
+
+### Example: Inverse
+```python
+from 4-inverse import inverse
+
+matrix = [[4, 7], [2, 6]]
+inv = inverse(matrix)
+print("Inverse Matrix:", inv)
+```
+
+### Example: Definiteness
+```python
+from 5-definiteness import definiteness
+import numpy as np
+
+matrix = np.array([[2, -1], [-1, 2]])
+def_type = definiteness(matrix)
+print("Definiteness:", def_type)
+```
+
+## Requirements
+- Python 3.x
+- NumPy
+
+### References
+- Linear Algebra and Its Applications, Gilbert Strang
+- Numerical Recipes: The Art of Scientific Computing
+
