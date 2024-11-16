@@ -1,68 +1,89 @@
-Tensorflow 2 & Keras
- Master
- By: Alexa Orrico, Software Engineer at Holberton School
- Weight: 2
- Migrated to checker v2: 
- Your score will be updated as you progress.
+# Keras Project
 
+This project is part of the Holberton School Machine Learning curriculum and focuses on building, training, saving, and testing neural networks using the Keras library.
 
-Resources
-Read or watch:
+---
 
-TensorFlow 1 vs TensorFlow 2: Is the new TF better?
-Differences Between Tensorflow 1.x and Tensorflow 2.0
-Keras Explained (starting at 3:48)
-Keras
-Keras vs. tf.keras: What’s the difference in TensorFlow 2.0?
-Hierarchical Data Format
-References:
+## Directory Overview
 
-tf.keras
-tf.keras.models
-tf.keras.activations
-tf.keras.callbacks
-tf.keras.initializers
-tf.keras.layers
-tf.keras.losses
-tf.keras.metrics
-tf.keras.optimizers
-tf.keras.regularizers
-tf.keras.utils
-serialization and saving
-Learning Objectives
-At the end of this project, you are expected to be able to explain to anyone, without the help of Google:
+### Neural Network Construction
+1. **`0-sequential.py`**
+   - Builds a neural network using the Keras Sequential API.
+   - Supports L2 regularization and dropout.
 
-General
-What is Keras?
-What is a model?
-How to instantiate a model (2 ways)
-How to build a layer
-How to add regularization to a layer
-How to add dropout to a layer
-How to add batch normalization
-How to compile a model
-How to optimize a model
-How to fit a model
-How to use validation data
-How to perform early stopping
-How to measure accuracy
-How to evaluate a model
-How to make a prediction with a model
-How to access the weights/outputs of a model
-What is HDF5?
-How to save and load a model’s weights, a model’s configuration, and the entire model
-Requirements
-General
-Allowed editors: vi, vim, emacs
-All your files will be interpreted/compiled on Ubuntu 20.04 LTS using python3 (version 3.9)
-Your files will be executed with numpy (version 1.25.2) and tensorflow (version 2.15)
-All your files should end with a new line
-The first line of all your files should be exactly #!/usr/bin/env python3
-A README.md file, at the root of the folder of the project, is mandatory
-Your code should use the pycodestyle style (version 2.11.1)
-All your modules should have documentation (python3 -c 'print(__import__("my_module").__doc__)')
-All your classes should have documentation (python3 -c 'print(__import__("my_module").MyClass.__doc__)')
-All your functions (inside and outside a class) should have documentation (python3 -c 'print(__import__("my_module").my_function.__doc__)' and python3 -c 'print(__import__("my_module").MyClass.my_function.__doc__)')
-Unless otherwise noted, you are not allowed to import any module except import tensorflow.keras as K
-All your files must be executable
-The length of your files will be tested using wc
+2. **`1-input.py`**
+   - Constructs a neural network using the Keras Functional API.
+   - Allows flexibility in defining complex architectures.
+
+---
+
+### Model Optimization
+3. **`2-optimize.py`**
+   - Sets up the Adam optimizer with categorical cross-entropy loss and accuracy metrics.
+
+4. **`3-one_hot.py`**
+   - Converts label vectors into one-hot encoded matrices.
+
+---
+
+### Model Training
+5. **`8-train.py`**
+   - Implements mini-batch gradient descent with:
+     - Optional validation data
+     - Early stopping
+     - Learning rate decay
+     - Model checkpointing
+
+---
+
+### Model Persistence
+6. **`9-model.py`**
+   - Provides methods to save and load entire models.
+
+7. **`10-weights.py`**
+   - Enables saving and loading of model weights independently.
+
+8. **`11-config.py`**
+   - Saves model configurations in JSON format and reconstructs models from these configurations.
+
+---
+
+### Model Evaluation
+9. **`12-test.py`**
+   - Evaluates a model's performance on test data.
+
+10. **`13-predict.py`**
+    - Makes predictions using a trained model.
+
+---
+
+## How to Use
+
+### Building Models
+- Use `0-sequential.py` or `1-input.py` to define a neural network depending on your preferred Keras API.
+
+### Optimizing Models
+- Optimize models with `2-optimize.py` using Adam and categorical cross-entropy.
+
+### Training
+- Train the model with `8-train.py` and add callbacks for early stopping, learning rate decay, and model checkpointing as needed.
+
+### Saving and Loading
+- Save models and weights using `9-model.py` or `10-weights.py`.
+- Use `11-config.py` to save and reload model configurations.
+
+### Evaluation and Prediction
+- Evaluate model accuracy using `12-test.py`.
+- Make predictions with `13-predict.py`.
+
+---
+
+## Requirements
+- Python 3.x
+- TensorFlow/Keras 2.x
+
+---
+
+## Authors
+- Holberton School Machine Learning Cohort
+
