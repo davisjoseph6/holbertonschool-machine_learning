@@ -91,5 +91,5 @@ This project implements the YOLO (You Only Look Once) object detection model usi
 ---
 
 ## Author
-- Davis Joseph ([LinkedIn](https://www.linkedin.com/in/davis-joseph/))
+- Davis Joseph ([LinkedIn]([https://www.linkedin.com/in/davis-joseph/](https://www.linkedin.com/in/davisjoseph767/)))
 

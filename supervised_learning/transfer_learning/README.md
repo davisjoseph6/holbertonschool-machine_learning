@@ -72,5 +72,5 @@ This project demonstrates the use of transfer learning for image classification 
 ---
 
 ## Author
-- Davis Joseph ([LinkedIn](https://www.linkedin.com/in/davis-joseph/))
+- Davis Joseph ([LinkedIn]([https://www.linkedin.com/in/davis-joseph/](https://www.linkedin.com/in/davisjoseph767/)))
 
