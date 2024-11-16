@@ -1,85 +1,155 @@
-Dimensionality Reduction
- Master
- By: Alexa Orrico, Software Engineer at Holberton School
- Weight: 2
- Migrated to checker v2: 
- Your score will be updated as you progress.
- Manual QA review must be done (request it when you are done with the project)
+# Dimensionality Reduction: t-SNE and PCA
 
+This project implements dimensionality reduction techniques including **Principal Component Analysis (PCA)** and **t-Distributed Stochastic Neighbor Embedding (t-SNE)**. These techniques are widely used for visualization and analysis of high-dimensional datasets.
 
-Resources
-Read or watch:
+---
 
-Dimensionality Reduction For Dummies — Part 1: Intuition
-Singular Value Decomposition
-Understanding SVD (Singular Value Decomposition)
-Intuitively, what is the difference between Eigendecomposition and Singular Value Decomposition?
-Dimensionality Reduction: Principal Components Analysis, Part 1
-Dimensionality Reduction: Principal Components Analysis, Part 2
-StatQuest: t-SNE, Clearly Explained
-t-SNE tutorial Part1
-t-SNE tutorial Part2
-How to Use t-SNE Effectively
-Definitions to skim:
+## Directory Overview
 
-Dimensionality Reduction
-Principal component analysis
-Eigendecomposition of a matrix
-Singular value decomposition
-Manifold check this out if you have never heard this term before
-Kullback–Leibler divergence
-T-distributed stochastic neighbor embedding
-As references:
+### Files and Functions
 
-numpy.cumsum
-Visualizing Data using t-SNE (paper)
-Visualizing Data Using t-SNE (video)
-Advanced:
+1. **`1-pca.py`**
+   - **`pca(X, ndim)`**
+     - Performs PCA on a dataset to reduce its dimensionality.
+     - **Inputs**:
+       - `X`: The dataset (numpy array).
+       - `ndim`: Target number of dimensions.
+     - **Outputs**:
+       - `T`: Transformed dataset in reduced dimensionality.
 
-Kernel principal component analysis
-Nonlinear Dimensionality Reduction: KPCA
-Learning Objectives
-What is eigendecomposition?
-What is singular value decomposition?
-What is the difference between eig and svd?
-What is dimensionality reduction and what are its purposes?
-What is principal components analysis (PCA)?
-What is t-distributed stochastic neighbor embedding (t-SNE)?
-What is a manifold?
-What is the difference between linear and non-linear dimensionality reduction?
-Which techniques are linear/non-linear?
-Requirements
-General
-Allowed editors: vi, vim, emacs
-All your files will be interpreted/compiled on Ubuntu 20.04 LTS using python3 (version 3.9)
-Your files will be executed with numpy (version 1.25.2)
-All your files should end with a new line
-The first line of all your files should be exactly #!/usr/bin/env python3
-A README.md file, at the root of the folder of the project, is mandatory
-Your code should use the pycodestyle style (version 2.11.1)
-All your modules should have documentation (python3 -c 'print(__import__("my_module").__doc__)')
-All your classes should have documentation (python3 -c 'print(__import__("my_module").MyClass.__doc__)')
-All your functions (inside and outside a class) should have documentation (python3 -c 'print(__import__("my_module").my_function.__doc__)' and python3 -c 'print(__import__("my_module").MyClass.my_function.__doc__)')
-Unless otherwise noted, you are not allowed to import any module except import numpy as np
-All your files must be executable
-Your code should use the minimum number of operations to avoid floating point errors
-Data
-Please test your main files with the following data:
+2. **`2-P_init.py`**
+   - **`P_init(X, perplexity)`**
+     - Initializes variables required to compute P affinities in t-SNE.
+     - **Inputs**:
+       - `X`: Dataset.
+       - `perplexity`: Desired perplexity for t-SNE.
+     - **Outputs**:
+       - Pairwise distance matrix `D`.
+       - Initialized P affinities matrix `P`.
+       - Precision values `betas`.
+       - Shannon entropy target `H`.
 
-mnist2500_X.txt
-mnist2500_labels.txt
-Watch Out!
-Just like lists, np.ndarrays are mutable objects:
+3. **`3-entropy.py`**
+   - **`HP(Di, beta)`**
+     - Computes the Shannon entropy and P affinities for a given point.
+     - **Inputs**:
+       - `Di`: Distances from a point to others.
+       - `beta`: Precision for the Gaussian distribution.
+     - **Outputs**:
+       - `Hi`: Shannon entropy.
+       - `Pi`: P affinities.
 
->>> vector = np.ones((100, 1))
->>> m1 = vector[55]
->>> m2 = vector[55, 0]
->>> vector[55] = 2
->>> m1
-array([2.])
->>> m2
-1.0
-Performance between SVD and EIG
-Here a graph of execution time (Y-axis) for the number of iteration (X-axis) - red line is EIG and blue line is SVG
+4. **`4-P_affinities.py`**
+   - **`P_affinities(X, tol, perplexity)`**
+     - Computes symmetric P affinities for t-SNE.
+     - **Inputs**:
+       - `X`: Dataset.
+       - `tol`: Tolerance for perplexity calculations.
+       - `perplexity`: Desired perplexity.
+     - **Outputs**:
+       - Symmetric P affinities.
 
+5. **`5-Q_affinities.py`**
+   - **`Q_affinities(Y)`**
+     - Computes Q affinities for the low-dimensional representation.
+     - **Inputs**:
+       - `Y`: Low-dimensional dataset.
+     - **Outputs**:
+       - `Q`: Q affinities matrix.
+       - `num`: Numerator values for Q calculation.
+
+6. **`6-grads.py`**
+   - **`grads(Y, P)`**
+     - Computes gradients for updating Y in t-SNE.
+     - **Inputs**:
+       - `Y`: Low-dimensional dataset.
+       - `P`: Symmetric P affinities.
+     - **Outputs**:
+       - `dY`: Gradients for Y.
+       - `Q`: Q affinities.
+
+7. **`7-cost.py`**
+   - **`cost(P, Q)`**
+     - Computes the Kullback-Leibler divergence (cost) between P and Q.
+     - **Inputs**:
+       - `P`: Symmetric P affinities.
+       - `Q`: Q affinities.
+     - **Outputs**:
+       - `C`: Cost value.
+
+8. **`8-tsne.py`**
+   - **`tsne(X, ndims, idims, perplexity, iterations, lr)`**
+     - Performs a t-SNE transformation on a dataset.
+     - **Inputs**:
+       - `X`: Dataset.
+       - `ndims`: Target dimensionality for t-SNE.
+       - `idims`: Initial dimensionality after PCA.
+       - `perplexity`: Desired perplexity.
+       - `iterations`: Number of optimization iterations.
+       - `lr`: Learning rate for optimization.
+     - **Outputs**:
+       - `Y`: Low-dimensional representation of the dataset.
+
+---
+
+## How t-SNE Works
+
+1. **PCA Initialization**:
+   - Reduces the dataset to a lower dimension (`idims`) to improve computational efficiency.
+
+2. **P Affinities Calculation**:
+   - Converts high-dimensional distances to probabilities using a Gaussian distribution and a target perplexity.
+
+3. **Q Affinities Calculation**:
+   - Computes low-dimensional affinities using a t-distribution to handle crowding effects.
+
+4. **Optimization**:
+   - Iteratively updates the low-dimensional representation (`Y`) by minimizing the Kullback-Leibler divergence between `P` and `Q`.
+
+---
+
+## How to Use
+
+1. Use **`pca(X, ndim)`** for simple dimensionality reduction.
+2. For visualization or advanced reduction, use **`tsne(X, ndims, idims, perplexity, iterations, lr)`**:
+   - Example:
+     ```python
+     import numpy as np
+     from 8-tsne import tsne
+
+     # Load your dataset
+     X = np.loadtxt("mnist2500_X.txt")
+     
+     # Perform t-SNE
+     Y = tsne(X, ndims=2, idims=50, perplexity=30.0, iterations=1000, lr=500)
+
+     # Visualize results
+     import matplotlib.pyplot as plt
+     plt.scatter(Y[:, 0], Y[:, 1])
+     plt.show()
+     ```
+
+---
+
+## Applications
+- **Data Visualization**: Reducing high-dimensional data to 2D or 3D for better interpretability.
+- **Clustering**: Enhancing clustering algorithms by transforming data to a lower-dimensional space.
+- **Feature Reduction**: Simplifying datasets while preserving important information.
+
+---
+
+## Requirements
+- Python 3.x
+- NumPy
+
+---
+
+## References
+- van der Maaten, Laurens, and Geoffrey Hinton. "Visualizing data using t-SNE." *Journal of machine learning research* 9.Nov (2008): 2579-2605.
+- Principal Component Analysis (PCA).
+
+---
+
+## Author
+- Davis Joseph ([LinkedIn](https://www.linkedin.com/in/davisjoseph767/))
 
