@@ -69,5 +69,5 @@ This project focuses on implementing convolutional and pooling operations from s
 ---
 
 ## Author
-- Davis Joseph ([LinkedIn](https://www.linkedin.com/in/davis-joseph/))
+- Davis Joseph ([LinkedIn]([https://www.linkedin.com/in/davis-joseph/](https://www.linkedin.com/in/davisjoseph767/)))
 
