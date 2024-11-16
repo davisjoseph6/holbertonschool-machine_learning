@@ -1,98 +1,113 @@
-Tensorflow
- Master
- By: Alexa Orrico, Software Engineer at Holberton School
- Weight: 3
- Migrated to checker v2: 
- Your score will be updated as you progress.
+# TensorFlow Neural Network Project
 
+This project demonstrates the construction, training, evaluation, and saving of a neural network classifier using TensorFlow (compat.v1). Each script in this directory implements a specific aspect of the neural network pipeline, from creating placeholders to training and evaluating the model.
 
-Resources
-Read or watch:
+---
 
-Low Level Intro (Excluding Datasets and Feature columns)
-Graphs
-Tensors
-Variables
-Placeholders
-Save and Restore (Up to Save and restore models, excluded)
-TensorFlow, why there are 3 files after saving the model?
-Exporting and Importing a MetaGraph
-TensorFlow - import meta graph and use variables from it
-References:
+## Directory Overview
 
-tf.Graph
-tf.Session
-tf.Session.run
-tf.Tensor
-tf.Variable
-tf.constant
-tf.placeholder
-tf.Operation
-tf.keras.layers
-tf.keras.layers.Dense
-tf.keras.initializers.VarianceScaling
-tf.nn
-tf.nn.relu
-tf.nn.sigmoid
-tf.nn.tanh
-tf.losses
-tf.losses.softmax_cross_entropy
-tf.train
-tf.train.import_meta_graph
-tf.train.GradientDescentOptimizer
-tf.train.GradientDescentOptimizer.minimize
-tf.train.Saver
-tf.train.Saver.save
-tf.train.Saver.restore
-tf.add_to_collection
-tf.get_collection
-tf.global_variables_initializer
-tf.argmax
-tf.math.equal
-tf.set_random_seed
-tf.keras.backend.name_scope
-Learning Objectives
-At the end of this project, you are expected to be able to explain to anyone, without the help of Google:
+### Neural Network Components
+1. **`0-create_placeholders.py`**
+   - Creates placeholders for input features (`x`) and labels (`y`) of the neural network.
+   - Example:  
+     ```python
+     x, y = create_placeholders(nx, classes)
+     ```
 
-General
-What is tensorflow?
-What is a session? graph?
-What are tensors?
-What are variables? constants? placeholders? How do you use them?
-What are operations? How do you use them?
-What are namespaces? How do you use them?
-How to train a neural network in tensorflow
-What is a checkpoint?
-How to save/load a model with tensorflow
-What is the graph collection?
-How to add and get variables from the collection
+2. **`1-create_layer.py`**
+   - Implements a function to create a single neural network layer with a specified number of nodes and activation function.
+   - Example:  
+     ```python
+     layer = create_layer(prev_layer, n, activation)
+     ```
 
-Requirements:
-General
-Allowed editors: vi, vim, emacs
-All your files will be interpreted/compiled on Ubuntu 20.04 LTS using python3 (version 3.9)
-Your files will be executed with numpy (version 1.25.2) and tensorflow (version 2.15)
-All your files should end with a new line
-The first line of all your files should be exactly #!/usr/bin/env python3
-A README.md file, at the root of the folder of the project, is mandatory
-Your code should use the pycodestyle style (version 2.11.1)
-All your modules should have documentation (python3 -c 'print(__import__("my_module").__doc__)')
-All your classes should have documentation (python3 -c 'print(__import__("my_module").MyClass.__doc__)')
-All your functions (inside and outside a class) should have documentation (python3 -c 'print(__import__("my_module").my_function.__doc__)' and python3 -c 'print(__import__("my_module").MyClass.my_function.__doc__)')
-Unless otherwise noted, you are not allowed to import any module except import tensorflow.compat.v1 as tf
-All your files must be executable
-The length of your files will be tested using wc
-More Info
-Installing Tensorflow 2.15
-$ pip install --user tensorflow==2.15
-Optimize Tensorflow (Optional)
-to make use of your GPU, follow the steps in the tensorflow official website.
-This will make training MUCH faster!
+3. **`2-forward_prop.py`**
+   - Builds the forward propagation graph for the neural network by stacking layers.
+   - Example:  
+     ```python
+     y_pred = forward_prop(x, layer_sizes, activations)
+     ```
 
-Note
-During this project, your main task is to delve into Tensorflow v1. Be sure to anticipate the upcoming project on Tensorflow 2 & Keras, which will enhance your understanding of Tensorflow v2.
+4. **`3-calculate_accuracy.py`**
+   - Calculates the accuracy of predictions by comparing predicted and true labels.
+   - Example:  
+     ```python
+     accuracy = calculate_accuracy(y, y_pred)
+     ```
 
-After completing this project, you can further explore the differences betwen Tensorflow v1 and Tensorflow v2 by consulting the following resources:
+5. **`4-calculate_loss.py`**
+   - Computes the softmax cross-entropy loss for a prediction.
+   - Example:  
+     ```python
+     loss = calculate_loss(y, y_pred)
+     ```
 
-TensorFlow 1.x vs TensorFlow 2 - Behaviors and APIs
-Tensorflow 1.xvs. Tensorflow 2.x: What’s the Difference?
+6. **`5-create_train_op.py`**
+   - Creates a training operation using gradient descent optimization.
+   - Example:  
+     ```python
+     train_op = create_train_op(loss, alpha)
+     ```
+
+---
+
+### Training and Evaluation
+7. **`6-train.py`**
+   - Builds, trains, and saves the neural network model.
+   - Key features:
+     - Iterative training with cost and accuracy monitoring.
+     - Saves the trained model to a specified path.
+   - Example usage:  
+     ```python
+     save_path = train(X_train, Y_train, X_valid, Y_valid, layer_sizes,
+                       activations, alpha, iterations)
+     ```
+
+8. **`7-evaluate.py`**
+   - Loads a saved model and evaluates its performance on a given dataset.
+   - Returns predictions, accuracy, and loss.
+   - Example usage:  
+     ```python
+     prediction, accuracy, loss = evaluate(X_test, Y_test, save_path)
+     ```
+
+---
+
+## Additional Files
+- **`model.ckpt.*`**: Files generated during the training process to store the model's weights and metadata.
+- **`checkpoint`**: TensorFlow checkpoint file.
+- **`output.log` / `error.log`**: Logs generated during script execution.
+- **`README.md`**: Documentation for the project.
+
+---
+
+## Usage
+### Running Scripts
+- Execute individual scripts to test specific components.
+- Example:  
+  ```bash
+  python3 0-create_placeholders.py
+  ```
+
+### Training the Model
+- Train a neural network using 6-train.py with specified hyperparameters:
+```python
+save_path = train(X_train, Y_train, X_valid, Y_valid,
+                  layer_sizes=[128, 64, 32], 
+                  activations=[tf.nn.relu, tf.nn.relu, tf.nn.softmax],
+                  alpha=0.01, iterations=1000)
+```
+
+- Evaluating the Model
+Evaluate a saved model with `7-evaluate.py`:
+```python
+prediction, accuracy, loss = evaluate(X_test, Y_test, "/tmp/model.ckpt")
+```
+
+## Requirements
+- Python 3.x
+- TensorFlow 1.x (tensorflow.compat.v1 module)
+- NumPy
+
+## Author
+Davis Joseph
