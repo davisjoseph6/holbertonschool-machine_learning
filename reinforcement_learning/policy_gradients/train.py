@@ -27,7 +27,8 @@ def train(env, nb_episodes, alpha=0.000045, gamma=0.98, show_result=False):
                 env.render()
 
             # Compute action and gradient using policy gradient
-            action, grad = policy_gradient(state, weight)  # Use correct policy_gradient function
+            # Use correct policy_gradient function
+            action, grad = policy_gradient(state, weight)
             action = int(action)  # Ensure action is an integer
 
             # Take a step in the environment
@@ -47,7 +48,9 @@ def train(env, nb_episodes, alpha=0.000045, gamma=0.98, show_result=False):
 
         # Compute the discounted rewards and update weights
         for t in range(len(episode_rewards)):
-            G = sum([gamma ** i * episode_rewards[i + t] for i in range(len(episode_rewards) - t)])
+            G = sum([
+                gamma ** i * episode_rewards[i + t] for i in range(
+                    len(episode_rewards) - t)])
 
             # Update weights using policy gradient
             weight_update = alpha * G * gradients[t]

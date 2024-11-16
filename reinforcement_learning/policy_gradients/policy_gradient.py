@@ -16,9 +16,11 @@ def policy(matrix, weight):
     exp = np.exp(z - np.max(z))  # Softmax with stability adjustment
     return exp / exp.sum(axis=1, keepdims=True)
 
+
 def policy_gradient(state, weight):
     """
-    Computes the Monte-Carlo policy gradient based on a state and weight matrix.
+    Computes the Monte-Carlo policy gradient based on a state
+    and weight matrix.
     """
     # Reshape the state to fit the dimensions expected by the policy function
     state = state.reshape(1, -1)
