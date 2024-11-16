@@ -1,54 +1,106 @@
-Multivariate Probability
- Master
- By: Alexa Orrico, Software Engineer at Holberton School
- Weight: 1
- Migrated to checker v2: 
- Your score will be updated as you progress.
+# Multivariate Probability
 
+This project focuses on multivariate probability, including the computation of mean and covariance, correlation matrices, and the probability density function (PDF) of a multivariate normal distribution. These concepts are fundamental in multivariate statistics and machine learning.
 
-Resources
-Read or watch:
+---
 
-Joint Probability Distributions
-Multivariate Gaussian distributions
-The Multivariate Gaussian Distribution
-An Introduction to Variance, Covariance & Correlation
-Variance-covariance matrix using matrix notation of factor analysis
-Definitions to skim:
+## Directory Overview
 
-Carl Friedrich Gauss
-Joint probability distribution
-Covariance
-Covariance matrix
-As references:
+### Files and Functions
 
-numpy.cov
-numpy.corrcoef
-numpy.linalg.det
-numpy.linalg.inv
-numpy.random.multivariate_normal
-Learning Objectives
-At the end of this project, you are expected to be able to explain to anyone, without the help of Google:
+1. **`0-mean_cov.py`**
+   - **`mean_cov(X)`**
+     - Calculates the mean and covariance of a given data set.
+     - **Inputs**:
+       - `X`: A 2D `numpy.ndarray` where each row represents a data point and each column a feature.
+     - **Outputs**:
+       - `mean`: A 1D array containing the mean of each feature.
+       - `cov`: The covariance matrix of the data.
 
-General
-Who is Carl Friedrich Gauss?
-What is a joint/multivariate distribution?
-What is a covariance?
-What is a correlation coefficient?
-What is a covariance matrix?
-What is a multivariate Gaussian distribution?
-Requirements
-General
-Allowed editors: vi, vim, emacs
-All your files will be interpreted/compiled on Ubuntu 20.04 LTS using python3 (version 3.9)
-Your files will be executed with numpy (version 1.25.2)
-All your files should end with a new line
-The first line of all your files should be exactly #!/usr/bin/env python3
-A README.md file, at the root of the folder of the project, is mandatory
-Your code should use the pycodestyle style (version 2.11.1)
-All your modules should have documentation (python3 -c 'print(__import__("my_module").__doc__)')
-All your classes should have documentation (python3 -c 'print(__import__("my_module").MyClass.__doc__)')
-All your functions (inside and outside a class) should have documentation (python3 -c 'print(__import__("my_module").my_function.__doc__)' and python3 -c 'print(__import__("my_module").MyClass.my_function.__doc__)')
-Unless otherwise noted, you are not allowed to import any module except import numpy as np
-All your files must be executable
-The length of your files will be tested using wc
+2. **`1-correlation.py`**
+   - **`correlation(C)`**
+     - Computes the correlation matrix from a covariance matrix.
+     - **Inputs**:
+       - `C`: A square `numpy.ndarray` representing the covariance matrix.
+     - **Outputs**:
+       - The correlation matrix, derived by normalizing the covariance matrix using the standard deviations.
+
+3. **`multinormal.py`**
+   - **`MultiNormal` Class**
+     - Represents a multivariate normal distribution.
+     - **Attributes**:
+       - `mean`: Mean vector of the distribution.
+       - `cov`: Covariance matrix of the distribution.
+     - **Methods**:
+       - **`__init__(data)`**:
+         - Initializes the distribution with a given data set.
+         - Computes the mean and covariance matrix.
+       - **`pdf(x)`**:
+         - Calculates the PDF value for a given data point.
+         - **Inputs**:
+           - `x`: A 1D `numpy.ndarray` representing a data point.
+         - **Outputs**:
+           - The probability density value for `x`.
+
+---
+
+## Key Concepts
+
+### Mean and Covariance
+- The **mean vector** provides the average of each feature in the dataset.
+- The **covariance matrix** describes the relationships between different features:
+  - Diagonal elements represent the variance of each feature.
+  - Off-diagonal elements represent the covariance between features.
+
+### Correlation Matrix
+- Normalizes the covariance matrix to provide a dimensionless measure of linear relationships between variables.
+- Values range between `-1` (perfect negative correlation) and `1` (perfect positive correlation).
+
+### Multivariate Normal Distribution
+- Extends the univariate normal distribution to multiple dimensions.
+- Defined by:
+  - A mean vector (`mean`).
+  - A covariance matrix (`cov`).
+- The **PDF**:
+  - Provides the likelihood of observing a specific data point.
+  - Utilizes the determinant and inverse of the covariance matrix.
+
+---
+
+## How to Use
+
+1. **Calculate Mean and Covariance**
+   - Use `mean_cov(X)` to compute the statistical properties of your data.
+
+2. **Generate a Correlation Matrix**
+   - Use `correlation(C)` to analyze the relationships between features in your dataset.
+
+3. **Work with Multivariate Normal Distributions**
+   - Create an instance of the `MultiNormal` class using a dataset.
+   - Use the `pdf(x)` method to calculate the likelihood of specific data points.
+
+---
+
+## Applications
+- Statistical modeling and hypothesis testing.
+- Principal Component Analysis (PCA).
+- Multivariate data analysis in machine learning and finance.
+- Probabilistic inference in Bayesian networks.
+
+---
+
+## Requirements
+- Python 3.x
+- NumPy
+
+---
+
+## References
+- Multivariate Statistics and Machine Learning
+- Probability and Statistics in Data Science
+
+---
+
+## Author
+- Davis Joseph ([LinkedIn](https://www.linkedin.com/in/davisjoseph767/))
+
