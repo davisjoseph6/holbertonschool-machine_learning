@@ -1,78 +1,108 @@
-Resources
-Read or watch:
+# Calculus Project
 
-Sigma Notation (starting at 0:32)
-Π Product Notation (up to 0:20)
-Sigma and Pi Notation
-What is a Series?
-What is a Mathematical Series?
-List of mathematical series: Sums of powers
-Bernoulli Numbers(Bn)
-Bernoulli Polynomials(Bn(x))
-Derivative (mathematics)
-Calculus for ML
-1 of 2: Seeing the big picture
-2 of 2: First Principles
-1 of 2: Finding the Derivative
-2 of 2: What do we discover?
-Deriving a Rule for Differentiating Powers of x
-1 of 3: Introducing a substitution
-2 of 3: Combining derivatives
-How To Understand Derivatives: The Product, Power & Chain Rules
-Product Rule
-Common Derivatives and Integrals
-Introduction to partial derivatives
-Partial derivatives - How to solve?
-Integral
-Integration and the fundamental theorem of calculus
-Introduction to Integration
-Indefinite Integral - Basic Integration Rules, Problems, Formulas, Trig Functions, Calculus
-Definite Integrals
-Definite Integral
-Multiple integral
-Double integral 1
-Double integrals 2
-Learning Objectives
-At the end of this project, you are expected to be able to explain to anyone, without the help of Google:
+This project is part of the Holberton School Machine Learning curriculum and focuses on various calculus operations such as summation, differentiation, integration, and their applications. The directory contains scripts implementing mathematical concepts with detailed explanations.
 
-General
-Summation and Product notation
-What is a series?
-Common series
-What is a derivative?
-What is the product rule?
-What is the chain rule?
-Common derivative rules
-What is a partial derivative?
-What is an indefinite integral?
-What is a definite integral?
-What is a double integral?
-Requirements
-Multiple Choice Questions
-Allowed editors: vi, vim, emacs
-Type the number of the correct answer in your answer file
-All your files should end with a new line
-Example:
+## Directory Overview
 
-What is 9 squared?
+### Summation
+1. **`0-sigma_is_for_sum`**
+   - Calculates the sum of a sequence:  
+     Example: \(\sum_{i=2}^{5} i = 2 + 3 + 4 + 5\)
 
-99
-81
-3
-18
-alexa@ubuntu$ cat answer_file
-2
-alexa@ubuntu$
-Python Scripts
-Allowed editors: vi, vim, emacs
-All your files will be interpreted/compiled on Ubuntu 20.04 LTS using python3 (version 3.9)
-All your files should end with a new line
-The first line of all your files should be exactly #!/usr/bin/env python3
-A README.md file, at the root of the folder of the project, is mandatory
-Your code should use the pycodestyle style (version 2.11.1)
-All your modules should have documentation (python3 -c 'print(__import__("my_module").__doc__)')
-All your classes should have documentation (python3 -c 'print(__import__("my_module").MyClass.__doc__)')
-All your functions (inside and outside a class) should have documentation (python3 -c 'print(__import__("my_module").my_function.__doc__)' and python3 -c 'print(__import__("my_module").MyClass.my_function.__doc__)')
-Unless otherwise noted, you are not allowed to import any module
-All your files must be executable
-The length of your files will be tested using wc
+2. **`1-seegma`**
+   - Calculates a summation with a variable:  
+     Example: \(\sum_{k=1}^{4} (9i - 2k) = 36i - 20\)
+
+### Product
+3. **`2-pi_is_for_product`**
+   - Computes the product of a sequence:  
+     Example: \(\prod_{i=1}^{m} i = m!\)
+
+4. **`3-pee`**
+   - Handles special cases in products:  
+     Example: \(\prod_{i=0}^{10} i = 0\)
+
+### Differentiation
+5. **`4-hello_derivatives`**
+   - Computes the derivative of a polynomial:  
+     Example: \(\frac{dy}{dx}\) where \(y = x^4 + 3x^3 - 5x + 1\) results in \(4x^3 + 9x^2 - 5\)
+
+6. **`5-log_on_fire`**
+   - Derives logarithmic functions:  
+     Example: \(\frac{d}{dx}(x\ln(x)) = \ln(x) + 1\)
+
+7. **`6-voltaire`**
+   - Derives logarithmic expressions:  
+     Example: \(\frac{d}{dx}(\ln(x^2)) = \frac{2}{x}\)
+
+8. **`7-partial_truths`**
+   - Computes partial derivatives:  
+     Example: \(\frac{\partial f(x, y)}{\partial y}\) where \(f(x, y) = e^{xy}\) yields \(xe^{xy}\)
+
+9. **`8-all-together`**
+   - Computes higher-order partial derivatives:  
+     Example: \(\frac{\partial^2}{\partial y \partial x}(e^{x^2y}) = 2x(1 + x^2y)e^{x^2y}\)
+
+### Summation Functions
+10. **`9-sum_total.py`**
+    - Implements a Python function to compute the sum of squares using the formula:  
+      \[
+      \text{Sum} = \frac{n(n+1)(2n+1)}{6}
+      \]
+
+### Derivative Functions
+11. **`10-matisse.py`**
+    - Defines a function `poly_derivative` to calculate the derivative of a polynomial represented by a list of coefficients.
+
+### Integration
+12. **`11-integral`**
+    - Integrates a simple polynomial:  
+      Example: \(\int x^3 dx = \frac{x^4}{4} + C\)
+
+13. **`12-integral`**
+    - Integrates an exponential function:  
+      Example: \(\int e^{2y} dy = \frac{e^{2y}}{2} + C\)
+
+14. **`13-definite`**
+    - Computes a definite integral:  
+      Example: \(\int_{0}^{3} u^2 du = 9\)
+
+15. **`14-definite`**
+    - Handles undefined integrals:  
+      Example: \(\int_{-1}^{0} \frac{1}{v} dv = \text{undefined}\)
+
+16. **`15-definite`**
+    - Integrates with respect to another variable:  
+      Example: \(\int_{0}^{5} x dy = 5x\)
+
+17. **`16-double`**
+    - Solves a double integral:  
+      Example: \(\int_{1}^{2} \int_{0}^{3} \frac{x^2}{y} dx dy = 9\ln(2)\)
+
+### Integration Functions
+18. **`17-integrate.py`**
+    - Provides the `poly_integral` function to calculate the integral of a polynomial, returning the coefficients of the resulting polynomial.
+
+---
+
+## Usage
+
+- Each file can be executed directly to demonstrate the mathematical concepts and Python implementations.
+- Functions are documented with clear input/output details.
+
+### Python Functions
+- `9-sum_total.py`: `summation_i_squared(n)` computes the sum of squares from \(1\) to \(n\).
+- `10-matisse.py`: `poly_derivative(poly)` calculates the derivative of a polynomial.
+- `17-integrate.py`: `poly_integral(poly, C=0)` calculates the integral of a polynomial.
+
+---
+
+## Requirements
+- Python 3.x
+- No additional libraries are required.
+
+---
+
+## Authors
+- Holberton School Machine Learning Cohort
+
