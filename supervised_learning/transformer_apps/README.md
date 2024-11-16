@@ -1,76 +1,131 @@
-Transformer Applications
- Master
- By: Alexa Orrico, Software Engineer at Holberton School
- Weight: 4
- Your score will be updated as you progress.
- Manual QA review must be done (request it when you are done with the project)
-Description
+# Transformer Applications for Machine Translation
 
+This project demonstrates how to implement a machine translation model using a Transformer architecture. Specifically, it utilizes the TED HRLR (Portuguese to English) translation dataset to train a model that can translate sentences from Portuguese to English.
 
-Resources
-Read or watch:
+---
 
-How machines Read
-Sub-word tokenizers
-Summary of the tokenizers
-Subword Tokenization
-Notes on BERT tokenizer and model
-What is AutoTokenizer?
-Training a new tokenizer from an old one
-TFDS Overview
-How Transformers Work: A Detailed Exploration of Transformer Architecture
-References:
+## Directory Overview
 
-tfds
-tfds.load
-AutoTokenizer
-encode
-tf.py_function
-TFDS Keras Example
-tf.linalg.band_part
-Customizing what happens in fit
-Learning Objectives
-At the end of this project, you are expected to be able to explain to anyone, without the help of Google:
+### Files and Scripts
 
-General
-How to use Transformers for Machine Translation
-How to write a custom train/test loop in Keras
-How to use Tensorflow Datasets
-Requirements
-General
-Allowed editors: vi, vim, emacs
-All your files will be interpreted/compiled on Ubuntu 20.04 LTS using python3 (version 3.9)
-Your files will be executed with numpy (version 1.25.2) and tensorflow (version 2.15)
-All your files should end with a new line
-The first line of all your files should be exactly #!/usr/bin/env python3
-All of your files must be executable
-A README.md file, at the root of the folder of the project, is mandatory
-Your code should follow the pycodestyle style (version 2.11.1)
-All your modules should have documentation (python3 -c 'print(__import__("my_module").__doc__)')
-All your classes should have documentation (python3 -c 'print(__import__("my_module").MyClass.__doc__)')
-All your functions (inside and outside a class) should have documentation (python3 -c 'print(__import__("my_module").my_function.__doc__)' and python3 -c 'print(__import__("my_module").MyClass.my_function.__doc__)')
-Unless otherwise stated, you cannot import any module except import transformers , import tensorflow_datasets as tfds and also import tensorflow as tf for some other tasks.
-TF Datasets
-For machine translation, we will be using the prepared Tensorflow Datasets ted_hrlr_translate/pt_to_en for English to Portuguese translation
+1. **`0-dataset.py` to `4-dataset.py`**
+   - These scripts contain different stages of the data preparation pipeline for the TED HRLR dataset, from loading and tokenizing the data to preparing it for model training.
 
-To download Tensorflow Datasets, please use:
+2. **`4-create_masks.py`**
+   - Contains the code for creating the masks that will be used in the Transformer model. Masks help the model focus on specific tokens during training.
 
-pip install --user tensorflow-datasets==4.9.2
-To use this dataset:
+3. **`5-main.py`**
+   - The main entry point for training the Transformer model. It initializes the dataset, model, and training loop.
 
-$ cat load_dataset.py
-#!/usr/bin/env python3
-import tensorflow as tf
-import tensorflow_datasets as tfds
+4. **`5-transformer.py`**
+   - Contains the Transformer architecture implementation, including the encoder, decoder, and attention mechanisms.
 
-pt2en_train = tfds.load('ted_hrlr_translate/pt_to_en', split='train', as_supervised=True)
-for pt, en in pt2en_train.take(1):
-  print(pt.numpy().decode('utf-8'))
-  print(en.numpy().decode('utf-8'))
-$ ./load_dataset.py
-e quando melhoramos a procura , tiramos a única vantagem da impressão , que é a serendipidade .
-and when you improve searchability , you actually take away the one advantage of print , which is serendipity .
-Transformers
-To download transformers library, please use:
+5. **`README.md`**
+   - This file, which provides an overview of the project.
 
-pip install --user transformers==4.44.2
+6. **`load_dataset.py`**
+   - A script for loading and preprocessing the dataset for training.
+
+---
+
+## Dataset: TED HRLR Translation Dataset
+
+The TED HRLR dataset contains pairs of sentences in Portuguese and English. The dataset is used for training machine translation models. In this project, the focus is on training a model to translate from Portuguese to English.
+
+- **Dataset Name**: TED HRLR
+- **Language Pairs**: Portuguese → English
+- **Source**: [TensorFlow Datasets - TED HRLR](https://www.tensorflow.org/datasets/community_catalog/huggingface/ted_hrlr_translate)
+
+---
+
+## Key Classes and Functions
+
+### `Dataset` Class
+
+The `Dataset` class is used to load, prepare, and encode the TED HRLR translation dataset for machine translation. It performs the following tasks:
+1. Loads the training and validation datasets from TensorFlow Datasets.
+2. Tokenizes the dataset using pre-trained tokenizers for Portuguese and English.
+3. Creates a data pipeline for efficient training using TensorFlow's `tf.data` API.
+
+#### Key Methods:
+- **`__init__(batch_size, max_len)`**: Initializes the `Dataset` object, loads the data, and sets up the data pipeline.
+- **`tokenize_dataset(data)`**: Tokenizes the dataset using pre-trained BERT tokenizers for both Portuguese and English.
+- **`encode(pt, en)`**: Encodes a Portuguese-English sentence pair into tokenized sentences.
+- **`tf_encode(pt, en)`**: TensorFlow wrapper for the `encode` method, used in the data pipeline.
+
+---
+
+## Model Architecture: Transformer
+
+The Transformer architecture is designed to handle sequences of data, such as sentences for machine translation. It uses attention mechanisms to process sequences in parallel, unlike traditional RNNs, which process sequences step-by-step.
+
+In this project, the Transformer model is implemented in `5-transformer.py`. The model consists of:
+- **Encoder**: Processes the input sequence (Portuguese sentence).
+- **Decoder**: Generates the output sequence (English translation).
+- **Attention Mechanism**: Enables the model to focus on different parts of the input sequence when generating the output.
+
+---
+
+## Training the Model
+
+The model is trained using the `5-main.py` script. It does the following:
+1. Loads the preprocessed data.
+2. Initializes the Transformer model.
+3. Trains the model using the training dataset.
+4. Evaluates the model using the validation dataset.
+
+---
+
+## Requirements
+
+- Python 3.x
+- TensorFlow 2.x
+- Hugging Face Transformers
+- TensorFlow Datasets
+
+---
+
+## How to Run
+
+1. **Prepare the Dataset**:
+   - Run `3-dataset.py` to prepare and encode the TED HRLR translation dataset.
+     ```bash
+     python3 3-dataset.py
+     ```
+
+2. **Create the Model**:
+   - Run `5-transformer.py` to implement the Transformer architecture.
+     ```bash
+     python3 5-transformer.py
+     ```
+
+3. **Train the Model**:
+   - Run `5-main.py` to train the model.
+     ```bash
+     python3 5-main.py
+     ```
+
+4. **Evaluate and Test**:
+   - After training, you can evaluate the model's performance and test it on new sentence pairs.
+
+---
+
+## Applications
+
+- **Machine Translation**: This project is primarily focused on translating sentences from Portuguese to English.
+- **Natural Language Processing (NLP)**: The Transformer model can be adapted to other NLP tasks, such as text summarization, question answering, and more.
+
+---
+
+## References
+
+- [Attention Is All You Need (Transformer Paper)](https://arxiv.org/abs/1706.03762)
+- [TED HRLR Translation Dataset](https://www.tensorflow.org/datasets/community_catalog/huggingface/ted_hrlr_translate)
+
+---
+
+## Author
+
+- **Davis Joseph**  
+  [LinkedIn Profile](https://www.linkedin.com/in/davisjoseph767/)
+
