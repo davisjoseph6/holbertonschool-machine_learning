@@ -1,49 +1,112 @@
-Natural Language Processing - Evaluation Metrics
- Master
- By: Alexa Orrico, Software Engineer at Holberton School
- Weight: 1
- Migrated to checker v2: 
- Your score will be updated as you progress.
-Resources
-Read or watch:
+# NLP Metrics: BLEU Score Calculation
 
-7 Applications of Deep Learning for Natural Language Processing
-10 Applications of Artificial Neural Networks in Natural Language Processing
-A Gentle Introduction to Calculating the BLEU Score for Text in Python
-Bleu Score
-Evaluating Text Output in NLP: BLEU at your own risk
-ROUGE metric
-Evaluation and Perplexity
-Evaluation metrics
-Definitions to skim
+This project implements several variations of the BLEU (Bilingual Evaluation Understudy) score, a popular metric for evaluating the quality of machine-generated translations by comparing them to reference translations. It includes:
 
-BLEU
-ROUGE
-Perplexity
-References:
+- Unigram BLEU score
+- N-gram BLEU score
+- Cumulative n-gram BLEU score
 
-BLEU: a Method for Automatic Evaluation of Machine Translation (2002)
-ROUGE: A Package for Automatic Evaluation of Summaries (2004)
-Learning Objectives
-At the end of this project, you are expected to be able to explain to anyone, without the help of Google:
+The BLEU score is widely used in machine translation and NLP tasks to assess how well a model's output matches reference translations.
 
-General
-What are the applications of natural language processing?
-What is a BLEU score?
-What is a ROUGE score?
-What is perplexity?
-When should you use one evaluation metric over another?
-Requirements
-General
-Allowed editors: vi, vim, emacs
-All your files will be interpreted/compiled on Ubuntu 20.04 LTS using python3 (version 3.9)
-Your files will be executed with numpy (version 1.25.2)
-All your files should end with a new line
-The first line of all your files should be exactly #!/usr/bin/env python3
-All of your files must be executable
-A README.md file, at the root of the folder of the project, is mandatory
-Your code should follow the pycodestyle style (version 2.11.1)
-All your modules should have documentation (python3 -c 'print(__import__("my_module").__doc__)')
-All your classes should have documentation (python3 -c 'print(__import__("my_module").MyClass.__doc__)')
-All your functions (inside and outside a class) should have documentation (python3 -c 'print(__import__("my_module").my_function.__doc__)' and python3 -c 'print(__import__("my_module").MyClass.my_function.__doc__)')
-You are not allowed to use the nltk module
+## Directory Overview
+
+### Files and Scripts
+
+1. **`0-uni_bleu.py`**
+   - **Function**: `uni_bleu(references, sentence)`
+   - **Description**: Calculates the unigram BLEU score for a given sentence compared to reference translations.
+     - Compares individual words (unigrams) between the candidate sentence and the reference sentences.
+     - Includes a brevity penalty based on the length of the sentence.
+
+2. **`1-ngram_bleu.py`**
+   - **Function**: `ngram_bleu(references, sentence, n)`
+   - **Description**: Calculates the n-gram BLEU score for a given sentence.
+     - Allows for any `n` (e.g., 2 for bigrams, 3 for trigrams) to be specified.
+     - Computes precision by counting the overlap of n-grams between the candidate sentence and references.
+     - Includes a brevity penalty based on sentence length.
+
+3. **`2-cumulative_bleu.py`**
+   - **Function**: `cumulative_bleu(references, sentence, n)`
+   - **Description**: Calculates the cumulative n-gram BLEU score for a given sentence.
+     - Computes precision for n-grams of varying sizes (from 1 to n) and combines them to give a cumulative BLEU score.
+     - Incorporates a brevity penalty similar to the n-gram BLEU calculation.
+
+---
+
+## Requirements
+
+- Python 3.x
+- NumPy
+
+---
+
+## How to Use
+
+### 1. **Unigram BLEU Score**:
+   - Example:
+     ```python
+     from 0-uni_bleu import uni_bleu
+     references = [["the", "cat", "sat", "on", "the", "mat"]]
+     sentence = ["the", "cat", "sat", "on", "mat"]
+     score = uni_bleu(references, sentence)
+     print(score)
+     ```
+
+### 2. **N-gram BLEU Score**:
+   - Example for bigram (n=2):
+     ```python
+     from 1-ngram_bleu import ngram_bleu
+     references = [["the", "cat", "sat", "on", "the", "mat"]]
+     sentence = ["the", "cat", "sat", "on", "mat"]
+     score = ngram_bleu(references, sentence, 2)
+     print(score)
+     ```
+
+### 3. **Cumulative n-gram BLEU Score**:
+   - Example for cumulative BLEU score up to trigrams (n=3):
+     ```python
+     from 2-cumulative_bleu import cumulative_bleu
+     references = [["the", "cat", "sat", "on", "the", "mat"]]
+     sentence = ["the", "cat", "sat", "on", "mat"]
+     score = cumulative_bleu(references, sentence, 3)
+     print(score)
+     ```
+
+---
+
+## BLEU Score Formula
+
+The BLEU score combines two main components:
+
+1. **Precision**: Measures how many n-grams in the candidate sentence match the reference n-grams.
+2. **Brevity Penalty**: Penalizes translations that are shorter than the reference translations.
+
+The score is computed as:
+
+\[
+BLEU = BP \times \text{precision}
+\]
+
+Where \( BP \) (Brevity Penalty) is defined as:
+
+\[
+BP = \begin{cases}
+1 & \text{if sentence length is greater than or equal to reference length} \\
+\exp(1 - \frac{\text{closest reference length}}{\text{sentence length}}) & \text{otherwise}
+\end{cases}
+\]
+
+---
+
+## References
+
+- [BLEU Score Wikipedia](https://en.wikipedia.org/wiki/BLEU)
+- [NLP Metric Evaluation Paper](https://aclanthology.org/P03-1022.pdf)
+
+---
+
+## Author
+
+- **Davis Joseph**  
+  [LinkedIn Profile](https://www.linkedin.com/in/davisjoseph767/)
+
