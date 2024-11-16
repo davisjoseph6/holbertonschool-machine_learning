@@ -80,13 +80,13 @@ This project is part of the Holberton School Machine Learning curriculum and foc
   print("Accuracy:", rf.accuracy(test_features, test_labels))
   ```
 - Example usage for Isolation_Random_Forest:
-```python
-from 11-isolation_forest import Isolation_Random_Forest
-irf = Isolation_Random_Forest(n_trees=50, max_depth=8)
-irf.fit(dataset)
-suspects, depths = irf.suspects(dataset, n_suspects=10)
-print("Top 10 anomalies:", suspects)
-```
+  ```python
+  from 11-isolation_forest import Isolation_Random_Forest
+  irf = Isolation_Random_Forest(n_trees=50, max_depth=8)
+  irf.fit(dataset)
+  suspects, depths = irf.suspects(dataset, n_suspects=10)
+  print("Top 10 anomalies:", suspects)
+  ```
 
 ### Outputs
 - Decision tree visualizations through string representations.
