@@ -34,7 +34,7 @@ The TED HRLR dataset contains pairs of sentences in Portuguese and English. The 
 
 - **Dataset Name**: TED HRLR
 - **Language Pairs**: Portuguese → English
-- **Source**: [TensorFlow Datasets - TED HRLR](https://www.tensorflow.org/datasets/community_catalog/huggingface/ted_hrlr_translate)
+- **Source**: [TensorFlow Datasets - TED HRLR](https://www.tensorflow.org/datasets/catalog/ted_hrlr_translate#ted_hrlr_translatept_to_en)
 
 ---
 
@@ -120,7 +120,7 @@ The model is trained using the `5-main.py` script. It does the following:
 ## References
 
 - [Attention Is All You Need (Transformer Paper)](https://arxiv.org/abs/1706.03762)
-- [TED HRLR Translation Dataset](https://www.tensorflow.org/datasets/community_catalog/huggingface/ted_hrlr_translate)
+- [TED HRLR Translation Dataset](https://www.tensorflow.org/datasets/catalog/ted_hrlr_translate#ted_hrlr_translatept_to_en)
 
 ---
 
