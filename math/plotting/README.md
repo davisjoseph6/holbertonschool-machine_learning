@@ -22,6 +22,7 @@ sudo apt-get install python3-tk
 ```
 
 ## Scripts Overview
+
 1. `0-line.py`
 Plots a simple line graph representing representing 
 𝑦
@@ -35,6 +36,7 @@ y=x
 - X-axis range: 0 to 10
 - Line style: Solid red line
 - Usage: Run the script to visualize the plot.
+
 2. `1-scatter.py`
 Creates a scatter plot showing the relationship between men's height and weight.
 
@@ -42,12 +44,14 @@ Creates a scatter plot showing the relationship between men's height and weight.
 - X-axis: Height (inches)
 - Y-axis: Weight (lbs)
 - Usage: Run the script to view the scatter plot.
+
 3. `2-change_scale.py`
 Visualizes exponential decay (C-14 decay) with a logarithmic y-axis.
 
 - X-axis: Time (years)
 - Y-axis: Fraction remaining (logarithmic scale)
 - Usage: Run the script to see the decay process.
+
 4. `3-two.py`
 Plots two radioactive elements' exponential decay (C-14 and Ra-226).
 
@@ -55,6 +59,7 @@ Plots two radioactive elements' exponential decay (C-14 and Ra-226).
 - Y-axis: Fraction remaining
 - Features: Two lines (C-14 dashed red, Ra-226 solid green) with a legend.
 - Usage: Run the script to visualize the comparison.
+
 5. `4-frequency.py`
 Generates a histogram of student grades for "Project A".
 
@@ -62,6 +67,7 @@ Generates a histogram of student grades for "Project A".
 - Y-axis: Number of students
 - Bins: 10-grade intervals
 - Usage: Run the script to display the histogram.
+
 6. `5-all_in_one.py`
 Combines multiple plots into a single figure:
 
@@ -78,18 +84,21 @@ y=x
 - Comparison of decay (C-14 vs. Ra-226)
 - Histogram of student grades
 - Usage: Run the script to view all plots in a single window.
+
 7. `6-bars.py`
 - Creates a stacked bar graph showing fruit distribution among three individuals.
 
 - People: Farrah, Fred, Felicia
 - Fruits: Apples, Bananas, Oranges, Peaches
 - Usage: Run the script to view the bar chart.
+
 8. `100-gradient.py`
 Plots a scatter plot with elevation data visualized using a color gradient.
 
 - X/Y-axis: Coordinates
 - Colorbar: Elevation
 - Usage: Run the script to explore elevation changes.
+
 9. 101-pca.py
 Performs PCA on a dataset and visualizes the first three principal components in a 3D scatter plot.
 
@@ -116,7 +125,7 @@ Or run directly via Python:
 python3 <script_name>.py
 ```
 
-Project Structure
+## Project Structure
 ```plaintext
 ├── 0-line.py
 ├── 1-scatter.py
