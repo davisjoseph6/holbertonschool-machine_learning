@@ -1,120 +1,93 @@
-GANs
- Novice
- By: Gaël Collinet , Malek Mrabti
- Weight: 3
- Migrated to checker v2: 
- Your score will be updated once you launch the project review.
-Concepts
-For this project, we expect you to look at these concepts:
+# Generative Adversarial Networks (GANs)
 
-Introduction to GANs (Generative Adversarial Networks)
-Simple GANs
-Wasserstein GANs
-Wasserstein GANs with gradient penalty
-Generating Faces
+This directory contains implementations of various types of GANs, including the simple GAN and Wasserstein GAN (WGAN) with clipping. These models are used for generating synthetic data, such as images, by training two neural networks: a generator and a discriminator, in an adversarial setting.
 
+---
 
+## Directory Overview
 
-Resources
+### Files and Functions
 
-Read or watch:
-GoodFellow et al. (2014)
-Arjovsky et al. (2017)
-Gulrajani et al. (2017)
-Introduction to the Wasserstein distance
-This person does not exist
+1. **`0-simple_gan.py`**
+   - **`Simple_GAN` class**:
+     - A basic implementation of a Generative Adversarial Network (GAN).
+     - **Components**:
+       - **Generator**: Takes random noise as input and generates fake data (e.g., images).
+       - **Discriminator**: Classifies data as real or fake.
+     - **Training**:
+       - The `train_step` method alternates between training the discriminator and generator. The discriminator tries to differentiate real from fake data, while the generator tries to fool the discriminator.
+       - The generator and discriminator are trained using the Adam optimizer with a learning rate of `0.005` and `beta_1 = 0.5`, `beta_2 = 0.9`.
 
+     - **Key Methods**:
+       - `get_real_sample(size=None)`: Generates a batch of real samples from the dataset.
+       - `get_fake_sample(size=None, training=False)`: Generates a batch of fake samples from the generator.
+       - `train_step(useless_argument)`: Performs one training step for both the discriminator and generator.
 
+2. **`1-wgan_clip.py`**
+   - **`WGAN_clip` class**:
+     - A variant of the GAN known as Wasserstein GAN (WGAN) with weight clipping.
+     - The main difference between WGAN and the standard GAN is the use of a different loss function (Wasserstein loss) and weight clipping for the discriminator.
+     - **Key Features**:
+       - **Wasserstein loss**: This loss function provides more stable gradients, which can improve training.
+       - **Weight Clipping**: The discriminator’s weights are clipped to a fixed range to enforce the Lipschitz constraint required for the Wasserstein loss.
 
-Basics about GANs
+     - **Training**:
+       - Similar to the `Simple_GAN`, the `train_step` method alternates between training the discriminator and generator, but with Wasserstein loss and weight clipping.
 
-Since their appearance around 2014, GANs have attracted a lot of attention due to their potential to generate fake models that can fool anybody.
+---
 
-For example, you can visit the pageThis person does not exist to see pictures of fake persons. Each time you refresh your browser, a new picture that seems quite realistic appears, but the person on this picture does not exist :
+## Key Concepts
 
+### Simple GAN
+- **Generator**: Learns to create synthetic data that resembles the real data distribution.
+- **Discriminator**: Learns to distinguish between real data and the generated data.
+- **Adversarial Process**: The generator and discriminator are trained simultaneously, where the generator aims to deceive the discriminator, and the discriminator tries to correctly classify data as real or fake.
 
-These persons do not exist
+### WGAN with Clipping
+- **Wasserstein Loss**: Unlike the traditional GAN loss (binary cross-entropy), WGAN uses a loss that is based on the Earth Mover’s distance, which provides smoother gradients for training.
+- **Weight Clipping**: To ensure that the discriminator function is Lipschitz continuous, the weights of the discriminator are clipped within a fixed range after each gradient update.
 
+---
 
+## How to Use
 
-The generator is in fact a continuous function from a (relatively small) space of latent vectors to the space of all pictures.
+1. **Simple GAN**:
+   - Create a `Simple_GAN` model by initializing it with a generator, discriminator, and a latent space generator (e.g., random noise generator).
+   - Use the `train_step` method for training the model. This method alternates between training the discriminator and the generator.
+   - Adjust hyperparameters such as `batch_size`, `learning_rate`, and `disc_iter` for better results.
 
-So if a given latent vector 
- furnishes a realistic picture 
-, then for a small latent vector 
-, the new latent vector 
- will furnish a picture 
- that is very close from 
-.
+2. **WGAN with Clipping**:
+   - Create a `WGAN_clip` model by initializing it similarly to the `Simple_GAN`, but with a discriminator that includes weight clipping and Wasserstein loss.
+   - Train the model using the `train_step` method, which handles both discriminator and generator training steps.
 
-If 
- is wisely chosen, then 
- will be the same as 
-, but smiling :
+---
 
+## Applications
 
+- **Image Generation**: GANs are widely used for generating synthetic images, including faces, objects, and scenes.
+- **Data Augmentation**: Generating new data to augment training datasets.
+- **Super-Resolution**: Enhancing the resolution of images using GANs.
+- **Art and Creative Works**: Generating artwork, music, and other creative content.
 
-person0 = Generator (l0) on the left, person1 = Generator (l0+epsilon) on the right
+---
 
+## Requirements
 
-With these kinds of perturbations, you can make your model older, or change its sex, or make its hair longer and so on :
+- Python 3.x
+- TensorFlow 2.x
+- Keras
+- Matplotlib (for visualization)
+- NumPy
 
+---
 
+## References
 
-Walk in a star shape to and from a picture
+- Ian Goodfellow et al., "Generative Adversarial Networks" (2014)
+- Martin Arjovsky, Soumith Chintala, and Léon Bottou, "Wasserstein GAN" (2017)
 
+---
 
-You can also walk along circle in the space of latent vectors, and look at the corresponding persons furnished by the generator, thus producing results like
-
-
-Cyclic walk from and to a picture
-
-
-
-Our aim in this project is to explain the basics of GANs, and convince you that you have understood how they work.
-
-Beyond this project: A large family of image generators has grown since then:
-
-Pro-GANs allow to have a far better quality of images
-SR-GANs take a blurry picture as input and return the same picture, unblurred
-Style-GANs have been popularized by their ability to modify one character of a picture. For example you can give them a picture of a young person and it will return the picture of the same person at age 60.
-
-Tasks
-
-This project about GANs is organized as follows :
-
-The description contains a crash course about GANs. The fundamentals ideas behind GANs are exposed as fast as possible.
-Task 0 : the class Simple_GAN : as they were introduced, GANs are a game played by two adversary players.
-Task 1 : the class WGAN_clip : later it appeared that in fact the two players can collaborate.
-Task 2 : the class WGANGP : a more natural version of the latter, which outperforms SimpleGANs and WGAN_clips in higher dimensions, as will be illustrated in the main program.
-Task 3 : convolutional generators and discriminators : to work with pictures we need to use convolutional neural networks.
-Task 4 : our own face generator : we will use a WGAN_GP model to produce faces of persons that don’t exist.
-Appendix : at the end of task 4 there is a short digression explaining why GANs are superior to the older generators of fake pictures that were based on PCA.
-
-
-
-Requirements
-
-You should carefully read all the concept pages attached above to gain a fundamental understanding of GANs and their various types.
-All your files will be interpreted/compiled on (still dont know) using python3 (version 3.9)
-Your files will be executed with numpy (version 1.25.2) and tensorflow (version 2.15.0)
-All your files should end with a new line
-The first line of all your files should be exactly #!/usr/bin/env python3
-A README.md file, at the root of the folder of the project, is mandatory
-All your modules should have documentation (python3 -c 'print(__import__("my_module").__doc__)')
-All your classes should have documentation (python3 -c 'print(__import__("my_module").MyClass.__doc__)')
-All your functions (inside and outside a class) should have documentation (python3 -c 'print(__import__("my_module").my_function.__doc__)' and python3 -c 'print(__import__("my_module").MyClass.my_function.__doc__)')
-All your files must be executable
-
-
-
-Objective: Provide a comprehensive guide to the project.
-Content:
-Introduction to GANs and the project.
-Description of each task.
-How to run the code, including dependencies.
-Any relevant results or images.
-Instructions on how to extend the project.
-File Structure:
-README.md
+## Author
+- Davis Joseph ([LinkedIn](https://www.linkedin.com/in/davisjoseph767/))
 
