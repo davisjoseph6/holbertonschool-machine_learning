@@ -1,58 +1,73 @@
-QA Bot
- Master
- By: Alexa Orrico, Software Engineer at Holberton School
- Weight: 1
- Manual QA review must be done (request it when you are done with the project)
-Description
+# QA Bot with Pretrained BERT
 
+This project implements an interactive Question Answering (QA) system using a pretrained BERT model. The system uses BERT's capabilities to extract answers from a provided reference document based on user queries. The project includes a loop that allows continuous interaction with the bot and exits when specific keywords are typed.
 
-Resources
-Read or watch:
+## Project Structure
 
-Question Answering (Q&A) Systems with LLMs
-Improving Language Understanding by Generative Pre-Training (2018)
-BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding (2018)
-SQuAD 2.0
-Know What You Don’t Know: Unanswerable Questions for SQuAD (2018)
-GLUE Benchmark
-GLUE: A Multi-Task Benchmark and Analysis Platform for Natural Language Understanding (2019)
-Speech-transformer: A no-recurrence sequence-to-sequence model for speech recognition (2018)
-More recent papers in NLP:
+### 0-qa.py
+- Contains the function `question_answer(question, reference)` which uses the pretrained BERT model to answer a given question based on the reference text.
+- The function uses TensorFlow and TensorFlow Hub to load the model and BERT tokenizer.
 
-Generating Long Sequences with Sparse Transformers (2019)
-Transformer-XL: Attentive Language Models Beyond a Fixed-Length Context (2019)
-XLNet: Generalized Autoregressive Pretraining for Language Understanding (2019)
-Language Models are Unsupervised Multitask Learners (GPT-2, 2019)
-Language Models are Few-Shot Learners (GPT-3, 2020)
-ALBERT: A Lite BERT for Self-Supervised Learning of Language Representations (2020)
-To keep up with the newest papers and their code bases go to paperswithcode.com. For example, check out the raked list of state of the art models for Language Modelling on Penn Treebank.
+### 1-loop.py
+- Implements an interactive loop that continuously asks the user for a question and prints a placeholder response.
+- The loop exits when the user types an exit keyword like 'exit', 'quit', 'goodbye', or 'bye'.
 
-Learning Objectives
-At the end of this project, you are expected to be able to explain to anyone, without the help of Google:
+### 2-qa.py
+- Extends the functionality of the QA bot by integrating the `question_answer` function from `0-qa.py`.
+- The loop allows users to input a question and receive answers from a reference document until an exit keyword is entered.
 
-General
-What is Question-Answering?
-What is Semantic Search?
-What is BERT?
-How to develop a QA chatbot
-How to use the transformers library
-How to use the tensorflow-hub library
-Requirements
-General
-Allowed editors: vi, vim, emacs
-All your files will be interpreted/compiled on Ubuntu 20.04 LTS using python3 (version 3.9)
-Your files will be executed with numpy (version 1.25.2) and tensorflow (version 2.15)
-All your files should end with a new line
-The first line of all your files should be exactly #!/usr/bin/env python3
-All of your files must be executable
-A README.md file, at the root of the folder of the project, is mandatory
-Your code should follow the pycodestyle style (version 2.11.1)
-All your modules should have documentation (python3 -c 'print(__import__("my_module").__doc__)')
-All your classes should have documentation (python3 -c 'print(__import__("my_module").MyClass.__doc__)')
-All your functions (inside and outside a class) should have documentation (python3 -c 'print(__import__("my_module").my_function.__doc__)' and python3 -c 'print(__import__("my_module").MyClass.my_function.__doc__)')
-Install Tensorflow Hub
-pip install --user tensorflow-hub==0.15.0
-Install Transformers
-pip install --user transformers==4.44.2
-Zendesk Articles.
-For this project, we will be using a collection of Holberton USA Zendesk Articles, ZendeskArticles.zip.
+### 3-semantic_search.py
+- Implements semantic search functionality (not detailed here, likely used for enhancing question matching).
+
+### ZendeskArticles
+- Contains reference documents (likely FAQ or support articles) that the QA bot can use to answer user questions.
+
+### c15a067b44a328c7d5a03c79070b7865f444d1e3
+- Could be a file containing additional resources or data for the QA bot (likely a serialized model or dataset).
+
+## Key Features
+
+- **Interactive QA loop**: Allows users to ask questions in natural language and get relevant answers from the reference text.
+- **Pretrained BERT model**: Uses the BERT model fine-tuned on the SQuAD dataset to extract answers from a document.
+- **Exit functionality**: The loop can be exited using keywords like 'exit', 'quit', 'goodbye', and 'bye'.
+
+## Requirements
+
+- Python 3.x
+- TensorFlow 2.x
+- TensorFlow Hub
+- Transformers library
+
+## Usage
+
+1. **Initialize the Bot**: Run the `2-qa.py` script to start the interactive QA loop. The bot will prompt you to enter a question.
+   
+2. **Ask Questions**: Type your questions, and the bot will use the reference document to find the best answer using the pretrained BERT model.
+
+3. **Exit the Bot**: Type any of the following exit keywords to end the loop: `exit`, `quit`, `goodbye`, or `bye`.
+
+```bash
+$ python3 2-qa.py
+Q: What is the capital of France?
+A: Paris
+Q: exit
+A: Goodbye
+```
+
+## Example Flow
+```bash
+$ python3 2-qa.py
+Q: Who is the president of the United States?
+A: Joe Biden
+Q: What is the capital of France?
+A: Paris
+Q: goodbye
+A: Goodbye
+```
+
+## References
+- BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding by Jacob Devlin et al.
+- SQuAD: 100,000+ Questions for Machine Comprehension of Text
+
+## Author
+Davis Joseph (LinkedIn)
