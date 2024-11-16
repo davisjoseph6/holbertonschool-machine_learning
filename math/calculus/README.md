@@ -103,6 +103,6 @@ This project is part of the Holberton School Machine Learning curriculum and foc
 
 ---
 
-## Authors
-- Holberton School Machine Learning Cohort
+## Author
+- Davis
 
