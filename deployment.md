@@ -20,6 +20,11 @@ sudo add-apt-repository ppa:deadsnakes/ppa -y
 sudo apt update && sudo apt upgrade -y
 ```
 
+Upgrade pip
+```bash
+pip install --upgrade pip
+```
+
 ## 2. Create a Virtual Environment
 
 Set up a dedicated virtual environment for the project:

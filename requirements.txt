@@ -30,3 +30,4 @@ tensorflow-datasets==4.9.2
 tensorflow-hub==0.15.0
 transformers==4.44.2
 pandas==2.2.2
+ml-dtypes==0.2.0
