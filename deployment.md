@@ -25,3 +25,9 @@ source myvenv/bin/activate
 ```
 pip install -r requirements.txt
 ```
+
+3. Deactivate the virtual environment
+
+```
+deactivate
+```
