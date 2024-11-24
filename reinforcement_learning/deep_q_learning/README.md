@@ -90,6 +90,8 @@ This setup requires Python version 3.10.12. If you have a newer version of Pytho
 It is recommended to use a virtual environment if you have a newer version of Python installed. Use the following commands to set up a virtual environment with Python 3.10.12:
 
 ```bash
+sudo add-apt-repository ppa:deadsnakes/ppa
+sudo apt update
 sudo apt install python3.10-venv
 python3.10 -m venv myvenv
 source myvenv/bin/activate
