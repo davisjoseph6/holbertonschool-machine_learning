@@ -88,6 +88,6 @@ This project is part of the Holberton School Machine Learning curriculum and foc
 
 ## Authors
 
-- **Davis Joseph** - [LinkedIn](https://www.linkedin.com/in/davis-joseph-aswpe/)
+- **Davis Joseph** - [LinkedIn](https://www.linkedin.com/in/davisjoseph767/)
 - Holberton School Machine Learning Cohort
 
