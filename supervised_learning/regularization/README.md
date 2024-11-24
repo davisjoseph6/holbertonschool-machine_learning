@@ -71,5 +71,5 @@ For an in-depth explanation of these regularization techniques and their importa
 ---
 
 ## Author
-- Davis Joseph ([LinkedIn](https://www.linkedin.com/in/davis-joseph/))
+- Davis Joseph ([LinkedIn](https://www.linkedin.com/in/davisjoseph767/))
 
