@@ -1,33 +1,58 @@
-# Basic requirements for deploying the project
+# Basic Requirements for Deploying the Project
 
-1. Setup virtual environment
+Follow the steps below to set up the project environment.
+
+---
+
+## 1. Install Basic Utilities
+
+Run the following commands to install essential tools and dependencies:
 
 ```bash
-sudo apt install vim
-sudo apt install python3-pip -y
-sudo apt-get update
-sudo apt-get upgrade
-sudo apt-get install git
-sudo apt install cmake -y
-sudo apt-get install python3-tk
-pip install gymnasium numpy
-sudo apt install pipx
-sudo add-apt-repository ppa:deadsnakes/ppa
-sudo apt update
-sudo apt upgrade
-sudo apt install python3.10-venv
+# Update and upgrade the system
+sudo apt-get update && sudo apt-get upgrade -y
+
+# Install utilities
+sudo apt install -y vim git cmake python3-pip python3-tk python3-venv pipx
+
+# Add the DeadSnakes PPA for alternative Python versions
+sudo add-apt-repository ppa:deadsnakes/ppa -y
+sudo apt update && sudo apt upgrade -y
+```
+
+## 2. Create a Virtual Environment
+
+Set up a dedicated virtual environment for the project:
+
+```bash
+# Install Python 3.10 and the virtual environment package if not already installed
+sudo apt install -y python3.10 python3.10-venv
+
+# Create and activate the virtual environment
 python3.10 -m venv myvenv
 source myvenv/bin/activate
 ```
 
-2. Install dependecies
+## 3. Install Dependencies
 
+Install core dependencies:
+
+```bash
+pip install gymnasium numpy
 ```
+
+Install project-specific dependencies:
+
+```bash
 pip install -r requirements.txt
 ```
 
-3. Deactivate the virtual environment
+## 4. Deactivate the Virtual Environment
 
-```
+When finished, deactivate the virtual environment:
+
+```bash
 deactivate
 ```
+
+Note: Ensure you are in the project directory before running the commands in steps 3 and 4.
