@@ -67,5 +67,5 @@ This project focuses on building, training, and implementing Convolutional Neura
 ---
 
 ## Author
-- Davis Joseph ([LinkedIn](https://www.linkedin.com/in/davis-joseph/))
+- Davis Joseph ([LinkedIn](https://www.linkedin.com/in/davisjoseph767/))
 
