@@ -25,7 +25,15 @@ Upgrade pip
 pip install --upgrade pip
 ```
 
-## 2. Create a Virtual Environment
+## 2. Install Additional System Libraries
+
+Install the required system dependencies for the project:
+
+```bash
+sudo apt-get install -y libcairo2-dev
+```
+
+## 3. Create a Virtual Environment
 
 Set up a dedicated virtual environment for the project:
 
@@ -38,7 +46,7 @@ python3.10 -m venv myvenv
 source myvenv/bin/activate
 ```
 
-## 3. Install Dependencies
+## 4. Install Dependencies
 
 Install core dependencies:
 
@@ -46,10 +54,28 @@ Install core dependencies:
 pip install gymnasium numpy
 ```
 
-Install project-specific dependencies:
+Install Tensorstore without dependencies:
+
+```bash
+pip install tensorstore==0.1.68 --no-deps
+```
+
+Install additional project-specific dependencies:
 
 ```bash
 pip install -r requirements.txt
+```
+
+Upgrade pip, setuptools, and wheel to ensure compatibility:
+
+```bash
+pip install --upgrade pip setuptools wheel
+```
+
+Verify dependencies and check for conflicts:
+
+```bash
+pip check
 ```
 
 ## 4. Deactivate the Virtual Environment
