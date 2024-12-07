@@ -8,8 +8,8 @@ import pandas as pd
 
 def rename(df):
     """
-    Renames the Timestamp column to Datetime, converts timestamp values to datetime,
-    and displays only the Datetime and Close columns.
+    Renames the Timestamp column to Datetime, converts timestamp values
+    to datetime, and displays only the Datetime and Close columns.
     """
     # Rename the column
     df.rename(columns={"Timestamp": "Datetime"}, inplace=True)
