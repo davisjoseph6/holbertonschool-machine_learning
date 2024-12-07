@@ -20,17 +20,16 @@ sudo add-apt-repository ppa:deadsnakes/ppa -y
 sudo apt update && sudo apt upgrade -y
 ```
 
-Upgrade pip
-```bash
-pip install --upgrade pip
-```
-
 ## 2. Install Additional System Libraries
 
 Install the required system dependencies for the project:
 
 ```bash
+# Install Cairo development libraries for graphics-related packages
 sudo apt-get install -y libcairo2-dev
+
+# Install Python development headers to build C extensions
+sudo apt-get install -y python3.10-dev
 ```
 
 ## 3. Create a Virtual Environment
@@ -44,6 +43,11 @@ sudo apt install -y python3.10 python3.10-venv
 # Create and activate the virtual environment
 python3.10 -m venv myvenv
 source myvenv/bin/activate
+```
+
+Upgrade pip
+```bash
+pip install --upgrade pip
 ```
 
 ## 4. Install Dependencies
