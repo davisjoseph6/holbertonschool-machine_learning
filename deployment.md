@@ -41,7 +41,7 @@ Set up a dedicated virtual environment for the project:
 sudo apt install -y python3.10 python3.10-venv
 
 # Create and activate the virtual environment
-python3.10 -m venv myvenv
+python3.10 -m venv myvenv --system-site-packages
 source myvenv/bin/activate
 ```
 
