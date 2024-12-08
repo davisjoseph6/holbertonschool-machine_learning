@@ -30,6 +30,9 @@ sudo apt-get install -y libcairo2-dev
 
 # Install Python development headers to build C extensions
 sudo apt-get install -y python3.10-dev
+
+# Install tkinter for Python 3.10 (required for GUI applications)
+sudo apt-get install -y python3.10-tk
 ```
 
 ## 3. Create a Virtual Environment
