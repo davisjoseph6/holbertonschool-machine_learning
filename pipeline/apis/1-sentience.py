@@ -22,7 +22,8 @@ def sentientPlanets():
         for species in data.get("results", []):
             classification = species.get("classification", "").lower()
             designation = species.get("designation", "").lower()
-            if classification in sentient_types or designation in sentient_types:
+            if (classification in sentient_types or
+                    designation in sentient_types):
                 homeworld = species.get("homeworld")
                 if homeworld:
                     planet_response = requests.get(homeworld)
