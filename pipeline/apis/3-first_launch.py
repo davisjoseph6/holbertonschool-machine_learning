@@ -1,22 +1,22 @@
 #!/usr/bin/env python3
 """
-Script to display the first SpaceX launch information using the SpaceX API.
+Script to display the first upcoming SpaceX launch information using the SpaceX API.
 """
 
 import requests
 from datetime import datetime
 
 
-def fetch_first_launch():
+def fetch_first_upcoming_launch():
     """
-    Fetches and displays the first SpaceX launch with the required details.
+    Fetches and displays the next upcoming SpaceX launch with the required details.
     """
-    launches_url = "https://api.spacexdata.com/v4/launches"
+    launches_url = "https://api.spacexdata.com/v4/launches/upcoming"
     rockets_url = "https://api.spacexdata.com/v4/rockets"
     launchpads_url = "https://api.spacexdata.com/v4/launchpads"
 
     try:
-        # Fetch launches
+        # Fetch upcoming launches
         launches_response = requests.get(launches_url)
         if launches_response.status_code != 200:
             print("Error fetching launches")
@@ -24,7 +24,7 @@ def fetch_first_launch():
 
         launches = launches_response.json()
 
-        # Find the first launch based on date_unix
+        # Find the first upcoming launch based on date_unix
         first_launch = min(launches, key=lambda x: x["date_unix"])
 
         # Fetch rocket data
@@ -59,4 +59,4 @@ def fetch_first_launch():
 
 
 if __name__ == "__main__":
-    fetch_first_launch()
+    fetch_first_upcoming_launch()
