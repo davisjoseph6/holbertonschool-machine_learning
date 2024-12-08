@@ -35,6 +35,14 @@ sudo apt-get install -y python3.10-dev
 sudo apt-get install -y python3.10-tk
 ```
 
+**Important**: Verify `tkinter` installation:
+
+```bash
+python3.10 -m tkinter
+```
+You should see a small GUI window open. If this fails, ensure `Python 3.10` and `python3.10-tk` are correctly installed.
+
+
 ## 3. Create a Virtual Environment
 
 Set up a dedicated virtual environment for the project:
@@ -84,8 +92,10 @@ Verify dependencies and check for conflicts:
 ```bash
 pip check
 ```
+Note on `tkinter`: 
+`tkinter` is a system-level dependency and cannot be included in `requirements.txt`. Make sure it is installed as described in **Step 2**.
 
-## 4. Deactivate the Virtual Environment
+## 5. Deactivate the Virtual Environment
 
 When finished, deactivate the virtual environment:
 
@@ -93,4 +103,6 @@ When finished, deactivate the virtual environment:
 deactivate
 ```
 
-Note: Ensure you are in the project directory before running the commands in steps 3 and 4.
+Notes: 
+1. Ensure you are in the project directory before running the commands in steps 3 and 4.
+2. If running in a non-GUI environment, consider using a non-interactive `matplotlib` backend like `Agg` for saving plots.
