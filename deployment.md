@@ -45,7 +45,7 @@ You should see a small GUI window open. If this fails, ensure `Python 3.10` and 
 
 ### 1. Create a Virtual Environment
 
-Set up a dedicated virtual environment for the project. This is an **optional** step in case you are not on 'Ubuntu 22.04' ("Jammy Jellyfish") environment with 'Python3.10' version:
+Set up a dedicated virtual environment for the project. This is an **optional** step in case you are not on `Ubuntu 22.04` ("Jammy Jellyfish") environment with `Python3.10` version:
 
 ```bash
 # Install Python 3.10 and the virtual environment package if not already installed
