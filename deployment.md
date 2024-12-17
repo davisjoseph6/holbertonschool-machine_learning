@@ -43,7 +43,7 @@ python3.10 -m tkinter
 You should see a small GUI window open. If this fails, ensure `Python 3.10` and `python3.10-tk` are correctly installed.
 
 
-### 1. Create a Virtual Environment
+### Create a Virtual Environment (optional)
 
 Set up a dedicated virtual environment for the project. This is an **optional** step in case you are not on `Ubuntu 22.04` ("Jammy Jellyfish") environment with `Python3.10` version:
 
@@ -95,9 +95,9 @@ pip check
 Note on `tkinter`: 
 `tkinter` is a system-level dependency and cannot be included in `requirements.txt`. Make sure it is installed as described in **Step 2**.
 
-## 5. Deactivate the Virtual Environment
+### Deactivate the Virtual Environment
 
-When finished, deactivate the virtual environment:
+When finished, deactivate the virtual environment (if you have created it previously):
 
 ```bash
 deactivate
