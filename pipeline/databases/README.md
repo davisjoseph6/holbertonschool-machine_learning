@@ -1,165 +1,169 @@
-# Setting Up MongoDB 8.0 Community Edition on Ubuntu
+# Setting up MySQL 8.0 and MongoDB 4.4 on Ubuntu 20.04 LTS
 
-This guide provides step-by-step instructions for installing MongoDB 8.0 Community Edition on supported Ubuntu systems using the official MongoDB packages.
+This guide provides a comprehensive step-by-step approach to installing and running MySQL 8.0 and MongoDB 4.4 on Ubuntu 20.04 LTS. Additionally, it covers importing SQL dumps and essential configuration.
 
-## Supported Ubuntu Versions
-
-MongoDB 8.0 Community Edition supports the following 64-bit Ubuntu LTS releases:
-- Ubuntu 24.04 LTS ("Noble")
-- Ubuntu 22.04 LTS ("Jammy")
-- Ubuntu 20.04 LTS ("Focal")
-
-To check your Ubuntu version, run:
-```bash
-cat /etc/lsb-release
-```
+## Requirements
+- **Operating System**: Ubuntu 20.04 LTS
+- **MySQL Version**: 8.0
+- **MongoDB Version**: 4.4
 
 ---
 
-## Prerequisites
+## 1. Installing MySQL 8.0
 
-1. Ensure your system is updated:
-   ```bash
-   sudo apt-get update
-   ```
-2. Install `gnupg` and `curl` (if not already installed):
-   ```bash
-   sudo apt-get install -y gnupg curl
-   ```
-
----
-
-## Step 1: Import the MongoDB Public GPG Key
-
-Run the following command to add the MongoDB GPG key:
-```bash
-curl -fsSL https://www.mongodb.org/static/pgp/server-8.0.asc | \
-   sudo gpg -o /usr/share/keyrings/mongodb-server-8.0.gpg --dearmor
-```
-
----
-
-## Step 2: Create the MongoDB Repository List File
-
-### Ubuntu 24.04 ("Noble")
-```bash
-echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-8.0.gpg ] https://repo.mongodb.org/apt/ubuntu noble/mongodb-org/8.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-8.0.list
-```
-
-### Ubuntu 22.04 ("Jammy")
-Replace `noble` with `jammy`:
-```bash
-echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-8.0.gpg ] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/8.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-8.0.list
-```
-
-### Ubuntu 20.04 ("Focal")
-Replace `noble` with `focal`:
-```bash
-echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-8.0.gpg ] https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/8.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-8.0.list
-```
-
----
-
-## Step 3: Reload the Package Database
-
-Update the local package database to include the MongoDB repository:
+### Step 1: Update the System
 ```bash
 sudo apt-get update
 ```
 
+### Step 2: Install MySQL Server
+```bash
+sudo apt-get install mysql-server
+```
+
+### Step 3: Secure MySQL Installation
+Run the secure installation script:
+```bash
+sudo mysql_secure_installation
+```
+
+### Step 4: Configure MySQL Root User
+Access the MySQL shell:
+```bash
+sudo mysql
+```
+Set the root password and enable native authentication:
+```sql
+ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'your_password';
+FLUSH PRIVILEGES;
+EXIT;
+```
+
 ---
 
-## Step 4: Install MongoDB Community Edition
+## 2. Running MySQL and Importing a SQL Dump
 
-To install MongoDB, run:
+### Step 1: Start the MySQL Service
+```bash
+sudo service mysql start
+```
+
+### Step 2: Create a Database
+```bash
+echo "CREATE DATABASE hbtn_0d_tvshows;" | mysql -uroot -p
+```
+
+### Step 3: Import the SQL Dump
+```bash
+curl "https://s3.eu-west-3.amazonaws.com/hbtn.intranet.project.files/holbertonschool-higher-level_programming+/274/hbtn_0d_tvshows.sql" -s | mysql -uroot -p hbtn_0d_tvshows
+```
+
+### Step 4: Verify the Import
+```bash
+echo "SELECT * FROM tv_genres;" | mysql -uroot -p hbtn_0d_tvshows
+```
+
+---
+
+## 3. Writing SQL Files with Comments
+Example of a SQL file with comments:
+
+```sql
+-- Retrieve the 3 most recent students in Batch ID=3
+-- Batch 3 is known for excellence!
+SELECT id, name FROM students WHERE batch_id = 3 ORDER BY created_at DESC LIMIT 3;
+```
+
+Save the above in a file named `my_script.sql`.
+
+---
+
+## 4. Installing MongoDB 4.4
+
+### Step 1: Import the MongoDB Public Key
+```bash
+wget -qO - https://www.mongodb.org/static/pgp/server-4.4.asc | sudo apt-key add -
+```
+
+### Step 2: Create MongoDB Repository
+```bash
+echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/4.4 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.4.list
+```
+
+### Step 3: Update the Package Database
+```bash
+sudo apt-get update
+```
+
+### Step 4: Install MongoDB
 ```bash
 sudo apt-get install -y mongodb-org
 ```
 
 ---
 
-## Step 5: Start and Enable MongoDB
+## 5. Running MongoDB
 
-### Start the MongoDB Service
+### Step 1: Start the MongoDB Service
 ```bash
-sudo systemctl start mongod
+sudo service mongod start
 ```
 
-### Enable MongoDB to Start on Boot
+### Step 2: Verify MongoDB Installation
 ```bash
-sudo systemctl enable mongod
+sudo service mongod status
 ```
 
----
-
-## Step 6: Verify MongoDB Installation
-
-Check the status of the MongoDB service:
-```bash
-sudo systemctl status mongod
-```
-
-Start the MongoDB shell to verify installation:
+### Step 3: Start the MongoDB Shell
 ```bash
 mongosh
 ```
-You should see a welcome message and the MongoDB shell prompt.
 
----
-
-## Additional Commands
-
-### Stop MongoDB
+To list databases:
 ```bash
-sudo systemctl stop mongod
-```
-
-### Restart MongoDB
-```bash
-sudo systemctl restart mongod
-```
-
-### Check Logs
-Logs are available at:
-```bash
-/var/log/mongodb/mongod.log
+echo "show dbs" | mongosh
 ```
 
 ---
 
-## Directories and Configuration
+## 6. Common Issues and Fixes
 
-- **Data Directory**: `/var/lib/mongodb`
-- **Log Directory**: `/var/log/mongodb`
-- **Configuration File**: `/etc/mongod.conf`
+### Issue: Data Directory Not Found
+If you encounter the error: `Data directory /data/db not found., terminating`
 
-Changes to the configuration file take effect after restarting MongoDB:
+Fix it by creating the directory:
 ```bash
-sudo systemctl restart mongod
+sudo mkdir -p /data/db
+sudo chown -R `id -u` /data/db
 ```
 
 ---
 
-## Start Using MongoDB
+## 7. Installing and Verifying PyMongo
 
-Run the following command to start a MongoDB shell session:
+### Step 1: Install PyMongo
 ```bash
-mongosh
+pip3 install pymongo
 ```
-### Example:
+
+### Step 2: Verify Installation
 ```bash
-> show dbs
+python3
+>>> import pymongo
+>>> pymongo.__version__
+'4.6.2'
 ```
-This command displays the databases available in MongoDB.
 
 ---
 
-## Troubleshooting
-
-If you encounter issues during installation or setup, refer to:
-- [MongoDB Troubleshooting Guide](https://www.mongodb.com/docs/manual/administration/production-notes/)
-
----
-
-Congratulations! You have successfully installed MongoDB 8.0 Community Edition on Ubuntu.
+## Notes
+- All SQL keywords should be in uppercase.
+- The first line of all MongoDB scripts should be:
+  ```
+  // my comment
+  ```
+- Python files should start with:
+  ```bash
+  #!/usr/bin/env python3
+  
 
